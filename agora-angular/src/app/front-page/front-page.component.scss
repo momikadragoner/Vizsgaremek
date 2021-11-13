@@ -1,0 +1,46 @@
+.card{
+    // max-width: 18rem;
+    // max-height: 32rem;
+}
+a.cart{
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+a.more {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.logo-text{
+    color: #342A2B;
+}
+header{
+    font-variant: small-caps;
+    font-family: 'IM Fell English', serif;
+}
+.slogen{
+    font-family: 'Bellota', cursive;
+}
+.salad{
+    background-image: url("./../../assets/salad.jpg");
+    background-position: center;
+}
+.agora{
+    border: none;
+    background-color: rgba(255, 255, 255, .15);
+    backdrop-filter: blur(10px);
+}
+.search{
+    background: inherit;
+    border-width: medium;
+    border-color: #342A2B;
+    color: #342A2B;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.search-btn{
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none;
+    border-width: medium;
+    border-color: #342A2B;
+}

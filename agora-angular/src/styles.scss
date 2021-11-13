@@ -1,0 +1,45 @@
+/* You can add global styles to this file, and also import other style files */
+// Custom.scss
+
+//import fonts
+@import url("https://fonts.googleapis.com/css?family=Noto+Serif");
+@import url("https://fonts.googleapis.com/css?family=IM+Fell+English");
+@import url("https://fonts.googleapis.com/css?family=Bellota:wght@700&display=swap");
+
+//general #a8e6cf #859C62 #559e83 #c3cb71;
+$primary: #859C62;
+$secondary: #c0c0c0;
+$danger: #ff8b94;
+$success: #a0d6b4;
+$body-color: #342A2B;
+$body-bg: #fffff4;
+$border-radius: 1rem;
+//$body-bg: #F6F6DB;
+
+//set font
+$font-family-sans-serif:
+  // Cross-platform generic font family (default user interface font)
+  "Noto Serif",
+  // Safari for macOS and iOS (San Francisco)
+  -apple-system,
+  // Windows
+  "Segoe UI",
+  // Android
+  Roboto,
+  // Basic web fallback
+  "Helvetica Neue", Arial,
+  // Linux
+  "Noto Sans",
+  "Liberation Sans",
+  // Sans serif fallback
+  sans-serif,
+  // Emoji fonts
+  "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
+
+//card
+$card-bg: #fbf7f5;
+//$card-bg: #859C62;
+$card-border-radius: 1rem;
+$card-border-color: null;
+
+@import "../node_modules/bootstrap/scss/bootstrap";
