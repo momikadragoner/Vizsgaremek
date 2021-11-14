@@ -1,46 +1,26 @@
-.card{
-    // max-width: 18rem;
-    // max-height: 32rem;
-}
-a.cart{
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-}
-a.more {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-}
-.logo-text{
-    color: #342A2B;
-}
-header{
-    font-variant: small-caps;
-    font-family: 'IM Fell English', serif;
+.card-product{
+    width: 16rem;
+    height: 26.5rem;
 }
 .slogen{
     font-family: 'Bellota', cursive;
+    font-weight: bold;
 }
-.salad{
+.container-front{
     background-image: url("./../../assets/salad.jpg");
     background-position: center;
 }
-.agora{
-    border: none;
-    background-color: rgba(255, 255, 255, .15);
-    backdrop-filter: blur(10px);
-}
 .search{
     background: inherit;
-    border-width: medium;
+    border-left: none;
+    border-width: .15rem;
     border-color: #342A2B;
+}
+::placeholder{
     color: #342A2B;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
 }
 .search-btn{
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
     border-right: none;
-    border-width: medium;
+    border-width: .15rem;
     border-color: #342A2B;
 }

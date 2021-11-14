@@ -14,6 +14,7 @@ $success: #a0d6b4;
 $body-color: #342A2B;
 $body-bg: #fffff4;
 $border-radius: 1rem;
+$input-color: #342A2B;
 //$body-bg: #F6F6DB;
 
 //set font
@@ -43,3 +44,11 @@ $card-border-radius: 1rem;
 $card-border-color: null;
 
 @import "../node_modules/bootstrap/scss/bootstrap";
+
+//put global scss here
+
+.frosted-glass{
+  border: none;
+  background-color: rgba(255, 255, 255, .15);
+  backdrop-filter: blur(10px);
+}
