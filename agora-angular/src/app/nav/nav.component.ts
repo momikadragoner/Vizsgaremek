@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { trigger, state, style, animate, transition } from '@angular/animations';
+import { trigger, state, style, animate, transition, query, stagger } from '@angular/animations';
 import { faCarrot } from '@fortawesome/free-solid-svg-icons';
 import { faAppleAlt } from '@fortawesome/free-solid-svg-icons';
 import { faBreadSlice } from '@fortawesome/free-solid-svg-icons';
@@ -14,33 +14,21 @@ import { faGlassMartiniAlt } from '@fortawesome/free-solid-svg-icons';
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.scss'],
   animations: [
-    trigger('toggleCategory', [
-      state('*', style({
-        opacity: '1'
-      })),
-      state('void', style({
-        opacity: '0',
-        height: '0'
-      })),
-      transition(':enter', [ 
-        animate('.2s ease-out')
-      ]),
-      transition(':leave', [
-        animate('.2s ease-in')
-      ]),
-    ]),
-    trigger('clickNowView', [
-      state('nowOpen', style({
-        backgroundColor: 'yellow',
-        borderRadius: '1rem'
-      })),
-      state('nowClosed',style({
-
-      })),
-      transition('nowClosed => nowOpen', [
-        animate('1s')
-      ]),
-    ]),
+     trigger('toggleMenu', [
+        state('*', style({
+          opacity: '1',
+        })),
+        state('void', style({
+          opacity: '0',
+          height: '0'
+        })),
+        transition(':enter', [
+          animate('.5s')
+        ]),
+        transition(':leave', [
+        animate('.5s')
+      ]),  
+     ]),
   ]
 })
 export class NavComponent implements OnInit {
@@ -54,17 +42,33 @@ export class NavComponent implements OnInit {
   faTshirt = faTshirt;
   faGlassMartiniAlt = faGlassMartiniAlt;
 
-  public isOpen = false;
-  public isNowOpen = false;
+  public openView = ""; 
 
   toggleCategory() {
-    this.isOpen = !this.isOpen;
-    this.isNowOpen = false;
+    if (this.openView != "category") {
+      this.openView = "category";
+    }
+    else{
+      this.openView = "";
+    }
   }
 
   toggleNowView(){
-    this.isNowOpen = !this.isNowOpen;
-    this.isOpen = false;
+    if (this.openView != "now") {
+      this.openView = "now";
+    }
+    else{
+      this.openView = "";
+    }
+  }
+
+  toggleBestView(){
+    if (this.openView != "best") {
+      this.openView = "best";
+    }
+    else{
+      this.openView = "";
+    }
   }
 
   constructor() { }
