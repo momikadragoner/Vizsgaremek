@@ -4,6 +4,10 @@ import { faCarrot } from '@fortawesome/free-solid-svg-icons';
 import { faAppleAlt } from '@fortawesome/free-solid-svg-icons';
 import { faBreadSlice } from '@fortawesome/free-solid-svg-icons';
 import { faCheese } from '@fortawesome/free-solid-svg-icons';
+import { faPalette } from '@fortawesome/free-solid-svg-icons';
+import { faGem } from '@fortawesome/free-solid-svg-icons';
+import { faTshirt } from '@fortawesome/free-solid-svg-icons';
+import { faGlassMartiniAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-nav',
@@ -23,8 +27,20 @@ import { faCheese } from '@fortawesome/free-solid-svg-icons';
       ]),
       transition(':leave', [
         animate('.2s ease-in')
-      ])
-    ])
+      ]),
+    ]),
+    trigger('clickNowView', [
+      state('nowOpen', style({
+        backgroundColor: 'yellow',
+        borderRadius: '1rem'
+      })),
+      state('nowClosed',style({
+
+      })),
+      transition('nowClosed => nowOpen', [
+        animate('1s')
+      ]),
+    ]),
   ]
 })
 export class NavComponent implements OnInit {
@@ -33,11 +49,22 @@ export class NavComponent implements OnInit {
   faBread = faBreadSlice;
   faApple = faAppleAlt;
   faCheese = faCheese;
+  faPalette = faPalette;
+  faGem = faGem;
+  faTshirt = faTshirt;
+  faGlassMartiniAlt = faGlassMartiniAlt;
 
   public isOpen = false;
+  public isNowOpen = false;
 
   toggleCategory() {
     this.isOpen = !this.isOpen;
+    this.isNowOpen = false;
+  }
+
+  toggleNowView(){
+    this.isNowOpen = !this.isNowOpen;
+    this.isOpen = false;
   }
 
   constructor() { }

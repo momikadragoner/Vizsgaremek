@@ -5,8 +5,12 @@ header{
     font-variant: small-caps;
     font-family: 'IM Fell English', serif;
 }
-.card-category{
-    background-color: #fce9e7;
+.card-category-produce{
+    background-color: #effce7;
+    border: none;
+}
+.card-category-product{
+    background-color: #fdf4e3;
     border: none;
 }
 .card-title{
@@ -14,4 +18,8 @@ header{
 }
 .selected{
     font-weight: bold;
+    background-color: #fdf4e3;
+}
+.nav-link-selectable{
+    border-radius: 1rem;
 }
