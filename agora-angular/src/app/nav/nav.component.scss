@@ -1,8 +1,5 @@
 .logo-text{
     color: #342A2B;
-}
-header{
-    font-variant: small-caps;
     font-family: 'IM Fell English', serif;
 }
 .card-category-produce{
@@ -22,4 +19,19 @@ header{
 }
 .nav-link-selectable{
     border-radius: 1rem;
+    font-variant: small-caps;
+    font-family: 'IM Fell English', serif;
+    font-size: 1.1rem;
+}
+.btn-sell{
+    font-size: .9rem;
+}
+.btn-login{
+    font-size: .9rem;
+    border: #342A2B thin solid;
+    border-radius: .6rem;
+}
+.btn-login:hover, .btn-sell:hover{
+    background-color: #342A2B;
+    color: #fffff4;
 }

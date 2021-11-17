@@ -1,0 +1,18 @@
+<div *ngFor="let product of products" class="col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3">
+    <div class="card card-product m-3 shadow">
+        <div class="img-placeholder ">
+            <img src="{{product.imgUrl}}" class="card-img-top img-product" alt="...">
+        </div>
+        <div class="card-body card-body-product text-center">
+            <h5 class="card-title fw-bold" [class.fit-text]="product.productName.length> 20">{{product.productName}}</h5>
+            <p class="card-text text-primary m-1">{{product.sellerName}}</p>
+            <h4 class="m-0 fw-bold">{{product.price}} Ft</h4>
+        </div>
+        <div class="btn-group mx-2 mb-3">
+            <a href="#" class="btn btn-primary w-75">Részletek</a>
+            <a href="#" class="btn btn-secondary w-25">
+                <fa-icon [icon]="faShoppingCart"></fa-icon>
+            </a>
+        </div>
+    </div>
+</div>

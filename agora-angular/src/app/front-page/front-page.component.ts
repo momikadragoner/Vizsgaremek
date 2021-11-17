@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { faChevronUp, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
@@ -10,7 +9,6 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 })
 export class FrontPageComponent implements OnInit {
 
-  faShoppingCart = faShoppingCart;
   faSearch = faSearch;
   faChevronDown = faChevronDown;
 
