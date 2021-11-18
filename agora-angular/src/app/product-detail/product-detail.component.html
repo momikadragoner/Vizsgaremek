@@ -1,6 +1,7 @@
 <div class="container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Kategóriák</a></li>
             <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Ékszerek</a></li>
             <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Nyakláncok</a></li>
             <li class="breadcrumb-item active" aria-current="page">Csodálatos arany nyaklánc medál</li>
@@ -19,9 +20,7 @@
                     <hr>
                     <h3 class="mt-3">Leírás</h3>
                     <p class="text-justify">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore, quo voluptates nemo dolores at
-                        modi ipsam fuga odio architecto beatae aliquid molestiae enim qui obcaecati doloribus. Ex saepe
-                        voluptatem magnam!
+                        {{productDetail.description}}
                     </p>
                 </div>
             </div>
@@ -137,28 +136,52 @@
         <div class="row">
             <h3>Értékelések</h3>
             <h1 class="fw-bold big ms-3">4,7<small class="fw-normal small">/ 5</small></h1>
-            <div class="shadow rounded review m-2">
-                <h5 class="m-2 fw-bold">Nagyszerű!!!</h5>
-                <div class="ms-2">
-                    <fa-icon [icon]="faStar"></fa-icon>
-                    <fa-icon [icon]="faStar"></fa-icon>
-                    <fa-icon [icon]="faStar"></fa-icon>
-                    <fa-icon [icon]="faStar"></fa-icon>
-                    <fa-icon [icon]="faStar"></fa-icon>
-                    <small class="ms-1">5/5</small>
+            <div class="scrollmenu row">
+                <div class="shadow rounded review m-2 col-12 col-md-6">
+                    <h5 class="m-2 fw-bold">Nagyszerű!!!</h5>
+                    <div class="ms-2">
+                        <fa-icon [icon]="faStar"></fa-icon>
+                        <fa-icon [icon]="faStar"></fa-icon>
+                        <fa-icon [icon]="faStar"></fa-icon>
+                        <fa-icon [icon]="faStar"></fa-icon>
+                        <fa-icon [icon]="faStar"></fa-icon>
+                        <small class="ms-1">5/5</small>
+                    </div>
+                    <p class="m-2">Az unokámnak vettem szülinapjára és imádja!!!! Köszönöm!!!!!</p>
                 </div>
-                <p class="m-2">Az unokámnak vettem szülinapjára és imádja!!!! Köszönöm!!!!!</p>
-            </div>
-            <div class="shadow rounded review m-2">
-                <h5 class="m-2 fw-bold">Szép darab</h5>
-                <div class="ms-2">
-                    <fa-icon [icon]="faStar"></fa-icon>
-                    <fa-icon [icon]="faStar"></fa-icon>
-                    <fa-icon [icon]="faStar"></fa-icon>
-                    <fa-icon [icon]="faStar"></fa-icon>
-                    <small class="ms-1">4/5</small>
+                <div class="shadow rounded review m-2 col-12 col-md-6">
+                    <h5 class="m-2 fw-bold">Szép darab</h5>
+                    <div class="ms-2">
+                        <fa-icon [icon]="faStar"></fa-icon>
+                        <fa-icon [icon]="faStar"></fa-icon>
+                        <fa-icon [icon]="faStar"></fa-icon>
+                        <fa-icon [icon]="faStar"></fa-icon>
+                        <small class="ms-1">4/5</small>
+                    </div>
+                    <p class="m-2">Aprólékos, jól kidolgozatt nyaklánc, csak ajánlani tudom. Nekem egy picit hosszú, de a lánc hosszát meg lehet igazítani.</p>
                 </div>
-                <p class="m-2">Aprólékos, jól kidolgozatt nyaklánc, csak ajánlani tudom. Nekem egy picit hosszú, de a lánc hosszát meg lehet igazítani.</p>
+                <div class="shadow rounded review m-2 col-12 col-md-6">
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="m-2 fw-bold">Szép darabocskák</h5>
+                        </div>
+                        <div class="text-end col-auto m-2 ps-0 ms-0">
+                            <small class="text-secondary">Máj. 12</small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="ms-2">
+                                <fa-icon *ngFor="let number of [0,1,2,3]" [icon]="faStar"></fa-icon>
+                                <small class="ms-1">4/5</small>
+                            </div>
+                        </div>
+                        <div class="col text-end me-2 ps-0 ms-0">
+                            <small class="text-secondary">andii12</small>
+                        </div>
+                    </div>
+                    <p class="m-2">Aprólékos, jól kidolgozatt nyaklánc, csak ajánlani tudom. Nekem egy picit hosszú, de a lánc hosszát meg lehet igazítani.</p>
+                </div>
             </div>
         </div>
     </div>

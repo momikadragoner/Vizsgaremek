@@ -9,4 +9,33 @@
 }
 .review{
     max-width: 19rem;
+    display: inline-block;
+    white-space: pre-wrap;
 }
+.scrollmenu{
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    box-sizing: content-box;
+}
+/* width */
+::-webkit-scrollbar {
+    height: .6rem;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: .3rem;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }

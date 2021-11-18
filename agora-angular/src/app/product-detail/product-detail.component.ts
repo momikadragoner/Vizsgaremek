@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { faHandPaper, faBalanceScale, faTree, faEnvelope, faShoppingCart, faHeart, faTruck, faGem, faBoxes, faStar} from '@fortawesome/free-solid-svg-icons';
 
+import { productDetail, products } from "./test-data";
+
 @Component({
   selector: 'app-product-detail',
   templateUrl: './product-detail.component.html',
@@ -19,12 +21,8 @@ export class ProductDetailComponent implements OnInit {
   faBoxes = faBoxes;
   faStar = faStar;
 
-  public products = [
-    {productName: "Gyöngy nyakék", sellerName: "Kiss Márta", price: "12 599", imgUrl: "assets/item2.jpg" },
-    {productName: "Arany lánc", sellerName: "Nagy Erzsébet", price: "18 999", imgUrl: "assets/item1.jpg" },
-    {productName: "Ásvány medál ékszer", sellerName: "Széles Lajos", price: "11 999", imgUrl: "assets/item3.jfif" },
-    {productName: "Arany és kristály nyaklánc", sellerName: "Közepes Borbála", price: "19 599", imgUrl: "assets/item4.jpg" }
-  ];
+  public products = products;
+  public productDetail = productDetail;
 
   constructor() { }
 
