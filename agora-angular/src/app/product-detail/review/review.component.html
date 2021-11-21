@@ -1,0 +1,25 @@
+<div>
+    <div class="col">
+        <h5 class="m-2 mb-0 fw-bold">{{content.title}}</h5>
+    </div>
+    <small class="text-secondary ps-2">{{content.username}} |</small>
+    <small class="text-secondary ms-2">Okt. 22</small>
+    <div class="col">
+        <div class="ms-2">
+            <fa-icon *ngFor="let number of [0,1,2,3,4]" [icon]="faStar"></fa-icon>
+            <small class="ms-1">{{content.rating}}/5</small>
+        </div>
+    </div>
+    <p class="m-2">{{content.review}}</p>
+    <div class="m-2">
+        <div class="nav">
+            <button [@addUpvote]="content.points" [class.upvoted]="hasUpvoted" (click)="upvote()" class="btn me-2" type="button">
+                <fa-icon [icon]="faArrowUp"></fa-icon>
+            </button>
+            <h5 class="pt-2 pe-2">{{content.points}}</h5>
+            <button [@addDownvote]="content.points" [class.downvoted]="hasDownvoted" (click)="downvote()" class="btn" type="button">
+                <fa-icon [icon]="faArrowDown"></fa-icon>
+            </button>
+        </div>
+    </div>
+</div>

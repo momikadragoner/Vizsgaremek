@@ -10,6 +10,8 @@ import { NavComponent } from './nav/nav.component';
 import { LoginComponent } from './login/login.component';
 import { ProductListComponent } from './product-list/product-list.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
+import { ModalComponent } from './modal/modal.component';
+import { ReviewComponent } from './product-detail/review/review.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,9 @@ import { ProductDetailComponent } from './product-detail/product-detail.componen
     NavComponent,
     LoginComponent,
     ProductListComponent,
-    ProductDetailComponent
+    ProductDetailComponent,
+    ModalComponent,
+    ReviewComponent
   ],
   imports: [
     BrowserModule,

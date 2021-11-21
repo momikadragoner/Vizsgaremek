@@ -1,3 +1,5 @@
+import { EmailValidator } from "@angular/forms";
+
 export const productDetail =
 {
     name: "Csodálatos arany nyaklánc medál",
@@ -14,8 +16,9 @@ export const productDetail =
     takesCustomOrders: true,
     rating: 4.7,
     reviews: [
-        { username: "Anitaaa43", title: "Nagyszerű!!!", review: "Az unokámnak vettem szülinapjára és imádja!!!! Köszönöm!!!!!", rating: "5" },
-        { username: "kmarika1234", title: "Szép darab", review: "Aprólékos, jól kidolgozatt nyaklánc, csak ajánlani tudom. Nekem egy picit hosszú, de a lánc hosszát meg lehet igazítani.", rating: "4" }
+        { id: 0, username: "Anitaaa43", title: "Nagyszerű!!!", review: "Az unokámnak vettem szülinapjára és imádja!!!! Köszönöm!!!!!", rating: "5", points: 6 },
+        { id: 1, username: "kmarika1234", title: "Csinos nyaklánc a kollekciómba", review: "Aprólékos, jól kidolgozatt nyaklánc, csak ajánlani tudom. Nekem egy picit hosszú, de a lánc hosszát meg lehet igazítani.", rating: "4", points: 3 },
+        { id: 2, username: "kmarika1234", title: "Szép darab", review: "Aprólékos, jól kidolgozatt nyaklánc, csak ajánlani tudom. Nekem egy picit hosszú, de a lánc hosszát meg lehet igazítani.", rating: "4", points: 2 }
     ]
 }
 
@@ -25,3 +28,14 @@ export const products = [
     { productName: "Ásvány medál ékszer", sellerName: "Széles Lajos", price: "11 999", imgUrl: "assets/item3.jfif" },
     { productName: "Arany és kristály nyaklánc", sellerName: "Közepes Borbála", price: "19 599", imgUrl: "assets/item4.jpg" }
 ];
+
+class User {
+    name: string;
+    follows?: Number;
+    followers?: Number;
+
+    constructor() {
+        this.name = "";
+        this.followers = undefined;
+    }
+}

@@ -9,7 +9,9 @@
 }
 .review{
     max-width: 19rem;
+    height: 11rem;
     display: inline-block;
+    vertical-align: top;
     white-space: pre-wrap;
 }
 .scrollmenu{
@@ -18,6 +20,11 @@
     overflow-x: auto;
     white-space: nowrap;
     box-sizing: content-box;
+}
+.none{
+  background-color: inherit;
+  border: none;
+  text-align: inherit;
 }
 /* width */
 ::-webkit-scrollbar {

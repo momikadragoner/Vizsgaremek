@@ -72,7 +72,8 @@
                             <p class="">
                                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore, quo voluptates nemo
                                 dolores at
-                                modi ipsam fuga odio architecto beatae aliquid molestiae enim qui obcaecati doloribus. Ex
+                                modi ipsam fuga odio architecto beatae aliquid molestiae enim qui obcaecati doloribus.
+                                Ex
                                 saepe
                                 voluptatem magnam!
                             </p>
@@ -137,50 +138,29 @@
             <h3>Értékelések</h3>
             <h1 class="fw-bold big ms-3">4,7<small class="fw-normal small">/ 5</small></h1>
             <div class="scrollmenu row">
-                <div class="shadow rounded review m-2 col-12 col-md-6">
-                    <h5 class="m-2 fw-bold">Nagyszerű!!!</h5>
-                    <div class="ms-2">
-                        <fa-icon [icon]="faStar"></fa-icon>
-                        <fa-icon [icon]="faStar"></fa-icon>
-                        <fa-icon [icon]="faStar"></fa-icon>
-                        <fa-icon [icon]="faStar"></fa-icon>
-                        <fa-icon [icon]="faStar"></fa-icon>
-                        <small class="ms-1">5/5</small>
-                    </div>
-                    <p class="m-2">Az unokámnak vettem szülinapjára és imádja!!!! Köszönöm!!!!!</p>
-                </div>
-                <div class="shadow rounded review m-2 col-12 col-md-6">
-                    <h5 class="m-2 fw-bold">Szép darab</h5>
-                    <div class="ms-2">
-                        <fa-icon [icon]="faStar"></fa-icon>
-                        <fa-icon [icon]="faStar"></fa-icon>
-                        <fa-icon [icon]="faStar"></fa-icon>
-                        <fa-icon [icon]="faStar"></fa-icon>
-                        <small class="ms-1">4/5</small>
-                    </div>
-                    <p class="m-2">Aprólékos, jól kidolgozatt nyaklánc, csak ajánlani tudom. Nekem egy picit hosszú, de a lánc hosszát meg lehet igazítani.</p>
-                </div>
-                <div class="shadow rounded review m-2 col-12 col-md-6">
-                    <div class="row">
-                        <div class="col">
-                            <h5 class="m-2 fw-bold">Szép darabocskák</h5>
-                        </div>
-                        <div class="text-end col-auto m-2 ps-0 ms-0">
-                            <small class="text-secondary">Máj. 12</small>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="ms-2">
-                                <fa-icon *ngFor="let number of [0,1,2,3]" [icon]="faStar"></fa-icon>
-                                <small class="ms-1">4/5</small>
+                <div *ngFor="let review of productDetail.reviews" class="shadow rounded review m-2 col-12 col-md-6">
+                    <button (click)="openModal([review.id])" class="none">
+                        <div class="row">
+                            <div class="col">
+                                <h5 class="m-2 fw-bold">{{review.title}}</h5>
+                            </div>
+                            <div class="text-end col-auto m-2 ps-0 ms-0">
+                                <small class="text-secondary">Okt. 22</small>
                             </div>
                         </div>
-                        <div class="col text-end me-2 ps-0 ms-0">
-                            <small class="text-secondary">andii12</small>
+                        <div class="row">
+                            <div class="col">
+                                <div class="ms-2">
+                                    <fa-icon *ngFor="let number of [0,1,2,3,4]" [icon]="faStar"></fa-icon>
+                                    <small class="ms-1">{{review.rating}}/5</small>
+                                </div>
+                            </div>
+                            <div class="col text-end me-2 ps-0 ms-0">
+                                <small class="text-secondary">{{review.username}}</small>
+                            </div>
                         </div>
-                    </div>
-                    <p class="m-2">Aprólékos, jól kidolgozatt nyaklánc, csak ajánlani tudom. Nekem egy picit hosszú, de a lánc hosszát meg lehet igazítani.</p>
+                        <p class="m-2">Az unokámnak vettem szülinapjára és imádja!!!! Köszönöm!!!!!</p>
+                    </button>
                 </div>
             </div>
         </div>
@@ -192,28 +172,32 @@
     <div class="container">
         <div class="row">
             <div class="col-12 col-md">
-              <small class="d-block mb-3 text-muted">Agora &copy;2021</small>
+                <small class="d-block mb-3 text-muted">Agora &copy;2021</small>
             </div>
             <div class="col-6 col-md">
-              <h5 class="fw-bold">Linkek</h5>
-              <ul class="list-unstyled text-small">
-                <li><a class="link-secondary text-decoration-none" href="#">Kezdőlap</a></li>
-                <li><a class="link-secondary text-decoration-none" href="#">Kategóriák</a></li>
-                <li><a class="link-secondary text-decoration-none" href="#">A szezon legjobbjai</a></li>
-                <li><a class="link-secondary text-decoration-none" href="#">Rólunk</a></li>
-                <li><a class="link-secondary text-decoration-none" href="#">Újdonságok</a></li>
-                <li><a class="link-secondary text-decoration-none" href="#">Hírlevél</a></li>
-              </ul>
+                <h5 class="fw-bold">Linkek</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="link-secondary text-decoration-none" href="#">Kezdőlap</a></li>
+                    <li><a class="link-secondary text-decoration-none" href="#">Kategóriák</a></li>
+                    <li><a class="link-secondary text-decoration-none" href="#">A szezon legjobbjai</a></li>
+                    <li><a class="link-secondary text-decoration-none" href="#">Rólunk</a></li>
+                    <li><a class="link-secondary text-decoration-none" href="#">Újdonságok</a></li>
+                    <li><a class="link-secondary text-decoration-none" href="#">Hírlevél</a></li>
+                </ul>
             </div>
             <div class="col-6 col-md">
-              <h5 class="fw-bold">Fiók</h5>
-              <ul class="list-unstyled text-small">
-                <li><a class="link-secondary text-decoration-none" href="#">Bejelentkezés</a></li>
-                <li><a class="link-secondary text-decoration-none" href="#">Regisztráció</a></li>
-                <li><a class="link-secondary text-decoration-none" href="#">Eladó regisztráció</a></li>
-                <li><a class="link-secondary text-decoration-none" href="#">Eladói fórum</a></li>
-              </ul>
+                <h5 class="fw-bold">Fiók</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="link-secondary text-decoration-none" href="#">Bejelentkezés</a></li>
+                    <li><a class="link-secondary text-decoration-none" href="#">Regisztráció</a></li>
+                    <li><a class="link-secondary text-decoration-none" href="#">Eladó regisztráció</a></li>
+                    <li><a class="link-secondary text-decoration-none" href="#">Eladói fórum</a></li>
+                </ul>
             </div>
-          </div>
+        </div>
     </div>
-  </footer>
+</footer>
+<!-- Review detailed views -->
+<modal-window [(modalVisible)]="modalVisible">
+    <app-review [(content)]="reviewContent"></app-review>
+</modal-window>

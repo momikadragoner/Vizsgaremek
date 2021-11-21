@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { faHandPaper, faBalanceScale, faTree, faEnvelope, faShoppingCart, faHeart, faTruck, faGem, faBoxes, faStar} from '@fortawesome/free-solid-svg-icons';
-
+import { Form } from '@angular/forms';
 import { productDetail, products } from "./test-data";
 
 @Component({
@@ -23,6 +23,16 @@ export class ProductDetailComponent implements OnInit {
 
   public products = products;
   public productDetail = productDetail;
+
+  public modalVisible = false;
+  public reviewContent:any;
+
+  openModal(id:number[]){
+    this.modalVisible = true;
+    this.reviewContent = productDetail.reviews[id[0]]; 
+  }
+
+  @ViewChild('review') selectedReview: any;
 
   constructor() { }
 
