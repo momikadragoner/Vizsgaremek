@@ -1,0 +1,56 @@
+<div class="p-0 container-fluid">
+    <!-- <img class="w-100 m-0 p-0" src="assets/salad.jpg" alt="" style="height: 10rem;"> -->
+    <div class="container">
+    </div>
+</div>
+<div class="container">
+    <div class="round shadow profile-picture ms-4" style="width: 10rem;">
+        <img class="p-2 round profile-picture" src="assets/profilepic.jpg" alt="" style="width: 10rem;">
+    </div>
+    <div class="shadow rounded px-4 pt-5 pb-2 about">
+        <div class="row">
+            <div class="col-5">
+                <h4 class="fw-bold m-2">Nagy Erzsébet</h4>
+            </div>
+            <div class="col-7">
+                <div class="d-grid gap-1 d-md-flex justify-content-md-end">
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-primary my-2 px-3">Követés</a>
+                        <a href="#" class="btn btn-secondary my-2 pe-3">
+                            <fa-icon [icon]="faEnvelope"></fa-icon>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+                <h6 class="m-2 mt-0 pt-0">
+                    <a href="" class="text-decoration-none">erzsiekszer.hu</a> 
+                </h6>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 col-md-3 col-lg-2">
+                <h5 class="fw-bold m-2">54 <small class="fw-normal">követő</small></h5>
+            </div>
+            <div class="col-4 col-md-3 col-lg-2">
+                <h5 class="fw-bold m-2">16 <small class="fw-normal">követ</small></h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-8">
+                <p class="mt-3">
+                    Sziasztok, Aranyoskák! Erzsi néni vagyok. Szabadidőmben szeretek ékszereket és egyéb
+                    apróságokat készíteni. ✨💎
+                </p>
+            </div>
+            <div class="col-12 col-md-4">
+                <p>Egyedi rendeléseket is vállal.</p>
+                <a href="#" class="btn btn-primary my-2 px-3">Rendelés</a>
+            </div>
+        </div>
+    </div>
+    <h3 class="m-3 pt-2"></h3>
+    <app-product-list class="row" [products]="products"></app-product-list>
+</div>

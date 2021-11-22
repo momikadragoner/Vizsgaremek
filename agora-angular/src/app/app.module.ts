@@ -12,6 +12,7 @@ import { ProductListComponent } from './product-list/product-list.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { ModalComponent } from './modal/modal.component';
 import { ReviewComponent } from './product-detail/review/review.component';
+import { ProfilePageComponent } from './profile-page/profile-page.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { ReviewComponent } from './product-detail/review/review.component';
     ProductListComponent,
     ProductDetailComponent,
     ModalComponent,
-    ReviewComponent
+    ReviewComponent,
+    ProfilePageComponent
   ],
   imports: [
     BrowserModule,
