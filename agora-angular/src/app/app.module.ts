@@ -13,6 +13,7 @@ import { ProductDetailComponent } from './product-detail/product-detail.componen
 import { ModalComponent } from './modal/modal.component';
 import { ReviewComponent } from './product-detail/review/review.component';
 import { ProfilePageComponent } from './profile-page/profile-page.component';
+import { FooterComponent } from './nav/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { ProfilePageComponent } from './profile-page/profile-page.component';
     ProductDetailComponent,
     ModalComponent,
     ReviewComponent,
-    ProfilePageComponent
+    ProfilePageComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

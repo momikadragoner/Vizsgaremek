@@ -1,56 +1,77 @@
-<div class="p-0 container-fluid">
-    <!-- <img class="w-100 m-0 p-0" src="assets/salad.jpg" alt="" style="height: 10rem;"> -->
-    <div class="container">
-    </div>
-</div>
-<div class="container">
-    <div class="round shadow profile-picture ms-4" style="width: 10rem;">
-        <img class="p-2 round profile-picture" src="assets/profilepic.jpg" alt="" style="width: 10rem;">
-    </div>
-    <div class="shadow rounded px-4 pt-5 pb-2 about">
-        <div class="row">
-            <div class="col-5">
-                <h4 class="fw-bold m-2">Nagy Erzsébet</h4>
-            </div>
-            <div class="col-7">
-                <div class="d-grid gap-1 d-md-flex justify-content-md-end">
-                    <div class="btn-group">
-                        <a href="#" class="btn btn-primary my-2 px-3">Követés</a>
-                        <a href="#" class="btn btn-secondary my-2 pe-3">
-                            <fa-icon [icon]="faEnvelope"></fa-icon>
-                        </a>
+<div class="p-0 container-fluid header"></div>
+<div class="container mt-5">
+    <div class="d-grid justify-content-md-center">
+        <div class="round profile-picture ms-4 bg-white shadow">
+            <img class="p-2 round profile-picture" src="assets/profilepic.jpg" alt="">
+        </div>
+        <div class="shadow rounded px-4 pt-5 pb-2 about">
+            <div class="row">
+                <div class="col-7 col-md-5">
+                    <h4 class="fw-bold m-2">Nagy Erzsébet</h4>
+                </div>
+                <div class="col-5 col-md-7">
+                    <div class="d-grid gap-1 d-flex justify-content-end mb-2">
+                        <div class="btn-group">
+                            <a href="#" class="btn btn-primary my-2 px-2">Követés</a>
+                            <a href="#" class="btn btn-secondary my-2 pe-3">
+                                <fa-icon [icon]="faEnvelope"></fa-icon>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-5">
-                <h6 class="m-2 mt-0 pt-0">
-                    <a href="" class="text-decoration-none">erzsiekszer.hu</a> 
-                </h6>
+            <div class="row justify-content-start">
+                <div class="m-2 mt-0 pt-0 col-auto">
+                    <fa-icon class="pe-2" [icon]="faLink"></fa-icon>
+                    <a href="" class="text-decoration-none">erzsiekszer.hu </a>
+                </div>
+                <div class="m-2 mt-0 pt-0 col-auto">
+                    <fa-icon class="pe-2" [icon]="faLocationArrow"></fa-icon>
+                    Nagybajcs
+                </div>
+                <div class="m-2 mt-0 pt-0 col-auto">
+                    <fa-icon class="pe-2" [icon]="faCalendar"></fa-icon>
+                    Csatlakozott: 2021 nov.
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-4 col-md-3 col-lg-2">
-                <h5 class="fw-bold m-2">54 <small class="fw-normal">követő</small></h5>
+            <div class="row">
+                <div class="col-5 col-md-3 col-lg-2">
+                    <h5 class="fw-bold m-2">54 <small class="fw-normal">követő</small></h5>
+                </div>
+                <div class="col-5 col-md-3 col-lg-2">
+                    <h5 class="fw-bold m-2">16 <small class="fw-normal">követ</small></h5>
+                </div>
             </div>
-            <div class="col-4 col-md-3 col-lg-2">
-                <h5 class="fw-bold m-2">16 <small class="fw-normal">követ</small></h5>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12 col-md-8">
+            <div class="row">
                 <p class="mt-3">
                     Sziasztok, Aranyoskák! Erzsi néni vagyok. Szabadidőmben szeretek ékszereket és egyéb
                     apróságokat készíteni. ✨💎
                 </p>
             </div>
-            <div class="col-12 col-md-4">
-                <p>Egyedi rendeléseket is vállal.</p>
-                <a href="#" class="btn btn-primary my-2 px-3">Rendelés</a>
+            <div class="row">
+                <hr>
+                <p>Egyedi rendeléseket is vállal.
+                    <a href="#" class="text-decoration-none">Tudj meg többet.</a>
+                </p>
             </div>
         </div>
     </div>
-    <h3 class="m-3 pt-2"></h3>
+    <h3 class="m-3 pt-2">Termékeim</h3>
+    <hr>
+    <div class="row d-flex justify-content-between">
+        <div class="col-12 col-md-4 mt-2">
+            <input class="form-control search" type="search" placeholder="Keresés" aria-label="Search">
+        </div>
+        <div class="col-12 col-md-4 mt-2">
+            <select class="form-select" aria-label="Default select example">
+                <option selected>Legújabb</option>
+                <option value="2">Legrégebbi</option>
+                <option value="3">Ár szerint csőkkenő</option>
+                <option value="4">Ár szerint növekvő</option>
+                <option value="5">Készleten</option>
+              </select>
+        </div>
+    </div>
     <app-product-list class="row" [products]="products"></app-product-list>
 </div>
+<page-footer></page-footer>

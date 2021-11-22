@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { products } from '../product-detail/test-data';
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faLink, faLocationArrow, faCalendarAlt} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-profile-page',
@@ -10,6 +10,10 @@ import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 export class ProfilePageComponent implements OnInit {
 
   faEnvelope = faEnvelope;
+  faLink = faLink;
+  faLocationArrow = faLocationArrow;
+  faCalendar = faCalendarAlt;
+
   products = products;
 
   constructor() { }
