@@ -1,0 +1,27 @@
+<account-form>
+    <h2 class="text-center mb-3">Regisztráció</h2>
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+            <label for="last-name" class="form-label mb-1">Vezetéknév </label>
+            <input id="last-name" type="text" formControlName="lastName" class="form-control short">
+        </div>
+        <div class="mb-3">
+            <label for="first-name" class="form-label mb-1">Keresztnév </label>
+            <input id="first-name" type="text" formControlName="firstName" class="form-control short">
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label mb-1">Email cím</label>
+            <input type="email" class="form-control short" formControlName="email" id="email" placeholder="name@example.com">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label mb-1">Jelszó</label>
+            <input type="password" class="form-control short" formControlName="password" id="password" placeholder="">
+        </div>
+        <div class="mb-3">
+            <button type="submit" [disabled]="!profileForm.valid" class="btn btn-primary w-100">Regisztráció</button>
+        </div>
+        <div class="text-center mb-0 pb-0">
+            <a class="btn small" href="/login">Már van fiókom</a>
+        </div>
+    </form>
+</account-form>

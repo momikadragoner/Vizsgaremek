@@ -1,0 +1,51 @@
+<account-form>
+    <h2 class="text-center mb-3">Regisztráció eladóknak</h2>
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+        <div class="rounded form-section p-2 my-3">
+            <h5 class="mb-0 pb-0">Saját adatok</h5>
+            <hr class="mt-1">
+            <div class="mb-3">
+                <label for="last-name" class="form-label mb-1">Vezetéknév </label>
+                <input id="last-name" type="text" formControlName="lastName" class="form-control short">
+            </div>
+            <div class="mb-3">
+                <label for="first-name" class="form-label mb-1">Keresztnév </label>
+                <input id="first-name" type="text" formControlName="firstName" class="form-control short">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label mb-1">Jelszó</label>
+                <input type="password" class="form-control short" formControlName="password" id="password" placeholder="">
+            </div>
+        </div>
+        <div class="rounded form-section p-2 my-3">
+            <h5 class="mb-0 pb-0">Publikus eladói információk</h5>
+            <hr class="mt-1">
+            <div class="mb-3">
+                <label for="company" class="form-label mb-1">Cég neve</label>
+                <input type="text" class="form-control short" formControlName="company" id="company" placeholder="">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label mb-1">Email cím</label>
+                <input type="email" class="form-control short" formControlName="email" id="email" placeholder="name@example.com">
+            </div>
+            <div class="mb-3">
+                <label for="phone" class="form-label mb-1">Telefonszám</label>
+                <input type="tel" class="form-control short" formControlName="phone" id="phone" placeholder="">
+            </div>
+            <div class="mb-3">
+                <label for="company" class="form-label mb-1">Hely <small>(város, település)</small> </label>
+                <input type="text" class="form-control short" formControlName="company" id="company" placeholder="">
+            </div>
+            <div class="mb-3">
+                <label for="company" class="form-label mb-1">Weboldal</label>
+                <input type="text" class="form-control short" formControlName="company" id="company" placeholder="">
+            </div>
+        </div>
+        <div class="mb-3">
+            <button type="submit" [disabled]="!profileForm.valid" class="btn btn-primary w-100">Regisztráció</button>
+        </div>
+        <div class="text-center mb-0 pb-0">
+            <a class="btn small" href="/login">Már van fiókom</a>
+        </div>
+    </form>
+</account-form>
