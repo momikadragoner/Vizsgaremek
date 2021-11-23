@@ -14,6 +14,8 @@ import { ModalComponent } from './modal/modal.component';
 import { ReviewComponent } from './product-detail/review/review.component';
 import { ProfilePageComponent } from './profile-page/profile-page.component';
 import { FooterComponent } from './nav/footer/footer.component';
+import { SignupComponent } from './signup/signup.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -26,13 +28,15 @@ import { FooterComponent } from './nav/footer/footer.component';
     ModalComponent,
     ReviewComponent,
     ProfilePageComponent,
-    FooterComponent
+    FooterComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule,
     FontAwesomeModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ReactiveFormsModule
   ],
   exports: [
     FontAwesomeModule

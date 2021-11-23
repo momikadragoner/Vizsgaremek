@@ -1,0 +1,17 @@
+<div class="container p-3">
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+            <label for="first-name" class="foem-label ms-2">Keresztnév </label>
+            <input id="first-name" type="text" formControlName="firstName" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="last-name" class="form-label">Vezetéknév </label>
+            <input id="last-name" type="text" formControlName="lastName" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email cím</label>
+            <input type="email" class="form-control" formControlName="email" id="email" placeholder="name@example.com">
+        </div>
+        <button type="submit" [disabled]="!profileForm.valid" class="btn btn-primary">Regisztráció</button>
+    </form>
+</div>
