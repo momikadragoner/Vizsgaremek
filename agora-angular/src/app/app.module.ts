@@ -18,6 +18,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AccountFormsComponent } from './account-forms/account-forms.component';
 import { SignupCustomerComponent } from './account-forms/signup-customer/signup-customer.component';
 import { SignupVendorComponent } from './account-forms/signup-vendor/signup-vendor.component';
+import { MessagesPageComponent } from './messages-page/messages-page.component';
+import { MessagesComponent } from './messages-page/messages/messages.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,9 @@ import { SignupVendorComponent } from './account-forms/signup-vendor/signup-vend
     FooterComponent,
     AccountFormsComponent,
     SignupCustomerComponent,
-    SignupVendorComponent
+    SignupVendorComponent,
+    MessagesPageComponent,
+    MessagesComponent
   ],
   imports: [
     BrowserModule,

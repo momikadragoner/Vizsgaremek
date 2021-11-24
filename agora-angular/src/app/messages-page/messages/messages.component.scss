@@ -1,0 +1,20 @@
+$primary: #859C62;
+$secondary: #c0c0c0;
+.message{
+    border-radius: 2rem;
+    font-size: 1rem;
+}
+.message-sent{
+    background-color: $secondary;
+}
+.message-recived{
+    background-color: $primary;
+}
+.bottom{
+    position: absolute;
+    bottom: 0;
+}
+.container-fluid{
+    overflow-x: hidden;
+    max-width: 100%;
+}
