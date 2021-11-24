@@ -1,17 +1,39 @@
-<div class="container-fluid m-0 px-4 shadow rounded">
-    <div class="frosted-glass border-bottom">
+<div class="shadow rounded messages-field">
+    <div class="frosted-glass border-bottom top w-100">
         <h5 class="text-center py-2 pt-3 fw-bold">Széles József</h5>
     </div>
-    <div class="row d-felx justify-content-start">
-        <p class="col-auto message message-recived p-2 my-4">Szia</p>
+    <div class="scroll m-3">
+        <div class="place-holder"></div>
+        <h1 class="display-1">Ez a beszélgetés kezdete</h1>
+        <div class="row d-felx justify-content-start m-2">
+            <p class="col-auto message message-recived p-2 my-4">Jónapot kívánok! A termékei iránt érdeklőnék.</p>
+        </div>
+        <div class="row d-felx justify-content-end m-2">
+            <p class="col-auto message message-sent p-2 my-4">Jónapot! Mi érdekelné pontoson?</p>
+        </div>
+        <div class="row d-felx justify-content-start m-2">
+            <p class="col-auto message message-recived p-2 my-4">Rendelésre készít még olyanokat mint múltkor?</p>
+        </div>
+        <div class="row d-felx justify-content-end m-2 mb-0">
+            <p class="col-auto message message-sent message-sent-burger-top p-2 my-4 mb-0">Neked bármikor <3 </p>
+        </div>
+        <div class="row d-felx justify-content-end me-2">
+            <p class="col-auto message message-sent message-sent-burger-bottom p-2 my-1">Pusz, pusz! </p>
+        </div>
+        <div class="row d-felx justify-content-start m-3">
+            <p class="col-auto message message-recived p-2 my-4">Szia</p>
+        </div>
+        <div class="row d-felx justify-content-end m-3">
+            <p class="col-auto message message-sent p-2 my-4">Szia</p>
+        </div>
+        <div class="place-holder"></div>
     </div>
-    <div class="row d-felx justify-content-end">
-        <p class="col-auto message message-sent p-2 my-4">Szia</p>
-    </div>
-    <div class="bottom">
-        <div class="input-group">
+    <div class="bottom frosted-glass border-top w-100">
+        <div class="input-group m-2 pe-3">
             <input type="text" name="message" id="message" class="form-control">
-            <button class="btn btn-secondary">Küldés</button>
+            <button class="btn btn-secondary">
+                <fa-icon [icon]="faPaperPlane" class="me-1"></fa-icon>
+            </button>
         </div>
     </div>
 </div>

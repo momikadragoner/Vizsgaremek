@@ -1,7 +1,15 @@
 $primary: #859C62;
 $secondary: #c0c0c0;
+.top{
+    position: absolute;
+    top: 0;
+}
+.bottom{
+    position: absolute;
+    bottom: 0;
+}
 .message{
-    border-radius: 2rem;
+    border-radius: 1.2rem;
     font-size: 1rem;
 }
 .message-sent{
@@ -10,11 +18,35 @@ $secondary: #c0c0c0;
 .message-recived{
     background-color: $primary;
 }
-.bottom{
-    position: absolute;
-    bottom: 0;
+.message-sent-burger-bottom{
+    border-top-right-radius: 0;
 }
-.container-fluid{
+.message-sent-burger-top{
+    border-bottom-right-radius: 0;
+}
+.message-sent-burger-middle{
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.message-recived-burger-bottom{
+    border-top-left-radius: 0;
+}
+.message-recived-burger-top{
+    border-bottom-left-radius: 0;
+}
+.message-recived-burger-middle{
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.messages-field{
+    width: inherit;
+    position: relative;
+}
+.scroll{
+    overflow-y: scroll;
     overflow-x: hidden;
-    max-width: 100%;
+    max-height: 82vh;
+}
+.place-holder{
+    height: 3rem;
 }

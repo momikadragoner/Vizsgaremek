@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-messages',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./messages.component.scss']
 })
 export class MessagesComponent implements OnInit {
+
+  faPaperPlane = faPaperPlane;
 
   constructor() { }
 
