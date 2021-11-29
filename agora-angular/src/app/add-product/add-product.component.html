@@ -1,0 +1,58 @@
+<div class="container shadow rounded p-3">
+    <h3>Új termék felvétele</h3>
+    <form>
+        <div class="mb-3">
+            <label for="name" class="form-label mb-1">Termék megnevezése</label>
+            <input type="text" class="form-control" formControlName="name" id="name">
+        </div>
+        <div class="mb-3">
+            <label for="price" class="form-label mb-1">Ár <small>(HUF)</small></label>
+            <input type="number" class="form-control" formControlName="price" id="price">
+        </div>
+        <div class="mb-3">
+            <label for="discount" class="form-label mb-1">Kedvezmény</label>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                  Kedvezmény elérhető
+                </label>
+              </div>
+            <input type="number" class="form-control" formControlName="discount" id="discount">
+        </div>
+        <div class="mb-3">
+            <label for="inventory" class="form-label mb-1">Raktáron <small>(db)</small></label>
+            <input type="number" class="form-control" formControlName="inventory" id="inventory">
+        </div>
+        <div class="mb-3">
+            <label for="delivery" class="form-label mb-1">Kiszállítás</label>
+            <div class="form-check">
+                <input type="radio" class="form-check-input" name="delivery" id="available" value="avilable">
+                <label class="form-check-label" for="available">Azonnal szállítható</label>
+              </div>
+              <div class="form-check">
+                <input type="radio" class="form-check-input" name="delivery" id="order" value="made-on-demand">
+                <label class="form-check-label" for="order">Megrendelésre készül</label>
+              </div>
+        </div>
+        <div class="mb-3">
+            <label for="category" class="form-label mb-1">Kategória</label>
+            <input type="text" class="form-control" formControlName="category" id="category">
+        </div>
+        <div class="mb-3">
+            <label for="tag" class="form-label mb-1">Cimkék</label>
+            <input type="text" class="form-control" formControlName="tag" id="tag">
+        </div>
+        <div class="mb-3">
+            <label for="materials" class="form-label mb-1">Alapanyagok</label>
+            <input type="text" class="form-control" formControlName="materials" id="materials">
+        </div>
+        <div class="mb-3">
+            <label for="picture" class="form-label mb-1">Kép</label>
+            <input type="file" class="form-control" id="picture">
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-secondary">Mentés</button>
+            <button type="submit" class="btn btn-primary">Közzététel</button>
+        </div>
+    </form>
+</div>
