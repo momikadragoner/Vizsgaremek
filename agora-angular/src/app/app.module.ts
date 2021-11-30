@@ -20,7 +20,8 @@ import { SignupCustomerComponent } from './account-forms/signup-customer/signup-
 import { SignupVendorComponent } from './account-forms/signup-vendor/signup-vendor.component';
 import { MessagesPageComponent } from './messages-page/messages-page.component';
 import { MessagesComponent } from './messages-page/messages/messages.component';
-import { AddProductComponent } from './add-product/add-product.component';
+import { MyProfileComponent } from './my-profile/my-profile.component';
+import { ProductFormComponent } from './my-profile/product-form/product-form.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { AddProductComponent } from './add-product/add-product.component';
     SignupVendorComponent,
     MessagesPageComponent,
     MessagesComponent,
-    AddProductComponent
+    MyProfileComponent,
+    ProductFormComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,6 @@
 <div class="container shadow rounded p-3">
     <h3>Új termék felvétele</h3>
-    <form>
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
         <div class="mb-3">
             <label for="name" class="form-label mb-1">Termék megnevezése</label>
             <input type="text" class="form-control" formControlName="name" id="name">
@@ -26,7 +26,7 @@
         <div class="mb-3">
             <label for="delivery" class="form-label mb-1">Kiszállítás</label>
             <div class="form-check">
-                <input type="radio" class="form-check-input" name="delivery" id="available" value="avilable">
+                <input type="radio" class="form-check-input" name="delivery" id="available" value="available">
                 <label class="form-check-label" for="available">Azonnal szállítható</label>
               </div>
               <div class="form-check">
@@ -52,7 +52,7 @@
         </div>
         <div class="mb-3">
             <button type="submit" class="btn btn-secondary">Mentés</button>
-            <button type="submit" class="btn btn-primary">Közzététel</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!productForm.valid">Közzététel</button>
         </div>
     </form>
 </div>
