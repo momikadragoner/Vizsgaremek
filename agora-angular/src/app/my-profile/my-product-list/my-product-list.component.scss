@@ -1,0 +1,25 @@
+$card-product-width: 16rem;
+$card-product-height: 28rem;
+
+.card-product{
+    width: $card-product-width;
+    height: $card-product-height;
+}
+.img-placeholder{
+    height: $card-product-width;
+}
+.img-product{
+    max-height: $card-product-width;
+}
+.fit-text{
+    font-size: 1rem;
+}
+.warning{
+    position: absolute;
+    padding: 1rem;
+    background-color: rgba(255, 255, 0, 0.514);
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    width: 100%;
+    color: black;
+}

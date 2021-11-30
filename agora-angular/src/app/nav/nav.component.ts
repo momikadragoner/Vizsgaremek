@@ -7,7 +7,7 @@ import { faCheese } from '@fortawesome/free-solid-svg-icons';
 import { faPalette } from '@fortawesome/free-solid-svg-icons';
 import { faGem } from '@fortawesome/free-solid-svg-icons';
 import { faTshirt } from '@fortawesome/free-solid-svg-icons';
-import { faGlassMartiniAlt } from '@fortawesome/free-solid-svg-icons';
+import { faGlassMartiniAlt, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-nav',
@@ -41,6 +41,7 @@ export class NavComponent implements OnInit {
   faGem = faGem;
   faTshirt = faTshirt;
   faGlassMartiniAlt = faGlassMartiniAlt;
+  faShoppingCart = faShoppingCart;
 
   public openView = ""; 
 
@@ -70,6 +71,8 @@ export class NavComponent implements OnInit {
       this.openView = "";
     }
   }
+
+  public loggedIn = false;
 
   constructor() { }
 

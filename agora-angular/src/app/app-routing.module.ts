@@ -8,6 +8,7 @@ import { SignupCustomerComponent } from './account-forms/signup-customer/signup-
 import { SignupVendorComponent } from './account-forms/signup-vendor/signup-vendor.component';
 import { MessagesPageComponent } from './messages-page/messages-page.component';
 import { ProductFormComponent } from './my-profile/product-form/product-form.component';
+import { MyProfileComponent } from './my-profile/my-profile.component';
 
 const routes: Routes = [
   {path: '', component: FrontPageComponent},
@@ -18,6 +19,7 @@ const routes: Routes = [
   {path: 'signup-vendor', component: SignupVendorComponent},
   {path: 'messages', component: MessagesPageComponent},
   {path: 'add-product', component: ProductFormComponent},
+  {path: 'my-profile', component: MyProfileComponent},
   {path: '**', component: FrontPageComponent}
 ];
 

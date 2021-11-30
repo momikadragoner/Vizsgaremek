@@ -11,7 +11,13 @@
             <li><a (click)="toggleNowView()" [class.selected]="openView == 'now' "href="#" class="nav-link-selectable nav-link px-2 link-dark">Most</a></li>
         </ul>
 
-        <div class="col-md-3 text-end">
+        <div *ngIf="loggedIn" class="col-md-3 text-end">
+            <a href="/" class="btn p-1 m-1">
+                <fa-icon [icon]="faShoppingCart"></fa-icon>
+            </a>
+            <a href="/my-profile" class="btn p-1 m-1"><img class="profile-nav" src="assets/profilepic.jpg" alt=""></a>
+        </div>
+        <div *ngIf="loggedIn == false" class="col-md-3 text-end">
             <a href="/signup-vendor" class="btn p-1 m-1 btn-sell">Eladok</a>
             <a href="/login" class="btn p-1 m-1 btn-login">Belépés</a>
         </div>

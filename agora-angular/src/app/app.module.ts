@@ -22,6 +22,7 @@ import { MessagesPageComponent } from './messages-page/messages-page.component';
 import { MessagesComponent } from './messages-page/messages/messages.component';
 import { MyProfileComponent } from './my-profile/my-profile.component';
 import { ProductFormComponent } from './my-profile/product-form/product-form.component';
+import { MyProductListComponent } from './my-profile/my-product-list/my-product-list.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { ProductFormComponent } from './my-profile/product-form/product-form.com
     MessagesPageComponent,
     MessagesComponent,
     MyProfileComponent,
-    ProductFormComponent
+    ProductFormComponent,
+    MyProductListComponent
   ],
   imports: [
     BrowserModule,

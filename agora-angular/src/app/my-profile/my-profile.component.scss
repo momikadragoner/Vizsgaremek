@@ -1,0 +1,24 @@
+.round{
+    border-radius: 50%;
+}
+.about{
+    margin-top: -3rem;
+    max-width: 50rem;
+}
+.profile-picture{
+    width: 10rem;
+    z-index: 3;
+}
+.header{
+    background-image: url('../../assets/salad.jpg');
+    height: 20rem;
+    position: absolute;
+    background-position: center;
+    z-index: -2;
+}
+.bg-white{
+    background-color: #fbf7f5;
+}
+.no-wrap{
+    white-space: nowrap;
+}
