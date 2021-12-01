@@ -7,12 +7,12 @@
         <div class="shadow rounded px-4 pt-5 pb-2 about">
             <div class="row">
                 <div class="col-7 col-md-5">
-                    <h4 class="fw-bold m-2">Nagy Erzsébet</h4>
+                    <h4 class="fw-bold m-2">{{profileDetail.name}}</h4>
                 </div>
                 <div class="col-5 col-md-7">
                     <div class="d-grid gap-1 d-flex justify-content-end mb-2">
                         <div class="btn-group">
-                            <a href="#" class="btn btn-primary my-2 px-2">Szerkesztés</a>
+                            <a href="/edit-profile" class="btn btn-primary my-2 px-2">Szerkesztés</a>
                         </div>
                     </div>
                 </div>
@@ -20,11 +20,11 @@
             <div class="row justify-content-start">
                 <div class="m-2 mt-0 pt-0 col-auto">
                     <fa-icon class="pe-2" [icon]="faLink"></fa-icon>
-                    <a href="" class="text-decoration-none">erzsiekszer.hu </a>
+                    {{profileDetail.email}} 
                 </div>
                 <div class="m-2 mt-0 pt-0 col-auto">
                     <fa-icon class="pe-2" [icon]="faLocationArrow"></fa-icon>
-                    Nagybajcs
+                    {{profileDetail.location}}
                 </div>
                 <div class="m-2 mt-0 pt-0 col-auto">
                     <fa-icon class="pe-2" [icon]="faCalendar"></fa-icon>
@@ -41,8 +41,7 @@
             </div>
             <div class="row">
                 <p class="mt-3">
-                    Sziasztok, Aranyoskák! Erzsi néni vagyok. Szabadidőmben szeretek ékszereket és egyéb
-                    apróságokat készíteni. ✨💎
+                   {{profileDetail.description}}
                 </p>
             </div>
             <div class="row">

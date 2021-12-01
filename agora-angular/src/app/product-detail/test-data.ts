@@ -36,6 +36,10 @@ export const myProducts = [
     { productName: "Arany és kristály nyaklánc", sellerName: "Közepes Borbála", price: "19 599", imgUrl: "assets/item4.jpg", public: true }
 ];
 
+export const profileDetail=
+    {name: "Nagy Erzsébet", email:"erzsiekszer.hu", location:"Nagybajcs", description: "Sziasztok, Aranyoskák! Erzsi néni vagyok. Szabadidőmben szeretek ékszereket és egyéb apróságokat készíteni. ✨💎", profileUrl:"assets/profilepic.jpg"}
+;
+
 class User {
     name: string;
     follows?: Number;

@@ -23,6 +23,7 @@ import { MessagesComponent } from './messages-page/messages/messages.component';
 import { MyProfileComponent } from './my-profile/my-profile.component';
 import { ProductFormComponent } from './my-profile/product-form/product-form.component';
 import { MyProductListComponent } from './my-profile/my-product-list/my-product-list.component';
+import { EditProfileComponent } from './my-profile/edit-profile/edit-profile.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { MyProductListComponent } from './my-profile/my-product-list/my-product-
     MessagesComponent,
     MyProfileComponent,
     ProductFormComponent,
-    MyProductListComponent
+    MyProductListComponent,
+    EditProfileComponent
   ],
   imports: [
     BrowserModule,

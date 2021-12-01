@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { myProducts } from '../product-detail/test-data';
-import { faEnvelope, faLink, faLocationArrow, faCalendarAlt} from '@fortawesome/free-solid-svg-icons';
+import { myProducts, profileDetail } from '../product-detail/test-data';
+import { faEnvelope, faLink,  faLocationArrow, faCalendarAlt} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-my-profile',
@@ -15,6 +15,7 @@ export class MyProfileComponent implements OnInit {
   faCalendar = faCalendarAlt;
 
   products = myProducts;
+  profileDetail=profileDetail;
 
   constructor() { }
 
