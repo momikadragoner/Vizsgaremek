@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { faHandPaper, faBalanceScale, faTree, faEnvelope, faShoppingCart, faHeart, faTruck, faGem, faBoxes, faStar} from '@fortawesome/free-solid-svg-icons';
 import { Form } from '@angular/forms';
-import { productDetail, products } from "./test-data";
+import { productDetail, products, Product } from "./test-data";
 
 @Component({
   selector: 'app-product-detail',
@@ -21,7 +21,7 @@ export class ProductDetailComponent implements OnInit {
   faBoxes = faBoxes;
   faStar = faStar;
 
-  public products = products;
+  public products:Product[] = [];
   public productDetail = productDetail;
 
   public modalVisible = false;

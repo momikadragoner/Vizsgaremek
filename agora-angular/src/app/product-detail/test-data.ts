@@ -46,3 +46,35 @@ class User {
         this.followers = undefined;
     }
 }
+
+export class Product{
+    /**
+     *
+     */
+    constructor(
+        public id: number,
+        public name: string,
+        public seller: string,
+        public price: number,
+        public discountAvailable: boolean,
+        public inventory: number,
+        public delivery: string,
+        public category: string,
+        public tags: string[],
+        public materilas: string[],
+        public picrureUrl: string,
+        public isPublic =  false,
+        public discount?: number,
+        ) 
+    {
+    }
+   
+}
+
+export const productsClass = [
+    new Product( name = )
+    { productName: "Gyöngy nyakék", sellerName: "Kiss Márta", price: "12 599", imgUrl: "assets/item2.jpg" },
+    { productName: "Arany lánc", sellerName: "Nagy Erzsébet", price: "18 999", imgUrl: "assets/item1.jpg" },
+    { productName: "Ásvány medál ékszer", sellerName: "Széles Lajos", price: "11 999", imgUrl: "assets/item3.jfif" },
+    { productName: "Arany és kristály nyaklánc", sellerName: "Közepes Borbála", price: "19 599", imgUrl: "assets/item4.jpg" }
+];
