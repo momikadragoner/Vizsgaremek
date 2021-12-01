@@ -1,0 +1,63 @@
+<div class="p-0 container-fluid header"></div>
+<div class="container mt-5">
+    <div class="d-grid justify-content-md-center">
+        <div class="round profile-picture ms-4 bg-white shadow">
+            
+            <img class="p-2 round profile-picture" src="{{profileDetail.profileUrl}}" alt="">
+            <a href="" class="btn bg-white my-2 profile-btn">
+                <fa-icon [icon]="faCamera"></fa-icon>
+            </a>
+        </div>
+        
+        <div class="shadow rounded px-4 pt-5 pb-2 about">
+            
+            <div class="row">
+                <div class="col-7 col-md-5">
+                    <label for="name">Név: </label>
+                    <input type="text" value="{{profileDetail.name}}" class="m-2 form-control" id="name" name="name">
+                </div>
+                <div class="col-5 col-md-7">
+                    <div class="d-grid gap-1 d-flex justify-content-end mb-2">
+                       <form action="" method="get">
+                        <div class="btn-group">
+                            <a href="/profile" class="btn btn-primary my-2 px-2">Mentés</a>
+                            
+                        </div>
+                       </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-start">
+                <div class="m-2 mt-0 pt-0 col-auto">
+                    
+                    <label for="email">Email cím: </label>
+                    <fa-icon class="pe-2" [icon]="faLink"></fa-icon>
+                    <input type="email" value="{{profileDetail.email}}" class="text-decoration-none form-control" id="email" name="email">
+                </div>
+                <div class="m-2 mt-0 pt-0 col-auto">
+                    
+                    <label for="location">Lakhely: </label>
+                    <fa-icon class="pe-2" [icon]="faLocationArrow"></fa-icon>
+                    <input type="text" value="{{profileDetail.location}}" class="form-control" id="location" name="location">
+                </div>
+                
+            </div>
+            
+            <div class="row">
+                <label for="description">Megjegyzés: </label>
+                <textarea type="text" class="mt-3 form-control m-1" id="description" name="description">{{profileDetail.description}}</textarea>
+                <hr>
+               
+            </div>
+            <div>
+                
+                <input type="checkbox" id="order" name="order" checked>
+                <label for="order" class="m-1">Egyedi rendeléseket is vállal.</label>
+                   
+                
+            </div>
+        </div>
+    </div>
+    
+</div>
+<page-footer></page-footer>
