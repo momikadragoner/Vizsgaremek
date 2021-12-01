@@ -1,0 +1,16 @@
+<div class="card card-product m-3 shadow">
+    <div class="img-placeholder ">
+        <img src="{{imgUrl}}" class="card-img-top img-product" alt="...">
+    </div>
+    <div class="card-body card-body-product text-center">
+        <h5 class="card-title fw-bold" [class.fit-text]="name.length> 20">{{name}}</h5>
+        <p class="card-text text-primary m-1">{{seller}}</p>
+        <h4 class="m-0 fw-bold">{{price}} Ft</h4>
+    </div>
+    <div class="btn-group mx-2 mb-3">
+        <a href="/product-details" class="btn btn-primary w-75">Részletek</a>
+        <a href="#" class="btn btn-secondary w-25">
+            <fa-icon [icon]="faShoppingCart"></fa-icon>
+        </a>
+    </div>
+</div>

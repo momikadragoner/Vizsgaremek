@@ -1,5 +1,5 @@
 <div *ngFor="let product of products" class="col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3">
-    <div class="card card-product m-3 shadow">
+    <!-- <div class="card card-product m-3 shadow">
         <div class="img-placeholder ">
             <img src="{{product.imgUrl}}" class="card-img-top img-product" alt="...">
         </div>
@@ -14,5 +14,6 @@
                 <fa-icon [icon]="faShoppingCart"></fa-icon>
             </a>
         </div>
-    </div>
+    </div> -->
+    <product-card [name]=product.name [sller]=product.seller [imgUrl]="" [price]=product.price></product-card>
 </div>

@@ -1,0 +1,19 @@
+$card-product-width: 16rem;
+$card-product-height: 28rem;
+
+.card-product{
+    width: $card-product-width;
+    height: $card-product-height;
+}
+.img-placeholder{
+    height: $card-product-width;
+}
+.card-body-product{
+    height: $card-product-height / 3;
+}
+.img-product{
+    max-height: $card-product-width;
+}
+.fit-text{
+    font-size: 1rem;
+}
