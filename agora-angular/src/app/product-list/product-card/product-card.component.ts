@@ -10,7 +10,7 @@ export class ProductCardComponent implements OnInit {
 
   @Input() public name: string = "";
   @Input() public seller: string =  "";
-  @Input() public price: string = "";
+  @Input() public price: number = 0;
   @Input() public imgUrl: string =  "";
 
   faShoppingCart = faShoppingCart;

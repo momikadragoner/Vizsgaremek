@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
-import {Product} from '../my-profile/product-form/product';
+import { Product } from '../product-detail/test-data';
+
 
 @Component({
   selector: 'app-product-list',

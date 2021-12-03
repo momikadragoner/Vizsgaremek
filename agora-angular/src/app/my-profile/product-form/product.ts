@@ -13,7 +13,7 @@ export class Product{
         public category: string,
         public tags: string[],
         public materilas: string[],
-        public picrureUrl: string,
+        public imgUrl: string,
         public isPublic =  false,
         public discount?: number,
         ) 

@@ -62,8 +62,8 @@ export class Product{
         public category: string,
         public tags: string[],
         public materilas: string[],
-        public picrureUrl: string,
-        public isPublic =  false,
+        public imgUrl: string,
+        public isPublic: boolean,
         public discount?: number,
         ) 
     {
@@ -72,9 +72,8 @@ export class Product{
 }
 
 export const productsClass = [
-    new Product( name = )
-    { productName: "Gyöngy nyakék", sellerName: "Kiss Márta", price: "12 599", imgUrl: "assets/item2.jpg" },
-    { productName: "Arany lánc", sellerName: "Nagy Erzsébet", price: "18 999", imgUrl: "assets/item1.jpg" },
-    { productName: "Ásvány medál ékszer", sellerName: "Széles Lajos", price: "11 999", imgUrl: "assets/item3.jfif" },
-    { productName: "Arany és kristály nyaklánc", sellerName: "Közepes Borbála", price: "19 599", imgUrl: "assets/item4.jpg" }
+    new Product( 1, "Gyöngy nyakék", "Kiss Márta", 12599, false, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], "assets/item2.jpg", true),
+    new Product( 2, "Arany lánc", "Nagy Erzsébet", 18599, false, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], "assets/item1.jpg", true),
+    new Product( 3, "Ásvány medál ékszer", "Széles Lajos", 11999, false, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], "assets/item3.jfif", true),
+    new Product( 4, "Arany és kristály nyaklánc", "Közepes Borbála", 19599, false, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], "assets/item4.jpg", true)
 ];
