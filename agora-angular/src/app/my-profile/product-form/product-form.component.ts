@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../../product-detail/test-data';
+import { Product, tags } from '../../model/product';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
+import { faTruck, faBoxes} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-product-form',
@@ -9,26 +10,54 @@ import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 })
 export class ProductFormComponent implements OnInit {
 
-  public model = new Product(1,"Nyaklánc", "Marika" ,1500,false,10,'Azonnal szállítható','Ékszerek',['környezetbarát'],['arany'],'item1.png',true);
+  public newProduct = new Product(1,"", "" ,0,false,0,'Azonnal szállítható','',[''],[''],'',false);
+  tagsList = tags;
+
+  faTruck = faTruck;
+  faBoxes = faBoxes;
 
   submitted = false;
 
   productForm = this.fb.group({
-    name: [this.model.name, Validators.required],
-    price: [this.model.price],
-    id: [this.model.price],
-    discountAvailable: [this.model.discountAvailable],
-    inventory: [this.model.inventory],
-    delivery: [this.model.delivery],
-    category: [this.model.category],
-    picrureUrl: [this.model.imgUrl],
+    name: [this.newProduct.name, Validators.required],
+    price: [this.newProduct.price],
+    id: [this.newProduct.price],
+    discountAvailable: [this.newProduct.discountAvailable],
+    inventory: [this.newProduct.inventory],
+    delivery: [this.newProduct.delivery],
+    category: [this.newProduct.category],
+    picrureUrl: [this.newProduct.imgUrl],
     tags: this.fb.array([
-      this.fb.control('')
     ]),
-    materilas: this.fb.array([
-      this.fb.control('')
+    materials: this.fb.array([
     ])
   });
+
+  get tags() {
+    return this.productForm.get('tags') as FormArray;
+  }
+
+  addTag() {
+    this.tags.push(this.fb.control(''));
+  }
+
+  get materials() {
+    return this.productForm.get('materials') as FormArray;
+  }
+
+  
+  getMaterials(){
+    let materialLabel:string = "";
+    this.materials.value.forEach((material: string) => {
+      materialLabel += material;
+      materialLabel += ", ";
+    });
+    return materialLabel;
+  }
+
+  addMaterial() {
+    this.materials.push(this.fb.control(''));
+  }
 
   onSubmit() {
     this.submitted = true;

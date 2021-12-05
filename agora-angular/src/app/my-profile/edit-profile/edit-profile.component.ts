@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {profileDetail} from '../../product-detail/test-data';
 import { faEnvelope, faLink, faLocationArrow, faCalendarAlt, faCamera} from '@fortawesome/free-solid-svg-icons';
+import { User, seller } from "../../model/user";
 
 @Component({
   selector: 'app-edit-profile',
@@ -15,7 +16,7 @@ export class EditProfileComponent implements OnInit {
   faCalendar = faCalendarAlt;
   faCamera=faCamera;
 
-  profileDetail=profileDetail;
+  profileDetail=seller;
 
   constructor() { }
 
