@@ -24,6 +24,7 @@ import { MyProfileComponent } from './my-profile/my-profile.component';
 import { ProductFormComponent } from './my-profile/product-form/product-form.component';
 import { MyProductListComponent } from './my-profile/my-product-list/my-product-list.component';
 import { EditProfileComponent } from './my-profile/edit-profile/edit-profile.component';
+import { ProductCardComponent } from './product-list/product-card/product-card.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { EditProfileComponent } from './my-profile/edit-profile/edit-profile.com
     MyProfileComponent,
     ProductFormComponent,
     MyProductListComponent,
-    EditProfileComponent
+    EditProfileComponent,
+    ProductCardComponent
   ],
   imports: [
     BrowserModule,

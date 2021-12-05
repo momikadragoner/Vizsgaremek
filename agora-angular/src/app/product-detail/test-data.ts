@@ -50,3 +50,34 @@ class User {
         this.followers = undefined;
     }
 }
+
+export class Product{
+    /**
+     *
+     */
+    constructor(
+        public id: number,
+        public name: string,
+        public seller: string,
+        public price: number,
+        public discountAvailable: boolean,
+        public inventory: number,
+        public delivery: string,
+        public category: string,
+        public tags: string[],
+        public materilas: string[],
+        public imgUrl: string,
+        public isPublic: boolean,
+        public discount?: number,
+        ) 
+    {
+    }
+   
+}
+
+export const productsClass = [
+    new Product( 1, "Gyöngy nyakék", "Kiss Márta", 12599, false, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], "assets/item2.jpg", true),
+    new Product( 2, "Arany lánc", "Nagy Erzsébet", 18599, false, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], "assets/item1.jpg", true),
+    new Product( 3, "Ásvány medál ékszer", "Széles Lajos", 11999, false, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], "assets/item3.jfif", true),
+    new Product( 4, "Arany és kristály nyaklánc", "Közepes Borbála", 19599, false, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], "assets/item4.jpg", true)
+];

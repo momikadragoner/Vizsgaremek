@@ -5,6 +5,7 @@ export class Product{
     constructor(
         public id: number,
         public name: string,
+        public seller: string,
         public price: number,
         public discountAvailable: boolean,
         public inventory: number,
@@ -12,11 +13,11 @@ export class Product{
         public category: string,
         public tags: string[],
         public materilas: string[],
-        public picrureUrl: string,
+        public imgUrl: string,
+        public isPublic =  false,
         public discount?: number,
         ) 
     {
-
     }
    
 }

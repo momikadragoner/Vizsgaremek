@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { faChevronUp, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { Product } from '../product-detail/test-data';
+
 
 @Component({
   selector: 'app-product-list',
@@ -8,7 +10,7 @@ import { faChevronUp, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 })
 export class ProductListComponent implements OnInit {
 
-  @Input() public products = [{productName: "", sellerName: "", price: "", imgUrl: ""}];
+  @Input() public products: Product[] = [];
 
   faShoppingCart = faShoppingCart;
 

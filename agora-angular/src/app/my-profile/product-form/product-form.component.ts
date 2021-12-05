@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Product} from './product';
+import { Product } from '../../product-detail/test-data';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
@@ -9,7 +9,7 @@ import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 })
 export class ProductFormComponent implements OnInit {
 
-  model = new Product(1,"Nyaklánc",1500,false,10,'Azonnal szállítható','Ékszerek',['környezetbarát'],['arany'],'item1.png');
+  public model = new Product(1,"Nyaklánc", "Marika" ,1500,false,10,'Azonnal szállítható','Ékszerek',['környezetbarát'],['arany'],'item1.png',true);
 
   submitted = false;
 
@@ -21,7 +21,7 @@ export class ProductFormComponent implements OnInit {
     inventory: [this.model.inventory],
     delivery: [this.model.delivery],
     category: [this.model.category],
-    picrureUrl: [this.model.picrureUrl],
+    picrureUrl: [this.model.imgUrl],
     tags: this.fb.array([
       this.fb.control('')
     ]),
