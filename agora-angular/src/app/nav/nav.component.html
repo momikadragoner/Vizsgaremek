@@ -6,9 +6,9 @@
         </a>
 
         <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-            <li><a (click)="toggleCategory()" [class.selected]="openView == 'category'" href="#" class="nav-link-selectable nav-link px-2 link-dark">Kategóriák</a></li>
-            <li><a (click)="toggleBestView()" [class.selected]="openView == 'best' "href="#" class="nav-link-selectable nav-link px-2 link-dark">A szezon legjobbjai</a></li>
-            <li><a (click)="toggleNowView()" [class.selected]="openView == 'now' "href="#" class="nav-link-selectable nav-link px-2 link-dark">Most</a></li>
+            <li><a (click)="toggleCategory()" [class.selected]="openView == 'category'" class="nav-link-selectable nav-link px-2 link-dark">Kategóriák</a></li>
+            <li><a (click)="toggleBestView()" [class.selected]="openView == 'best'" class="nav-link-selectable nav-link px-2 link-dark">A szezon legjobbjai</a></li>
+            <li><a (click)="toggleNowView()" [class.selected]="openView == 'now'" class="nav-link-selectable nav-link px-2 link-dark">Most</a></li>
         </ul>
 
         <div *ngIf="loggedIn" class="col-md-3 text-end">
@@ -90,6 +90,16 @@
                             <p class="card-text m-0">Divat</p>
                         </div>
                     </div>
+                </div>
+                <div class="col-6 col-md-3 col-lg-2 mb-3">
+                    <a href="/search" class="text-decoration-none text-dark">
+                        <div class="card card-category-product">
+                            <div class="hstack gap-2 card-body mx-auto">
+                                <fa-icon [icon]="faBoxes"></fa-icon>
+                                <p class="card-text m-0">Összes</p>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>

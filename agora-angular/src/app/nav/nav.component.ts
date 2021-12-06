@@ -1,13 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, animate, transition, query, stagger } from '@angular/animations';
-import { faCarrot } from '@fortawesome/free-solid-svg-icons';
-import { faAppleAlt } from '@fortawesome/free-solid-svg-icons';
-import { faBreadSlice } from '@fortawesome/free-solid-svg-icons';
-import { faCheese } from '@fortawesome/free-solid-svg-icons';
-import { faPalette } from '@fortawesome/free-solid-svg-icons';
-import { faGem } from '@fortawesome/free-solid-svg-icons';
-import { faTshirt } from '@fortawesome/free-solid-svg-icons';
-import { faGlassMartiniAlt, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { faCarrot, faAppleAlt, faBreadSlice, faCheese } from '@fortawesome/free-solid-svg-icons';
+import { faPalette, faGem, faTshirt, faGlassMartiniAlt, faShoppingCart, faBoxes } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-nav',
@@ -42,6 +36,7 @@ export class NavComponent implements OnInit {
   faTshirt = faTshirt;
   faGlassMartiniAlt = faGlassMartiniAlt;
   faShoppingCart = faShoppingCart;
+  faBoxes = faBoxes;
 
   public openView = ""; 
 

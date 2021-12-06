@@ -26,6 +26,8 @@ import { MyProductListComponent } from './my-profile/my-product-list/my-product-
 import { EditProfileComponent } from './my-profile/edit-profile/edit-profile.component';
 import { ProductCardComponent } from './product-list/product-card/product-card.component';
 import { PricePipe } from './price.pipe';
+import { SearchComponent } from './search/search.component';
+import { CategoriesComponent } from './search/categories/categories.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,9 @@ import { PricePipe } from './price.pipe';
     MyProductListComponent,
     EditProfileComponent,
     ProductCardComponent,
-    PricePipe
+    PricePipe,
+    SearchComponent,
+    CategoriesComponent
   ],
   imports: [
     BrowserModule,
