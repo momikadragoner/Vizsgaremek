@@ -25,11 +25,11 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 col-lg-8">
-                <h1 class="my-3">Csodálatos arany nyaklánc medál</h1>
+                <h1 class="my-3">{{productDetail.name}}</h1>
                 <div class="row">
                     <div class="col-12 col-lg-6 m-2">
-                        <h1 class="fw-bold">6 499 Ft</h1>
-                        <p class="m-2">Elérhető: 4db</p>
+                        <h1 class="fw-bold">{{productDetail.price|currency:"HUF ":"symbol"}}</h1>
+                        <p class="m-2">Elérhető: {{productDetail.inventory}}db</p>
                     </div>
                     <div class="col-12 col-lg-6 my-2">
                         <a href="#" class="btn btn-primary m-2 py-3 w-50">
@@ -70,12 +70,7 @@
                             <hr>
                             <h3 class="mt-3">Leírás</h3>
                             <p class="">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore, quo voluptates nemo
-                                dolores at
-                                modi ipsam fuga odio architecto beatae aliquid molestiae enim qui obcaecati doloribus.
-                                Ex
-                                saepe
-                                voluptatem magnam!
+                                {{productDetail.description}}
                             </p>
                         </div>
                     </div>
@@ -119,10 +114,10 @@
                             </div>
                             <div class="row">
                                 <p class="mt-3">
-                                    {{productDetail.sellerDescription}}
+                                    {{seller.about}}
                                 </p>
                             </div>
-                            <div class="row">
+                            <div *ngIf="seller.takesCustomOrders" class="row">
                                 <hr>
                                 <p>Egyedi rendeléseket is vállal.</p>
                                 <a href="#" class="btn btn-primary my-2 px-3">Rendelés</a>

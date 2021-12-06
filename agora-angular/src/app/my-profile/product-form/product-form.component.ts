@@ -10,7 +10,7 @@ import { faTruck, faBoxes} from '@fortawesome/free-solid-svg-icons';
 })
 export class ProductFormComponent implements OnInit {
 
-  public newProduct = new Product(1,"", "" ,0,false,0,'Azonnal szállítható','',[''],[''],'',false);
+  public newProduct = new Product(1,"", "" ,0,false,0,'Azonnal szállítható','',[''],[''],'',"",false);
   tagsList = tags;
 
   faTruck = faTruck;

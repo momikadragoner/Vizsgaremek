@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { faHandPaper, faBalanceScale, faTree, faEnvelope, faShoppingCart, faHeart, faTruck, faGem, faBoxes, faStar} from '@fortawesome/free-solid-svg-icons';
 import { Form } from '@angular/forms';
-import { productDetail, productsClass, Product } from "./test-data";
+import { productDetailed, productListShort, Product } from "../model/product";
+import { User, seller } from "../model/user";
+import { Review, reviews } from "../model/review";
 
 @Component({
   selector: 'app-product-detail',
@@ -21,15 +23,16 @@ export class ProductDetailComponent implements OnInit {
   faBoxes = faBoxes;
   faStar = faStar;
 
-  public products= productsClass;
-  public productDetail = productDetail;
+  public products= productListShort;
+  public productDetail:Product = productDetailed;
+  public seller:User = seller;
 
   public modalVisible = false;
   public reviewContent:any;
 
   openModal(id:number[]){
     this.modalVisible = true;
-    this.reviewContent = productDetail.reviews[id[0]]; 
+    this.reviewContent = this.productDetail.reviews; 
   }
 
   @ViewChild('review') selectedReview: any;
