@@ -132,20 +132,20 @@
             <h3>Értékelések</h3>
             <h1 class="fw-bold big ms-3">4,7<small class="fw-normal small">/ 5</small></h1>
             <div class="scrollmenu row">
-                <div *ngFor="let review of productDetail.reviews" class="shadow rounded review m-2 col-12 col-md-6">
+                <div *ngFor="let review of reviews" class="shadow rounded review m-2 col-12 col-md-6">
                     <button (click)="openModal([review.id])" class="none">
                         <div class="row">
                             <div class="col">
                                 <h5 class="m-2 fw-bold">{{review.title}}</h5>
                             </div>
                             <div class="text-end col-auto m-2 ps-0 ms-0">
-                                <small class="text-secondary">Okt. 22</small>
+                                <small class="text-secondary">{{review.publishedAt|date}}</small>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
                                 <div class="ms-2">
-                                    <fa-icon *ngFor="let number of [0,1,2,3,4]" [icon]="faStar"></fa-icon>
+                                    <fa-icon *ngFor="let number of ratingToArray(review.rating)" [icon]="faStar"></fa-icon>
                                     <small class="ms-1">{{review.rating}}/5</small>
                                 </div>
                             </div>
@@ -153,7 +153,7 @@
                                 <small class="text-secondary">{{review.username}}</small>
                             </div>
                         </div>
-                        <p class="m-2">Az unokámnak vettem szülinapjára és imádja!!!! Köszönöm!!!!!</p>
+                        <p class="m-2">{{review.review|trim: 75}}</p>
                     </button>
                 </div>
             </div>

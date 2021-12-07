@@ -28,6 +28,7 @@ import { ProductCardComponent } from './product-list/product-card/product-card.c
 import { PricePipe } from './price.pipe';
 import { SearchComponent } from './search/search.component';
 import { CategoriesComponent } from './search/categories/categories.component';
+import { TrimPipe } from './trim.pipe';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { CategoriesComponent } from './search/categories/categories.component';
     ProductCardComponent,
     PricePipe,
     SearchComponent,
-    CategoriesComponent
+    CategoriesComponent,
+    TrimPipe
   ],
   imports: [
     BrowserModule,

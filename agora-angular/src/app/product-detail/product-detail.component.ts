@@ -3,7 +3,7 @@ import { faHandPaper, faBalanceScale, faTree, faEnvelope, faShoppingCart, faHear
 import { Form } from '@angular/forms';
 import { productDetailed, productListShort, Product } from "../model/product";
 import { User, seller } from "../model/user";
-import { Review, reviews } from "../model/review";
+import { Review, reviews, ratingToArray } from "../model/review";
 
 @Component({
   selector: 'app-product-detail',
@@ -26,14 +26,15 @@ export class ProductDetailComponent implements OnInit {
   public products= productListShort;
   public productDetail:Product = productDetailed;
   public seller:User = seller;
-
+  public reviews = reviews;
   public modalVisible = false;
-  public reviewContent:any;
+  public reviewContent?:any;
 
   openModal(id:number[]){
     this.modalVisible = true;
-    this.reviewContent = this.productDetail.reviews; 
+    this.reviewContent = reviews[id[0]]; 
   }
+  ratingToArray = ratingToArray;
 
   @ViewChild('review') selectedReview: any;
 

@@ -3,6 +3,7 @@ import { faArrowUp, faArrowDown, faStar } from '@fortawesome/free-solid-svg-icon
 import { EventEmitter } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { ThrowStmt } from '@angular/compiler';
+import { ratingToArray } from '../../model/review'
 
 @Component({
   selector: 'app-review',
@@ -79,6 +80,8 @@ export class ReviewComponent implements OnChanges {
     }
     this.addContent(this.content);
   }
+
+  ratingToArray = ratingToArray;
 
   addContent(value: any) {
     this.contentChange.emit(value);

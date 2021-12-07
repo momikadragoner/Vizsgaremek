@@ -3,10 +3,10 @@
         <h5 class="m-2 mb-0 fw-bold">{{content.title}}</h5>
     </div>
     <small class="text-secondary ps-2">{{content.username}} |</small>
-    <small class="text-secondary ms-2">Okt. 22</small>
+    <small class="text-secondary ms-2">{{content.publishedAt|date}}</small>
     <div class="col">
         <div class="ms-2">
-            <fa-icon *ngFor="let number of [0,1,2,3,4]" [icon]="faStar"></fa-icon>
+            <fa-icon *ngFor="let number of ratingToArray(content.rating)" [icon]="faStar"></fa-icon>
             <small class="ms-1">{{content.rating}}/5</small>
         </div>
     </div>
