@@ -29,6 +29,7 @@ import { PricePipe } from './price.pipe';
 import { SearchComponent } from './search/search.component';
 import { CategoriesComponent } from './search/categories/categories.component';
 import { TrimPipe } from './trim.pipe';
+import { CollapsePanelComponent } from './collapse-panel/collapse-panel.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { TrimPipe } from './trim.pipe';
     PricePipe,
     SearchComponent,
     CategoriesComponent,
-    TrimPipe
+    TrimPipe,
+    CollapsePanelComponent
   ],
   imports: [
     BrowserModule,

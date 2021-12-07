@@ -1,77 +1,68 @@
-<div (click)="toggleCategory()">
-    <h4 class="fw-bold">Összes kategória 
-        <fa-icon *ngIf="!categoryOpen" [icon]="faPlus"></fa-icon>
-        <fa-icon *ngIf="categoryOpen"[icon]="faMinus"></fa-icon>
-    </h4>
-    <hr>
-</div>
-<div *ngIf="categoryOpen" @toggleMenu>
-    <div>
-        <div class="row">
-            <div class="col-6 col-md-12 col-xl-6 mb-3">
-                <div class="card card-category-produce">
-                    <div class="hstack gap-2 card-body mx-auto">
-                        <fa-icon [icon]="faCarrot"></fa-icon>
-                        <p class="card-text m-0">Zöldség</p>
-                    </div>
+<collapse-panel [title]="'Kategóriák'">
+    <div class="row">
+        <div class="col-6 col-md-12 col-xl-6 mb-3">
+            <div class="card card-category-produce">
+                <div class="hstack gap-2 card-body mx-auto">
+                    <fa-icon [icon]="faCarrot"></fa-icon>
+                    <p class="card-text m-0">Zöldség</p>
                 </div>
             </div>
-            <div class="col-6 col-md-12 col-xl-6 mb-3">
-                <div class="card card-category-produce">
-                    <div class="hstack gap-2 card-body mx-auto">
-                        <fa-icon [icon]="faApple"></fa-icon>
-                        <p class="card-text m-0">Gyümölcs</p>
-                    </div>
+        </div>
+        <div class="col-6 col-md-12 col-xl-6 mb-3">
+            <div class="card card-category-produce">
+                <div class="hstack gap-2 card-body mx-auto">
+                    <fa-icon [icon]="faApple"></fa-icon>
+                    <p class="card-text m-0">Gyümölcs</p>
                 </div>
             </div>
-            <div class="col-6 col-md-12 col-xl-6 mb-3">
-                <div class="card card-category-produce">
-                    <div class="hstack gap-2 card-body mx-auto">
-                        <fa-icon [icon]="faBread"></fa-icon>
-                        <p class="card-text m-0">Pékáru</p>
-                    </div>
+        </div>
+        <div class="col-6 col-md-12 col-xl-6 mb-3">
+            <div class="card card-category-produce">
+                <div class="hstack gap-2 card-body mx-auto">
+                    <fa-icon [icon]="faBread"></fa-icon>
+                    <p class="card-text m-0">Pékáru</p>
                 </div>
             </div>
-            <div class="col-6 col-md-12 col-xl-6 mb-3">
-                <div class="card card-category-produce">
-                    <div class="hstack gap-2 card-body mx-auto">
-                        <fa-icon [icon]="faCheese"></fa-icon>
-                        <p class="card-text m-0">Tejtermék</p>
-                    </div>
+        </div>
+        <div class="col-6 col-md-12 col-xl-6 mb-3">
+            <div class="card card-category-produce">
+                <div class="hstack gap-2 card-body mx-auto">
+                    <fa-icon [icon]="faCheese"></fa-icon>
+                    <p class="card-text m-0">Tejtermék</p>
                 </div>
             </div>
-            <div class="col-6 col-md-12 col-xl-6 mb-3">
-                <div class="card card-category-produce">
-                    <div class="hstack gap-2 card-body mx-auto">
-                        <fa-icon [icon]="faGlassMartiniAlt"></fa-icon>
-                        <p class="card-text m-0">Italok</p>
-                    </div>
+        </div>
+        <div class="col-6 col-md-12 col-xl-6 mb-3">
+            <div class="card card-category-produce">
+                <div class="hstack gap-2 card-body mx-auto">
+                    <fa-icon [icon]="faGlassMartiniAlt"></fa-icon>
+                    <p class="card-text m-0">Italok</p>
                 </div>
             </div>
-            <div class="col-6 col-md-12 col-xl-6 mb-3">
-                <div class="card card-category-product">
-                    <div class="hstack gap-2 card-body mx-auto">
-                        <fa-icon [icon]="faGem"></fa-icon>
-                        <p class="card-text m-0">Ékszer</p>
-                    </div>
+        </div>
+        <div class="col-6 col-md-12 col-xl-6 mb-3">
+            <div class="card card-category-product">
+                <div class="hstack gap-2 card-body mx-auto">
+                    <fa-icon [icon]="faGem"></fa-icon>
+                    <p class="card-text m-0">Ékszer</p>
                 </div>
             </div>
-            <div class="col-6 col-md-12 col-xl-6 mb-3">
-                <div class="card card-category-product">
-                    <div class="hstack gap-2 card-body mx-auto">
-                        <fa-icon [icon]="faPalette"></fa-icon>
-                        <p class="card-text m-0">Művészet</p>
-                    </div>
+        </div>
+        <div class="col-6 col-md-12 col-xl-6 mb-3">
+            <div class="card card-category-product">
+                <div class="hstack gap-2 card-body mx-auto">
+                    <fa-icon [icon]="faPalette"></fa-icon>
+                    <p class="card-text m-0">Művészet</p>
                 </div>
             </div>
-            <div class="col-6 col-md-12 col-xl-6 mb-3">
-                <div class="card card-category-product">
-                    <div class="hstack gap-2 card-body mx-auto">
-                        <fa-icon [icon]="faTshirt"></fa-icon>
-                        <p class="card-text m-0">Divat</p>
-                    </div>
+        </div>
+        <div class="col-6 col-md-12 col-xl-6 mb-3">
+            <div class="card card-category-product">
+                <div class="hstack gap-2 card-body mx-auto">
+                    <fa-icon [icon]="faTshirt"></fa-icon>
+                    <p class="card-text m-0">Divat</p>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</collapse-panel>

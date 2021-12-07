@@ -26,6 +26,11 @@
         <div class="row d-felx justify-content-end m-3">
             <p class="col-auto message message-sent p-2 my-4">Szia</p>
         </div>
+        <div *ngFor="let message of messages">
+            <div class="row d-felx m-2" [ngClass]="{'justify-content-end':(!message.recived), 'justify-content-start':message.recived}">
+                <p class="col-auto message p-2 my-4" [ngClass]="{'message-sent':(!message.recived), 'message-recived':message.recived}">{{message.message}}</p>
+            </div>
+        </div>
         <div class="place-holder"></div>
     </div>
     <div class="bottom frosted-glass border-top w-100">

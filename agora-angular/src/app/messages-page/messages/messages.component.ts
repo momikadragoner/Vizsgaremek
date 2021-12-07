@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { Message } from '../../model/messages'
 
 @Component({
   selector: 'app-messages',
@@ -9,6 +10,8 @@ import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 export class MessagesComponent implements OnInit {
 
   faPaperPlane = faPaperPlane;
+
+  @Input() public messages:Message[] = [];
 
   constructor() { }
 

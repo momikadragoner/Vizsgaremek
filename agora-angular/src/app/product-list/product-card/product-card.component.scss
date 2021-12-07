@@ -8,12 +8,27 @@ $card-product-height: 28rem;
 .img-placeholder{
     height: $card-product-width;
 }
-.card-body-product{
-    height: $card-product-height / 3;
-}
 .img-product{
     max-height: $card-product-width;
 }
 .fit-text{
     font-size: 1rem;
+}
+.card-narrow{
+    height: 26rem;
+    min-width: 11rem;
+    max-width: 15rem;
+}
+.img-placeholder-narrow{
+    min-width: 11rem;
+    max-width: 15rem;
+}
+.img-product-narrow{
+    min-width: 11rem;
+    max-width: 15rem;
+}
+.bottom{
+    position: absolute;
+    bottom: 0;
+    width: 92.7%;
 }

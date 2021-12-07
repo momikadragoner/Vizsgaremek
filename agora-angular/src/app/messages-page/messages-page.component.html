@@ -4,16 +4,25 @@
             <div class="shadow rounded m-2 p-2 mt-1 pt-0">
                 <h2 class="fw-bold p-3 pb-0 mb-0">Üzenetek</h2>
                 <hr>
-                <div class="my-3">
-                    <img src="assets/profilepic.jpg" class="profile-picture float-start mx-2" alt="">
-                    <h5 class="fw-bold mb-0 mt-3">Széles József</h5>
-                    <p>Szia</p>
+                <div *ngFor="let contact of contacts">
+                    <div class="row">
+                        <div class="col-3">
+                            <img *ngIf="contact.profileImgUrl != ''" src="{{contact.profileImgUrl}}" class="profile-picture float-start mx-2" alt="">
+                            <svg *ngIf="contact.profileImgUrl == ''" height="100" width="100">
+                                <circle cx="40" cy="50" r="2rem" fill="#868e96" />
+                            </svg>
+                        </div>
+                        <div class="col-8 ms-3">
+                            <h5 class="fw-bold mb-0 mt-3">{{contact.name}}</h5>
+                            <p>{{contact.lastMessage}}</p>
+                        </div>
+                    </div>
+                    <hr>
                 </div>
-                <hr class="mt-4">
             </div>
         </div>
         <div class="col-12 col-md-7">
-            <app-messages>
+            <app-messages [messages]=messages>
             </app-messages>
         </div>
     </div>

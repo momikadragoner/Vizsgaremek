@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {messages, contactList, Message} from '../model/messages'
 
 @Component({
   selector: 'app-messages-page',
@@ -7,7 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MessagesPageComponent implements OnInit {
 
+  messages = messages;
+
   constructor() { }
+
+  contacts = contactList;
 
   ngOnInit(): void {
   }

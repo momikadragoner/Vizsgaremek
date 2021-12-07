@@ -10,6 +10,7 @@ import { Product } from '../model/product';
 export class ProductListComponent implements OnInit {
 
   @Input() public products: Product[] = [];
+  @Input() public wide: boolean = true;
 
   faShoppingCart = faShoppingCart;
 
