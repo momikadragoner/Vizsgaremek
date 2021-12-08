@@ -60,6 +60,13 @@ export const productDetailed = new Product(
     reviews
 );
 
+export const myProductList = [
+    new Product( 1, "Gyöngy nyakék", "Nagy Erzsébet", 12599, false, 12, "Azonnal szállítható", "Ékszer", ["Környezetbarát", "Kézzel készült", "Etikusan beszerzett alapanyagok"], ["arany", "ásvány"], "assets/item2.jpg", "Lorem ipsum", false),
+    new Product( 2, "Arany lánc", "Nagy Erzsébet", 18599, false, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], "assets/item1.jpg", "Lorem ipsum", true),
+    new Product( 3, "Ásvány medál ékszer", "Nagy Erzsébet", 11999, false, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], "assets/item3.jfif", "Lorem ipsum", true),
+    new Product( 4, "Arany és kristály nyaklánc", "Nagy Erzsébet", 19599, false, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], "assets/item4.jpg", "Lorem ipsum", true),
+];
+
 export const tags = [
     "Környezetbarát",
     "Kézzel készült",
