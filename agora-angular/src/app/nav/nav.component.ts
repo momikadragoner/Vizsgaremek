@@ -40,7 +40,8 @@ export class NavComponent implements OnInit {
 
   public openView = ""; 
 
-  toggleCategory() {
+  toggleCategory($event: any) {
+    $event.preventDefault();
     if (this.openView != "category") {
       this.openView = "category";
     }
@@ -49,7 +50,8 @@ export class NavComponent implements OnInit {
     }
   }
 
-  toggleNowView(){
+  toggleNowView($event: any){
+    $event.preventDefault();
     if (this.openView != "now") {
       this.openView = "now";
     }
@@ -58,7 +60,8 @@ export class NavComponent implements OnInit {
     }
   }
 
-  toggleBestView(){
+  toggleBestView($event: any){
+    $event.preventDefault();
     if (this.openView != "best") {
       this.openView = "best";
     }

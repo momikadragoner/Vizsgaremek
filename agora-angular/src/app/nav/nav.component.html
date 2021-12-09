@@ -1,14 +1,18 @@
 <div>
-    <header class="container d-flex flex-wrap align-items-center justify-content-center justify-content-md-between pt-3 mb-3">
+    <header
+        class="container d-flex flex-wrap align-items-center justify-content-center justify-content-md-between pt-3 mb-3">
         <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
             <img src="assets/logo.svg" class="me-2 logo-img" height="32" alt="">
             <h3 class="mt-2 pt-1 logo-text">AGORA</h3>
         </a>
 
         <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-            <li><a (click)="toggleCategory()" [class.selected]="openView == 'category'" class="nav-link-selectable nav-link px-2 link-dark">Kategóriák</a></li>
-            <li><a (click)="toggleBestView()" [class.selected]="openView == 'best'" class="nav-link-selectable nav-link px-2 link-dark">A szezon legjobbjai</a></li>
-            <li><a (click)="toggleNowView()" [class.selected]="openView == 'now'" class="nav-link-selectable nav-link px-2 link-dark">Most</a></li>
+            <li><a href="#" (click)="toggleCategory($event)" [class.selected]="openView == 'category'"
+                    class="nav-link-selectable nav-link px-2 link-dark">Kategóriák</a></li>
+            <li><a href="#" (click)="toggleBestView($event)" [class.selected]="openView == 'best'"
+                    class="nav-link-selectable nav-link px-2 link-dark">A szezon legjobbjai</a></li>
+            <li><a href="#" (click)="toggleNowView($event)" [class.selected]="openView == 'now'"
+                    class="nav-link-selectable nav-link px-2 link-dark">Most</a></li>
         </ul>
 
         <div *ngIf="loggedIn" class="col-md-3 text-end">
@@ -24,7 +28,7 @@
     </header>
 </div>
 <div [ngSwitch]="openView">
-    <div @toggleMenu *ngSwitchCase="'category'">  
+    <div @toggleMenu *ngSwitchCase="'category'">
         <div class="col-12 container pb-4">
             <div class="row">
                 <div class="col-6 col-md-3 col-lg-2 mb-3">
@@ -104,21 +108,35 @@
             </div>
         </div>
     </div>
-    <div @toggleMenu *ngSwitchCase="'now'">  
+    <div @toggleMenu *ngSwitchCase="'now'">
         <div class="col-12 container pb-4">
             <div class="row">
-                <div class="col-6 col-md-3 col-lg-2 mb-3">
-                    <div class="card card-category-produce">
-                        <div class="hstack gap-2 card-body mx-auto">
-                            <fa-icon [icon]="faCarrot"></fa-icon>
-                            <p class="card-text m-0">Zöldség</p>
+                <div class="col-12 col-md-5 col-lg-4 mb-3">
+                    <div class="card bg-dark text-white fw-bold card-now border-none">
+                        <img src="assets/market.jpg" class="card-img card-now" alt="...">
+                        <div class="card-img-overlay">
+                            <div class="frosted-glass m-0 p-2 card-now-body">
+                                <h5 class="card-title p-1 mb-0 pb-0">#esemeny #most</h5>
+                                <p class="card-text p-1">Termelői piac Tatabányán</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-5 col-lg-4 mb-3">
+                    <div class="card bg-dark text-white fw-bold card-now border-none">
+                        <img src="assets/karacsonyivasar.jpg" class="card-img card-now" alt="...">
+                        <div class="card-img-overlay">
+                            <div class="frosted-glass m-0 p-2 card-now-body">
+                                <h5 class="card-title p-1 mb-0 pb-0">#onlinepiacter #ajandek</h5>
+                                <p class="card-text p-1">Online karácsonyi vásár</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div @toggleMenu *ngSwitchCase="'best'">  
+    <div @toggleMenu *ngSwitchCase="'best'">
         <div class="col-12 container pb-4">
             <div class="row">
                 <div class="col-6 col-md-3 col-lg-2 mb-3">
