@@ -1,9 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { faHandPaper, faBalanceScale, faTree, faEnvelope, faShoppingCart, faHeart, faTruck, faGem, faBoxes, faStar} from '@fortawesome/free-solid-svg-icons';
+import { faHandPaper, faBalanceScale, faTree, faEnvelope, faShoppingCart, faHeart, faTruck, faGem, faBoxes, faStar, IconPrefix, IconName} from '@fortawesome/free-solid-svg-icons';
+import { library } from '@fortawesome/fontawesome-svg-core';
 import { Form } from '@angular/forms';
 import { productDetailed, productListShort, Product } from "../model/product";
 import { User, seller } from "../model/user";
 import { Review, reviews, ratingToArray } from "../model/review";
+
+library.add(faHandPaper, faTree, faBalanceScale);
 
 @Component({
   selector: 'app-product-detail',
@@ -12,7 +15,9 @@ import { Review, reviews, ratingToArray } from "../model/review";
 })
 export class ProductDetailComponent implements OnInit {
 
-  faHand = faHandPaper;
+  iconPrefix: IconPrefix = 'fas';
+  iconName: IconName = 'tree';
+  faHandPaper = faHandPaper;
   faBalanceScale = faBalanceScale;
   faTree = faTree;
   faEnvelope = faEnvelope;
