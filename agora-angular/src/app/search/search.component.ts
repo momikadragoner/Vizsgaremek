@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {productListLong} from '../model/product'
+import {productListLong, tags} from '../model/product'
 
 @Component({
   selector: 'app-search',
@@ -9,6 +9,8 @@ import {productListLong} from '../model/product'
 export class SearchComponent implements OnInit {
 
   constructor() { }
+
+  tags = tags;
 
   products = productListLong;
 

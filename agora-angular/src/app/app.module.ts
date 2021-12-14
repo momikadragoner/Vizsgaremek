@@ -30,6 +30,7 @@ import { SearchComponent } from './search/search.component';
 import { CategoriesComponent } from './search/categories/categories.component';
 import { TrimPipe } from './trim.pipe';
 import { CollapsePanelComponent } from './collapse-panel/collapse-panel.component';
+import { HorizontalScrollDirective } from './horizontal-scroll.directive';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { CollapsePanelComponent } from './collapse-panel/collapse-panel.componen
     SearchComponent,
     CategoriesComponent,
     TrimPipe,
-    CollapsePanelComponent
+    CollapsePanelComponent,
+    HorizontalScrollDirective
   ],
   imports: [
     BrowserModule,

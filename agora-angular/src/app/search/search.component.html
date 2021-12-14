@@ -2,10 +2,39 @@
     <div class="row">
         <div class="col-12 col-md-4 mb-2 p-3">
             <div class="rounded shadow p-3">
-                <h1>Filter</h1>
-                <label for="customRange1" class="form-label"></label>
-                <input type="range" class="form-range" id="customRange1">
+                <h1>Szűrés</h1>
                 <product-categories></product-categories>
+                <collapse-panel [title]="'Ár'">
+                    <label for="customRange1" class="form-label"></label>
+                    <input type="range" class="form-range" id="customRange1">
+                    <label for="" class="form-label">Max. ár</label>
+                    <input type="number" name="" id="" class="form-control">
+                </collapse-panel>
+                <collapse-panel [title]="'Címkék'">
+                    <form action="">
+                        <div *ngFor="let tag of tags" class="form-check ms-3">
+                            <input type="checkbox" name="{{tag}}" id="{{tag}}" class="form-check-input">
+                            <label for="{{tag}}" class="form-check-label">{{tag}}</label>
+                        </div>
+                        <hr class="m-1">
+                        <div class="form-check ms-3">
+                            <input type="checkbox" name="inventory" id="inventory" class="form-check-input">
+                            <label for="inventory" class="form-check-label">Raktáron</label>
+                        </div>
+                        <div class="form-check ms-3">
+                            <input type="checkbox" name="delivery" id="delivery" class="form-check-input">
+                            <label for="delivery" class="form-check-label">Azonnal szállítható</label>
+                        </div>
+                        <div class="form-check ms-3">
+                            <input type="checkbox" name="madeOnDemand" id="madeOnDemand" class="form-check-input">
+                            <label for="madeOnDemand" class="form-check-label">Megrendelésre készül</label>
+                        </div>
+                        <div class="form-check ms-3 mb-2">
+                            <input type="checkbox" name="discount" id="discount" class="form-check-input">
+                            <label for="discount" class="form-check-label">Kedvezményes</label>   
+                        </div>
+                    </form>
+                </collapse-panel>
             </div>
         </div>
         <div class="col-12 col-md-8 mb-2">

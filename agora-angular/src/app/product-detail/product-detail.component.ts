@@ -30,7 +30,8 @@ export class ProductDetailComponent implements OnInit {
   public modalVisible = false;
   public reviewContent?:any;
 
-  openModal(id:number[]){
+  openModal(id:number[], $event: any){
+    $event.preventDefault();
     this.modalVisible = true;
     this.reviewContent = reviews[id[0]]; 
   }

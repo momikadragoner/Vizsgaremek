@@ -1,11 +1,13 @@
-<div (click)="togglePanel()">
-    <div class="d-flex justify-content-between">
-        <h4 class="fw-bold">{{title}}</h4>
-        <fa-icon *ngIf="!panelOpen" [icon]="faPlus" class="m-1"></fa-icon>
-        <fa-icon *ngIf="panelOpen"[icon]="faMinus" class="m-1"></fa-icon>
+<div class="mb-3">
+    <div (click)="togglePanel()">
+        <div class="d-flex justify-content-between">
+            <h4 class="fw-bold">{{title}}</h4>
+            <fa-icon *ngIf="!panelOpen" [icon]="faPlus" class="m-1"></fa-icon>
+            <fa-icon *ngIf="panelOpen"[icon]="faMinus" class="m-1"></fa-icon>
+        </div>
+        <hr class="m-1">
     </div>
-    <hr>
-</div>
-<div *ngIf="panelOpen" @togglePanel>
-    <ng-content></ng-content>
+    <div *ngIf="panelOpen" @togglePanel class="mb-3">
+        <ng-content></ng-content>
+    </div>
 </div>
