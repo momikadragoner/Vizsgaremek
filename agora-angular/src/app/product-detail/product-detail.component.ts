@@ -33,16 +33,29 @@ export class ProductDetailComponent implements OnInit {
   public seller:User = seller;
   public reviews = reviews;
   public modalVisible = false;
-  public reviewContent?:any;
+  public imgOpen = false;
+  public reviewContent:Review = new Review(0,"","","",0,0,new Date());
+  public selectedImg:string = productDetailed.imgUrl[0];
+  public selectedImgIndex:number = 0;
 
   openModal(id:number[], $event: any){
     $event.preventDefault();
     this.modalVisible = true;
     this.reviewContent = reviews[id[0]]; 
   }
-  ratingToArray = ratingToArray;
 
-  @ViewChild('review') selectedReview: any;
+  selectImg(id:number, $event: any){
+    $event.preventDefault();
+    this.selectedImg = productDetailed.imgUrl[id];
+    this.selectedImgIndex = id;
+  }
+
+  fullScreenImg($event :any){
+    $event.preventDefault();
+    this.imgOpen = true;
+  }
+
+  ratingToArray = ratingToArray;
 
   constructor() { }
 

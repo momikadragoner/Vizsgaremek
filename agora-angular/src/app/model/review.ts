@@ -13,7 +13,6 @@ export class Review{
         ) 
     {
     }
-   
 }
 export const reviews = [
     new Review( 0, "Anitaaa43", "Nagyszerű!!!", "Az unokámnak vettem szülinapjára és imádja!!!! Köszönöm!!!!!", 5, 6, new Date(2021, 10, 28) ),

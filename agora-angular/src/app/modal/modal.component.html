@@ -1,4 +1,4 @@
-<div [@openModal]="modalVisible" *ngIf="modalVisible">
+<div scrollBlock [@openModal]="modalVisible" *ngIf="modalVisible">
     <div class="modal-background w-100 frosted-glass" (click)="toggleModal()">
         <div (click)="$event.stopPropagation()" class="modal-body position-fixed top-50 start-50 translate-middle shadow rounded">
             <div class="d-grid gap-1 d-md-flex justify-content-md-end">
@@ -6,7 +6,7 @@
                     <fa-icon  [icon]="faClose"></fa-icon>
                 </button>
             </div>
-            <ng-content></ng-content>
+            <ng-content class="postition-absolute"></ng-content>
         </div>
     </div>
 </div>
