@@ -33,6 +33,7 @@ import { CollapsePanelComponent } from './collapse-panel/collapse-panel.componen
 import { HorizontalScrollDirective } from './horizontal-scroll.directive';
 import { TagIconPipe } from "./tag-icon.pipe";
 import { ScrollBlockDirective } from './scroll-block.directive';
+import { ReviewFormComponent } from './product-detail/review-form/review-form.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { ScrollBlockDirective } from './scroll-block.directive';
     CollapsePanelComponent,
     HorizontalScrollDirective,
     TagIconPipe,
-    ScrollBlockDirective
+    ScrollBlockDirective,
+    ReviewFormComponent
   ],
   imports: [
     BrowserModule,

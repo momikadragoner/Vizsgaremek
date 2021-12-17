@@ -46,8 +46,30 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
 .img-fullscreen{
   max-width: 75vw;
   max-height: 75vh;
   object-fit: cover;
+}
+.arrow-left{
+  position: absolute;
+  left: 0;
+  top: 50%;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  padding: 0.2rem;
+}
+.arrow-right{
+  position: absolute;
+  right: 0;
+  top: 50%;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  padding: 0.2rem;
+}
+.arrow-left:hover, .arrow-right:hover{
+  background-color: #fffff4;
 }

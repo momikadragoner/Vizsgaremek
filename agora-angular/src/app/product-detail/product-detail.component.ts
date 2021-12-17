@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { faHandPaper, faBalanceScale, faTree, faEnvelope, faShoppingCart, faHeart, faTruck, faGem, faBoxes, faStar, IconPrefix, IconName} from '@fortawesome/free-solid-svg-icons';
+import { faHandPaper, faEdit, faBalanceScale, faTree, faEnvelope, faShoppingCart, faHeart, faTruck, faGem, faBoxes, faStar, IconPrefix, IconName, faChevronLeft, faChevronRight} from '@fortawesome/free-solid-svg-icons';
+// import { faStar } from '@fortawesome/free-regular-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { Form } from '@angular/forms';
 import { productDetailed, productListShort, Product } from "../model/product";
@@ -27,6 +28,9 @@ export class ProductDetailComponent implements OnInit {
   faGem = faGem;
   faBoxes = faBoxes;
   faStar = faStar;
+  faChevronRight = faChevronRight; 
+  faChevronLeft = faChevronLeft;
+  faEdit = faEdit;
 
   public products= productListShort;
   public productDetail:Product = productDetailed;
@@ -34,25 +38,47 @@ export class ProductDetailComponent implements OnInit {
   public reviews = reviews;
   public modalVisible = false;
   public imgOpen = false;
+  public newReviewOpen = false;
   public reviewContent:Review = new Review(0,"","","",0,0,new Date());
   public selectedImg:string = productDetailed.imgUrl[0];
   public selectedImgIndex:number = 0;
 
-  openModal(id:number[], $event: any){
+  openModal(id:number[], $event:any){
     $event.preventDefault();
     this.modalVisible = true;
     this.reviewContent = reviews[id[0]]; 
   }
 
-  selectImg(id:number, $event: any){
+  selectImg(id:number, $event:any){
     $event.preventDefault();
     this.selectedImg = productDetailed.imgUrl[id];
     this.selectedImgIndex = id;
   }
 
-  fullScreenImg($event :any){
+  fullScreenImg($event:any){
     $event.preventDefault();
     this.imgOpen = true;
+  }
+
+  nextImg(next:number, $event:any){
+    $event.preventDefault();
+    if (this.selectedImgIndex + next == productDetailed.imgUrl.length) {
+      this.selectedImg = productDetailed.imgUrl[0];
+      this.selectedImgIndex = 0;
+    }
+    else if (this.selectedImgIndex + next < 0) {
+      this.selectedImg = productDetailed.imgUrl[productDetailed.imgUrl.length -1];
+      this.selectedImgIndex = productDetailed.imgUrl.length -1;
+    }
+    else{
+      this.selectedImg = productDetailed.imgUrl[this.selectedImgIndex + next];
+      this.selectedImgIndex = this.selectedImgIndex + next;
+    }
+  }
+
+  writeReview($event:any){
+    $event.preventDefault();
+    this.newReviewOpen = true;
   }
 
   ratingToArray = ratingToArray;

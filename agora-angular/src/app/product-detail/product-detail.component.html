@@ -168,6 +168,16 @@
                 </a>
             </div>
         </div>
+        <div class="row mt-3">
+            <!-- <h5>Értékeld a terméket</h5>
+            <div>
+                <fa-icon *ngFor="let number of [1,2,3,4,5]" [icon]="faStar"></fa-icon>
+            </div> -->
+            <a href="#" (click)="writeReview($event)" class="text-decoration-none pt-3 ms-3">
+                <fa-icon [icon]="faEdit"></fa-icon>
+                Vélemény írása
+            </a>
+        </div>
     </div>
     <h3 class="m-3 pt-2">További ajánlatok</h3>
     <app-product-list class="row" [products]="products" [sideScrollable]="true"></app-product-list>
@@ -179,4 +189,13 @@
 </modal-window>
 <modal-window [(modalVisible)]="imgOpen">
     <img src="{{selectedImg}}" class="mx-auto d-block rounded img-fullscreen">
+    <a href="#" (click)="nextImg(-1,$event)" class="arrow-left ms-4 text-center frosted-glass text-dark">
+        <fa-icon [icon]="faChevronLeft"></fa-icon>
+    </a>
+    <a href="#" (click)="nextImg(1,$event)" class="arrow-right me-4 text-center frosted-glass text-dark">
+        <fa-icon [icon]="faChevronRight"></fa-icon>
+    </a>
+</modal-window>
+<modal-window [(modalVisible)]="newReviewOpen">
+    <review-form></review-form>
 </modal-window>
