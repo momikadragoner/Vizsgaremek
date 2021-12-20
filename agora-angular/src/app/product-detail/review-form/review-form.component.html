@@ -1,16 +1,16 @@
 <h3 class="text-center fw-bold">Vélemény írása</h3>
 <form action="">
     <div class="my-2 text-center">
-        <fa-icon *ngFor="let number of [1,2,3,4,5]" [icon]="faStar" class="text-large"></fa-icon>
+        <fa-icon (click)="solidStars(i)" *ngFor="let number of [1,2,3,4,5]; let i = index" [icon]="[(rating >= i) ? 'fas' : 'far','star']" class="text-large"></fa-icon>
     </div>
     <div class="mb-2">
         <input type="text" name="title" id="title" class="form-control" placeholder="Cím">
     </div>
     <div class="mb-2">
-        <textarea name="review" id="review" cols="30" rows="10" class="form-control" placeholder="Vélemény"></textarea>
+        <textarea name="review" id="review" cols="30" rows="10" class="form-control textarea" placeholder="Vélemény"></textarea>
     </div>
     <div class="d-flex justify-content-between">
-        <a href="#" class="btn btn-secondary">Mégse</a>
+        <a (click)=back($event) href="#" class="btn btn-secondary">Mégse</a>
         <button type="submit" class="btn btn-primary">Vélemény küldése</button>
     </div>
 </form>

@@ -6,8 +6,9 @@ import { Form } from '@angular/forms';
 import { productDetailed, productListShort, Product } from "../model/product";
 import { User, seller } from "../model/user";
 import { Review, reviews, ratingToArray } from "../model/review";
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 
-library.add(faHandPaper, faTree, faBalanceScale);
+
 
 @Component({
   selector: 'app-product-detail',
@@ -17,7 +18,7 @@ library.add(faHandPaper, faTree, faBalanceScale);
 export class ProductDetailComponent implements OnInit {
 
   iconPrefix: IconPrefix = 'fas';
-  iconName: IconName = 'tree';
+  // iconName: IconName = 'tree';
   faHandPaper = faHandPaper;
   faBalanceScale = faBalanceScale;
   faTree = faTree;
@@ -81,9 +82,15 @@ export class ProductDetailComponent implements OnInit {
     this.newReviewOpen = true;
   }
 
+  closeNewReview(){
+    this.newReviewOpen = false;
+  }
+
   ratingToArray = ratingToArray;
 
-  constructor() { }
+  constructor(library: FaIconLibrary) {
+    library.addIcons(faHandPaper, faTree, faBalanceScale);
+  }
 
   ngOnInit(): void {
   }

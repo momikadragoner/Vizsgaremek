@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Product, tags } from '../../model/product';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
-import { faTruck, faBoxes} from '@fortawesome/free-solid-svg-icons';
+import { faTruck, faBoxes, IconPrefix, faTree, faHandPaper, faBalanceScale} from '@fortawesome/free-solid-svg-icons';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-product-form',
@@ -10,6 +11,7 @@ import { faTruck, faBoxes} from '@fortawesome/free-solid-svg-icons';
 })
 export class ProductFormComponent implements OnInit {
 
+  iconPrefix: IconPrefix = 'fas';
   public newProduct = new Product(1,"", "" ,0,false,0,'Azonnal szállítható','',[''],[''],[''],"",false);
   tagsList = tags;
 
@@ -63,7 +65,9 @@ export class ProductFormComponent implements OnInit {
     this.submitted = true;
   }
 
-  constructor( private fb: FormBuilder) { }
+  constructor( private fb: FormBuilder, library:FaIconLibrary) {
+    library.addIcons(faHandPaper, faTree, faBalanceScale);
+  }
 
   ngOnInit(): void {
   }
