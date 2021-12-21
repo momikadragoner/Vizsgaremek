@@ -40,6 +40,7 @@
 .profile-nav{
     height: 2rem;
     border-radius: 50%;
+    border: #342A2B thin solid;
 }
 .card-now{
     max-height: 15rem;
@@ -55,4 +56,22 @@
 }
 .border-none{
     border: none;
+}
+.menu{
+    position: absolute;
+    z-index: 2;
+    top: auto;
+    right: 0;
+    width: 10rem;
+}
+.loggedin-nav{
+    position: relative;
+}
+.rounded-bottom{
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+.btn-cart{
+    width: 2rem;
+    height: 2rem;
 }

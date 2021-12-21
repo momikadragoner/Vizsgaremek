@@ -38,7 +38,9 @@ export class NavComponent implements OnInit {
   faShoppingCart = faShoppingCart;
   faBoxes = faBoxes;
 
-  public openView = ""; 
+  public openView = "";
+  menuOpen = false;
+  hoverMenu = false;
 
   toggleCategory($event: any) {
     $event.preventDefault();
@@ -70,7 +72,14 @@ export class NavComponent implements OnInit {
     }
   }
 
-  public loggedIn = false;
+  toggleCart(){
+    if (!this.hoverMenu) {
+      this.menuOpen = false;
+    }
+    this.menuOpen = true;
+  }
+
+  public loggedIn = true;
 
   constructor() { }
 
