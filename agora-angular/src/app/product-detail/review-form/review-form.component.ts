@@ -14,7 +14,7 @@ export class ReviewFormComponent implements OnInit {
   fasStar = fasStar;
 
   @Output() modalState = new EventEmitter<boolean>();
-  rating:number = 0;
+  rating:number = -1;
 
   constructor(library:FaIconLibrary){
     library.addIcons(fasStar, farStar);

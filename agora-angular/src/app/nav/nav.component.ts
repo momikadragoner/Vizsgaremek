@@ -40,7 +40,6 @@ export class NavComponent implements OnInit {
 
   public openView = "";
   menuOpen = false;
-  hoverMenu = false;
 
   toggleCategory($event: any) {
     $event.preventDefault();
@@ -72,11 +71,9 @@ export class NavComponent implements OnInit {
     }
   }
 
-  toggleCart(){
-    if (!this.hoverMenu) {
-      this.menuOpen = false;
-    }
-    this.menuOpen = true;
+  toggleCart($event: any){
+    $event.preventDefault();
+    this.menuOpen = !this.menuOpen;
   }
 
   public loggedIn = true;

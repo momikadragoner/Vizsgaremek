@@ -22,24 +22,28 @@
                     <fa-layers-counter content=" "></fa-layers-counter>
                 </fa-layers>
             </a>
-            <a (mouseover)="menuOpen = true" (mouseleave)="toggleCart()" href="/my-profile" class="btn p-1 m-1"><img
-                    class="profile-nav" src="assets/profilepic.jpg" alt=""></a>
-            <div *ngIf="menuOpen" class="rounded shadow menu" (mouseover)="menuOpen = true; hoverMenu = true" (mouseleave)="menuOpen = false; hoverMenu = false">
-                <ul class="list-unstyled mb-0">
-                    <li class="text-start m-2">
-                        <p class="small m-0">Bejelentkezve mint <span class="fw-bold">Nagy Erzsébet</span> </p>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider m-0">
-                    </li>
-                    <li><a class="dropdown-item" href="#">Profil</a></li>
-                    <li><a class="dropdown-item" href="#">Kívánság lista</a></li>
-                    <li><a class="dropdown-item" href="#">Beállítások</a></li>
-                    <li>
-                        <hr class="dropdown-divider m-0">
-                    </li>
-                    <li><a class="dropdown-item rounded-bottom" href="#">Kilépés</a></li>
-                </ul>
+            <a (click)="toggleCart($event)" href="/my-profile" class="p-1 m-1">
+                <img class="profile-nav" src="assets/profilepic.jpg" alt="">
+            </a>
+            <div *ngIf="menuOpen">
+                <div class="menu-bg" (click)="toggleCart($event)"></div>
+                <div class="rounded shadow menu">
+                    <ul class="list-unstyled mb-0">
+                        <li class="text-start m-2 mx-3">
+                            <p class="small m-0">Bejelentkezve mint <span class="fw-bold">Nagy Erzsébet</span> </p>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider m-0">
+                        </li>
+                        <li><a class="dropdown-item" href="/my-profile">Profil</a></li>
+                        <li><a class="dropdown-item" href="#">Kívánság lista</a></li>
+                        <li><a class="dropdown-item" href="#">Beállítások</a></li>
+                        <li>
+                            <hr class="dropdown-divider m-0">
+                        </li>
+                        <li><a class="dropdown-item rounded-bottom" href="#">Kilépés</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div *ngIf="loggedIn == false" class="col-md-3 text-end">

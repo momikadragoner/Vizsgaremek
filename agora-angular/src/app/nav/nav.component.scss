@@ -59,7 +59,7 @@
 }
 .menu{
     position: absolute;
-    z-index: 2;
+    z-index: 3;
     top: auto;
     right: 0;
     width: 10rem;
@@ -74,4 +74,12 @@
 .btn-cart{
     width: 2rem;
     height: 2rem;
+}
+.menu-bg{
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 3;
 }
