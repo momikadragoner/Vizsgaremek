@@ -34,6 +34,7 @@ import { HorizontalScrollDirective } from './horizontal-scroll.directive';
 import { TagIconPipe } from "./tag-icon.pipe";
 import { ScrollBlockDirective } from './scroll-block.directive';
 import { ReviewFormComponent } from './product-detail/review-form/review-form.component';
+import { CartComponent } from './cart/cart.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { ReviewFormComponent } from './product-detail/review-form/review-form.co
     HorizontalScrollDirective,
     TagIconPipe,
     ScrollBlockDirective,
-    ReviewFormComponent
+    ReviewFormComponent,
+    CartComponent
   ],
   imports: [
     BrowserModule,
