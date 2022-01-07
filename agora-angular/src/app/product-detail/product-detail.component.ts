@@ -40,6 +40,7 @@ export class ProductDetailComponent implements OnInit {
   public modalVisible = false;
   public imgOpen = false;
   public newReviewOpen = false;
+  public cartOpen = false;
   public reviewContent:Review = new Review(0,"","","",0,0,new Date());
   public selectedImg:string = productDetailed.imgUrl[0];
   public selectedImgIndex:number = 0;
@@ -80,6 +81,11 @@ export class ProductDetailComponent implements OnInit {
   writeReview($event:any){
     $event.preventDefault();
     this.newReviewOpen = true;
+  }
+
+  addToCart($event:any){
+    $event.preventDefault();
+    this.cartOpen = true;
   }
 
   closeNewReview(){

@@ -35,6 +35,7 @@ import { TagIconPipe } from "./tag-icon.pipe";
 import { ScrollBlockDirective } from './scroll-block.directive';
 import { ReviewFormComponent } from './product-detail/review-form/review-form.component';
 import { CartComponent } from './cart/cart.component';
+import { AddToCartComponent } from './product-detail/add-to-cart/add-to-cart.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import { CartComponent } from './cart/cart.component';
     TagIconPipe,
     ScrollBlockDirective,
     ReviewFormComponent,
-    CartComponent
+    CartComponent,
+    AddToCartComponent
   ],
   imports: [
     BrowserModule,
