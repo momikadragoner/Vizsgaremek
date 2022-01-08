@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {productListLong, tags} from '../model/product'
+import { ProductShort as Product, ProductListService as ProductService, tags} from '../model/product'
 
 @Component({
   selector: 'app-search',
@@ -7,14 +7,20 @@ import {productListLong, tags} from '../model/product'
   styleUrls: ['./search.component.scss']
 })
 export class SearchComponent implements OnInit {
-
-  constructor() { }
-
+  
+  products: Product[] = [{ id: 0, name: "", seller: "", price: 0, discountAvailable: false, imgUrl: ""}];
+  error: string = "";
   tags = tags;
 
-  products = productListLong;
+  constructor(private productService: ProductService) { }
 
   ngOnInit(): void {
+    this.ShowProductList();
+  }
+
+  ShowProductList() {
+    this.productService.getProductListLong()
+    .subscribe((data: [Product]) => this.products = [...data], error => this.error = error);
   }
 
 }

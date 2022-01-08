@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { productListShort } from '../model/product';
+import { ProductShort as Product, ProductListService as ProductService} from '../model/product';
 import { User, seller } from "../model/user";
 import { faEnvelope, faLink, faLocationArrow, faCalendarAlt} from '@fortawesome/free-solid-svg-icons';
 
@@ -15,12 +15,19 @@ export class ProfilePageComponent implements OnInit {
   faLocationArrow = faLocationArrow;
   faCalendar = faCalendarAlt;
 
-  products = productListShort;
+  products: Product[] = [{ id: 0, name: "", seller: "", price: 0, discountAvailable: false, imgUrl: ""}];
+  error: string = "";
   user = seller;
 
-  constructor() { }
+  constructor(private productService: ProductService) { }
 
   ngOnInit(): void {
+    this.ShowProductList();
+  }
+
+  ShowProductList() {
+    this.productService.getProductListLong()
+    .subscribe((data: [Product]) => this.products = [...data], error => this.error = error);
   }
 
 }

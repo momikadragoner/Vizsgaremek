@@ -4,17 +4,18 @@
             <li class="breadcrumb-item"><a href="search" class="text-decoration-none">Kategóriák</a></li>
             <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Ékszerek</a></li>
             <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Nyakláncok</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{productDetail.name}}</li>
+            <li class="breadcrumb-item active" aria-current="page">{{product.name}}</li>
         </ol>
     </nav>
     <div class="rounded shadow p-4 m-2">
         <div class="row">
             <div class="col-12 col-md-6 col-lg-4">
                 <a (click)="fullScreenImg($event)" href="#">
-                    <img src="{{selectedImg}}" class="img-fluid rounded shadow-sm">
+                    <img *ngIf="selectedImg == null" src="{{product.imgUrl[0]}}" class="img-fluid rounded shadow-sm">
+                    <img *ngIf="selectedImg != null" src="{{selectedImg}}" class="img-fluid rounded shadow-sm">
                 </a>
                 <div class="mt-3">
-                    <a *ngFor="let img of productDetail.imgUrl; let i = index;" (click)="selectImg(i, $event)" href="#">
+                    <a *ngFor="let img of product.imgUrl; let i = index;" (click)="selectImg(i, $event)" href="#">
                         <img src="{{img}}" class="w-25 rounded mx-2" [ngClass]="{'shadow': selectedImgIndex == i}">
                     </a>
                 </div>
@@ -22,16 +23,16 @@
                     <hr>
                     <h3 class="mt-3">Leírás</h3>
                     <p class="text-justify">
-                        {{productDetail.description}}
+                        {{product.description}}
                     </p>
                 </div>
             </div>
             <div class="col-12 col-md-6 col-lg-8">
-                <h1 class="my-3">{{productDetail.name}}</h1>
+                <h1 class="my-3">{{product.name}}</h1>
                 <div class="row">
                     <div class="col-12 col-lg-6 m-2">
-                        <h1 class="fw-bold">{{productDetail.price|price}}</h1>
-                        <p class="m-2">Elérhető: {{productDetail.inventory}}db</p>
+                        <h1 class="fw-bold">{{product.price|price}}</h1>
+                        <p class="m-2">Elérhető: {{product.inventory}}db</p>
                     </div>
                     <div class="col-12 col-lg-6 my-2">
                         <a (click)="addToCart($event)" href="#" class="btn btn-primary m-2 py-3 w-50 shadow-sm">
@@ -72,13 +73,13 @@
                             <hr>
                             <h3 class="mt-3">Leírás</h3>
                             <p class="">
-                                {{productDetail.description}}
+                                {{product.description}}
                             </p>
                         </div>
                     </div>
                     <div class="col-12 col-lg-6">
                         <div class="shadow rounded px-4 pt-3 pb-2 m-2">
-                            <div *ngFor="let tag of productDetail.tags" class="row mx-auto">
+                            <div *ngFor="let tag of product.tags" class="row mx-auto">
                                 <div class="col-2 text-center">
                                     <fa-icon [icon]="[iconPrefix, (tag|icon)]"></fa-icon> 
                                 </div>
@@ -114,7 +115,7 @@
                                     <img src="assets/profilepic.jpg" class="round img-fluid">
                                 </div>
                                 <div class="col-8">
-                                    <h5><a href="/profile" class="text-decoration-none fw-bold">{{productDetail.seller}}</a></h5>
+                                    <h5><a href="/profile" class="text-decoration-none fw-bold">{{product.seller}}</a></h5>
                                     <div class="btn-group">
                                         <a href="#" class="btn btn-primary my-2 px-3">Követés</a>
                                         <a href="#" class="btn btn-secondary my-2 pe-3">
@@ -181,7 +182,7 @@
         </div> -->
     </div>
     <h3 class="m-3 pt-2">További ajánlatok</h3>
-    <app-product-list class="row" [products]="products" [sideScrollable]="true"></app-product-list>
+    <app-product-list class="row" [products]="productList" [sideScrollable]="true"></app-product-list>
 </div>
 <page-footer></page-footer>
 <!-- Review detailed views -->
@@ -201,5 +202,5 @@
     <review-form (modalState)="closeNewReview()"></review-form>
 </modal-window>
 <modal-window [(modalVisible)]="cartOpen">
-    <add-to-cart (modalState)="cartOpen = false" [product]="productDetail" [recommendedProducts]="products"></add-to-cart>
+    <add-to-cart (modalState)="cartOpen = false" [product]="product" [recommendedProducts]="productList"></add-to-cart>
 </modal-window>

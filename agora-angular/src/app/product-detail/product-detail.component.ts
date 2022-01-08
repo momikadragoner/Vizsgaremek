@@ -3,12 +3,13 @@ import { faHandPaper, faEdit, faBalanceScale, faTree, faEnvelope, faShoppingCart
 // import { faStar } from '@fortawesome/free-regular-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { Form } from '@angular/forms';
-import { productDetailed, productListShort, Product } from "../model/product";
+//import { productDetailed, productListShort, Product } from "../model/product";
 import { User, seller } from "../model/user";
-import { Review, reviews, ratingToArray } from "../model/review";
+import { ratingToArray } from "../model/review";
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { HttpClient } from '@angular/common/http';
-import { ProductService, Product as Iprod } from './product-detail.service';
+import { ProductService, Product, Review, ProductShort } from './product-detail.service';
+import { asapScheduler } from 'rxjs';
 
 
 
@@ -20,7 +21,6 @@ import { ProductService, Product as Iprod } from './product-detail.service';
 export class ProductDetailComponent implements OnInit {
 
   iconPrefix: IconPrefix = 'fas';
-  // iconName: IconName = 'tree';
   faHandPaper = faHandPaper;
   faBalanceScale = faBalanceScale;
   faTree = faTree;
@@ -35,27 +35,56 @@ export class ProductDetailComponent implements OnInit {
   faChevronLeft = faChevronLeft;
   faEdit = faEdit;
 
-  public products= productListShort;
-  public productDetail:Product = productDetailed;
+  product: Product = {id: 0, name: '', seller: '', price: 0, discountAvailable: false, inventory: 0, delivery: '', category: '', tags: [], materials: [], imgUrl: [], description: '', isPublic: true,};
+  reviews: Review[] =[{id: 0, username: "", title: "", review: "", rating: 0, points: 0, publishedAt: new Date()}];
+  productList: ProductShort[] = [{ id: 0, name: "", seller: "", price: 0, discountAvailable: false, imgUrl: ""}];
+  error:any;
+  
+  constructor(library: FaIconLibrary, private productService: ProductService) {
+    library.addIcons(faHandPaper, faTree, faBalanceScale);
+  }
+
+  ngOnInit(): void {
+    this.showProduct();
+    this.ShowReviews();
+    this.ShowProductList();
+  }
+  
+  showProduct() {
+    this.productService.getProduct()
+    .subscribe((data: Product) => this.product = { ...data }, error => this.error = error);
+  }
+
+  ShowReviews() {
+    this.productService.getReviews()
+    .subscribe((data: [Review]) => this.reviews = [...data], error => this.error = error);
+  }
+
+  ShowProductList() {
+    this.productService.getProductList()
+    .subscribe((data: [ProductShort]) => this.productList = [...data], error => this.error = error);
+  }
+
+  //public products= productListShort;
+  //public productDetail:Product = productDetailed;
   public seller:User = seller;
-  public reviews = reviews;
   public modalVisible = false;
   public imgOpen = false;
   public newReviewOpen = false;
   public cartOpen = false;
-  public reviewContent:Review = new Review(0,"","","",0,0,new Date());
-  public selectedImg:string = productDetailed.imgUrl[0];
+  public reviewContent?:Review = {id: 0, username: "", title: "", review: "", rating: 0, points: 0, publishedAt: new Date()};
+  public selectedImg:string = this.product.imgUrl[0];
   public selectedImgIndex:number = 0;
 
   openModal(id:number[], $event:any){
     $event.preventDefault();
     this.modalVisible = true;
-    this.reviewContent = reviews[id[0]]; 
+    this.reviewContent = this.reviews?.[id[0]];
   }
 
   selectImg(id:number, $event:any){
     $event.preventDefault();
-    this.selectedImg = productDetailed.imgUrl[id];
+    this.selectedImg = this.product.imgUrl[id];
     this.selectedImgIndex = id;
   }
 
@@ -66,16 +95,16 @@ export class ProductDetailComponent implements OnInit {
 
   nextImg(next:number, $event:any){
     $event.preventDefault();
-    if (this.selectedImgIndex + next == productDetailed.imgUrl.length) {
-      this.selectedImg = productDetailed.imgUrl[0];
+    if (this.selectedImgIndex + next == this.product.imgUrl.length) {
+      this.selectedImg = this.product.imgUrl[0];
       this.selectedImgIndex = 0;
     }
     else if (this.selectedImgIndex + next < 0) {
-      this.selectedImg = productDetailed.imgUrl[productDetailed.imgUrl.length -1];
-      this.selectedImgIndex = productDetailed.imgUrl.length -1;
+      this.selectedImg = this.product.imgUrl[this.product.imgUrl.length -1];
+      this.selectedImgIndex = this.product.imgUrl.length -1;
     }
     else{
-      this.selectedImg = productDetailed.imgUrl[this.selectedImgIndex + next];
+      this.selectedImg = this.product.imgUrl[this.selectedImgIndex + next];
       this.selectedImgIndex = this.selectedImgIndex + next;
     }
   }
@@ -95,19 +124,5 @@ export class ProductDetailComponent implements OnInit {
   }
 
   ratingToArray = ratingToArray;
-
-  constructor(library: FaIconLibrary, private productService: ProductService) {
-    library.addIcons(faHandPaper, faTree, faBalanceScale);
-  }
-
-  ngOnInit(): void {
-  }
-
-  product: Product | undefined;
-
-  showProduct() {
-    this.productService.getProduct()
-      .subscribe((data: Product) => this.product = { ...data });
-  }
 
 }

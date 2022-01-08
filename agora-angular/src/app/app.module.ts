@@ -37,6 +37,8 @@ import { ScrollBlockDirective } from './scroll-block.directive';
 import { ReviewFormComponent } from './product-detail/review-form/review-form.component';
 import { CartComponent } from './cart/cart.component';
 import { AddToCartComponent } from './product-detail/add-to-cart/add-to-cart.component';
+import { ProductService } from './product-detail/product-detail.service';
+import { ProductListService } from './model/product';
 
 @NgModule({
   declarations: [
@@ -74,16 +76,19 @@ import { AddToCartComponent } from './product-detail/add-to-cart/add-to-cart.com
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     FontAwesomeModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
-    HttpClientModule
   ],
   exports: [
     FontAwesomeModule
   ],
-  providers: [],
+  providers: [
+    ProductService,
+    ProductListService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

@@ -1,4 +1,33 @@
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
 import { Review, reviews } from "./review";
+
+export interface ProductShort{
+    id: number,
+    name: string,
+    seller: string,
+    price: number,
+    discountAvailable: boolean,
+    imgUrl: string,
+    discount?: number,
+}
+
+@Injectable()
+export class ProductListService {
+  
+  constructor(private http: HttpClient) { }
+  
+  rootURL = '/api';
+
+  getProductList() {
+    return this.http.get<[ProductShort]>(this.rootURL + '/product-list');
+  }
+
+  getProductListLong() {
+    return this.http.get<[ProductShort]>(this.rootURL + '/product-list-long');
+  }
+
+}
 
 export class Product{
     /**
