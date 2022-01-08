@@ -34,7 +34,7 @@
                         <p class="m-2">Elérhető: {{productDetail.inventory}}db</p>
                     </div>
                     <div class="col-12 col-lg-6 my-2">
-                        <a href="#" class="btn btn-primary m-2 py-3 w-50 shadow-sm">
+                        <a (click)="addToCart($event)" href="#" class="btn btn-primary m-2 py-3 w-50 shadow-sm">
                             <fa-icon [icon]="faShoppingCart"></fa-icon>
                             Kosárba
                         </a>
@@ -199,4 +199,7 @@
 </modal-window>
 <modal-window [(modalVisible)]="newReviewOpen">
     <review-form (modalState)="closeNewReview()"></review-form>
+</modal-window>
+<modal-window [(modalVisible)]="cartOpen">
+    <add-to-cart (modalState)="cartOpen = false" [product]="productDetail" [recommendedProducts]="products"></add-to-cart>
 </modal-window>

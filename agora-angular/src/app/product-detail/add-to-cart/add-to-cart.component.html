@@ -1,0 +1,29 @@
+<div class="container">
+    <h3 class="fw-bold">Termék hozzáadva a kosárhoz</h3>
+    <div class="row p-2 pb-0 m-3">
+        <div class="col-4 col-lg-2">
+            <img src="{{product.imgUrl[0]}}" alt="" class="img img-fluid rounded">
+        </div>
+        <div class="col-8 col-lg-6">
+            <h5 class="fw-bold">{{product.name}}</h5>
+            <a href="" class="text-decoration-none">{{product.seller}}</a>
+            <p>{{product.delivery}}</p>
+        </div>
+        <div class="col-6 col-lg-1 mt-3">
+            <p>1 db</p>
+        </div>
+        <div class="col-6 col-lg-3 mt-3">
+            <h4 class="fw-bold">{{product.price|price}}</h4>
+        </div>
+    </div>
+    <div class="d-flex justify-content-between">
+        <a (click)=back($event) href="#" class="btn btn-secondary mx-2">Vásárlás folytatása</a>
+        <a href="/cart" class="btn btn-primary mx-2">
+            <fa-icon [icon]="faShoppingCart"></fa-icon>
+            Kosár megtekintése
+        </a>
+    </div>
+    <hr>
+    <h4 class="fw-bold">Hasonló ajánlatok</h4>
+    <app-product-list class="row" [products]="recommendedProducts" [sideScrollable]="true" [wide]="false"></app-product-list>
+</div>
