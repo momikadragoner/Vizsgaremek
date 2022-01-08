@@ -7,6 +7,8 @@ import { productDetailed, productListShort, Product } from "../model/product";
 import { User, seller } from "../model/user";
 import { Review, reviews, ratingToArray } from "../model/review";
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { HttpClient } from '@angular/common/http';
+import { ProductService, Product as Iprod } from './product-detail.service';
 
 
 
@@ -88,11 +90,18 @@ export class ProductDetailComponent implements OnInit {
 
   ratingToArray = ratingToArray;
 
-  constructor(library: FaIconLibrary) {
+  constructor(library: FaIconLibrary, private productService: ProductService) {
     library.addIcons(faHandPaper, faTree, faBalanceScale);
   }
 
   ngOnInit(): void {
+  }
+
+  product: Product | undefined;
+
+  showProduct() {
+    this.productService.getProduct()
+      .subscribe((data: Product) => this.product = { ...data });
   }
 
 }

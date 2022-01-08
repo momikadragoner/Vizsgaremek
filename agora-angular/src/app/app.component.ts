@@ -25,7 +25,7 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   
-  title = 'agora-angular';
+  title = 'Agora';
 
   prepareRoute(outlet: RouterOutlet) {
     return outlet?.activatedRouteData?.['animation'];
