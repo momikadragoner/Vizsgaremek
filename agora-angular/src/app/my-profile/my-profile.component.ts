@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { User, seller } from "../model/user";
-import { Product, productListShort, myProductList } from "../model/product";
+import { User, seller } from "../services/user.service";
+import { Product, productListShort, myProductList } from "../services/product.service";
 import { faEnvelope, faLink,  faLocationArrow, faCalendarAlt} from '@fortawesome/free-solid-svg-icons';
 
 @Component({

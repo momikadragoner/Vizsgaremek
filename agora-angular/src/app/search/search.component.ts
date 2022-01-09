@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductShort as Product, ProductListService as ProductService, tags} from '../model/product'
+import { ProductShort as Product, ProductService, tags} from '../services/product.service'
 
 @Component({
   selector: 'app-search',
@@ -8,7 +8,7 @@ import { ProductShort as Product, ProductListService as ProductService, tags} fr
 })
 export class SearchComponent implements OnInit {
   
-  products: Product[] = [{ id: 0, name: "", seller: "", price: 0, discountAvailable: false, imgUrl: ""}];
+  products: Product[] = [{ id: 0, name: "", seller: "", price: -1, discountAvailable: false, imgUrl: ""}];
   error: string = "";
   tags = tags;
 

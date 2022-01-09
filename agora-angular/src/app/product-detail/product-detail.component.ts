@@ -4,11 +4,10 @@ import { faHandPaper, faEdit, faBalanceScale, faTree, faEnvelope, faShoppingCart
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { Form } from '@angular/forms';
 //import { productDetailed, productListShort, Product } from "../model/product";
-import { User, seller } from "../model/user";
-import { ratingToArray } from "../model/review";
+import { User, seller } from "../services/user.service";
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { HttpClient } from '@angular/common/http';
-import { ProductService, Product, Review, ProductShort } from './product-detail.service';
+import { ProductService, Product, Review, ProductShort, ratingToArray } from '../services/product.service';
 import { asapScheduler } from 'rxjs';
 
 
@@ -35,9 +34,9 @@ export class ProductDetailComponent implements OnInit {
   faChevronLeft = faChevronLeft;
   faEdit = faEdit;
 
-  product: Product = {id: 0, name: '', seller: '', price: 0, discountAvailable: false, inventory: 0, delivery: '', category: '', tags: [], materials: [], imgUrl: [], description: '', isPublic: true,};
+  product: Product = {id: 0, name: '', seller: '', price: -1, discountAvailable: false, inventory: -1, delivery: '', category: '', tags: [], materials: [], imgUrl: [], description: '', isPublic: true, rating: -1};
   reviews: Review[] =[{id: 0, username: "", title: "", review: "", rating: 0, points: 0, publishedAt: new Date()}];
-  productList: ProductShort[] = [{ id: 0, name: "", seller: "", price: 0, discountAvailable: false, imgUrl: ""}];
+  productList: ProductShort[] = [{ id: 0, name: "", seller: "", price: -1, discountAvailable: false, imgUrl: ""}];
   error:any;
   
   constructor(library: FaIconLibrary, private productService: ProductService) {

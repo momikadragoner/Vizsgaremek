@@ -16,7 +16,7 @@
         </ul>
 
         <div *ngIf="loggedIn" class="col-md-3 text-end loggedin-nav">
-            <a href="/cart" class="btn p-1 m-1 btn-cart">
+            <a [routerLink]="['/cart']" class="btn p-1 m-1 btn-cart">
                 <fa-layers [fixedWidth]="true">
                     <fa-icon [icon]="faShoppingCart"></fa-icon>
                     <fa-layers-counter content=" "></fa-layers-counter>
@@ -35,9 +35,9 @@
                         <li>
                             <hr class="dropdown-divider m-0">
                         </li>
-                        <li><a class="dropdown-item" href="/my-profile">Profil</a></li>
-                        <li><a class="dropdown-item" href="#">Kívánság lista</a></li>
-                        <li><a class="dropdown-item" href="#">Beállítások</a></li>
+                        <li><a class="dropdown-item" (click)="toggleCart($event)" [routerLink]="['/my-profile']">Profil</a></li>
+                        <li><a class="dropdown-item" (click)="toggleCart($event)" href="#">Kívánság lista</a></li>
+                        <li><a class="dropdown-item" (click)="toggleCart($event)" href="#">Beállítások</a></li>
                         <li>
                             <hr class="dropdown-divider m-0">
                         </li>
@@ -47,7 +47,7 @@
             </div>
         </div>
         <div *ngIf="loggedIn == false" class="col-md-3 text-end">
-            <a href="/signup-vendor" class="btn p-1 m-1 btn-sell">Eladok</a>
+            <a [routerLink]="['/signup-vendor']" class="btn p-1 m-1 btn-sell">Eladok</a>
             <a href="/login" class="btn p-1 m-1 btn-login">Belépés</a>
         </div>
     </header>
@@ -121,7 +121,7 @@
                     </div>
                 </div>
                 <div class="col-6 col-md-3 col-lg-2 mb-3">
-                    <a href="/search" class="text-decoration-none text-dark">
+                    <a [routerLink]="['/search']" class="text-decoration-none text-dark">
                         <div class="card card-category-product">
                             <div class="hstack gap-2 card-body mx-auto">
                                 <fa-icon [icon]="faBoxes"></fa-icon>

@@ -3,7 +3,7 @@ import { faArrowUp, faArrowDown, faStar } from '@fortawesome/free-solid-svg-icon
 import { EventEmitter } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { ThrowStmt } from '@angular/compiler';
-import { ratingToArray } from '../../model/review'
+import { ratingToArray } from '../../services/product.service'
 
 @Component({
   selector: 'app-review',

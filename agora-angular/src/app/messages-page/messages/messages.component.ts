@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
-import { Message } from '../../model/messages'
+import { Message } from '../../services/messages'
 
 @Component({
   selector: 'app-messages',

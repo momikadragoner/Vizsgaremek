@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { ProductShort as Product, ProductListService as ProductService } from "../model/product";
+import { ProductShort as Product, ProductService } from "../services/product.service";
 
 @Component({
   selector: 'app-front-page',
@@ -13,7 +13,7 @@ export class FrontPageComponent implements OnInit {
   faSearch = faSearch;
   faChevronDown = faChevronDown;
 
-  products: Product[] = [{ id: 0, name: "", seller: "", price: 0, discountAvailable: false, imgUrl: ""}];
+  products: Product[] = [{ id: 0, name: "", seller: "", price: -1, discountAvailable: false, imgUrl: ""}];
   error: string = "";
 
   constructor(private productService: ProductService) { }

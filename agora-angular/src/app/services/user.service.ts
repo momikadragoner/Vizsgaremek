@@ -1,3 +1,38 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+export interface User{
+    id: number,
+    name: string,
+    follows: number,
+    followers: number,
+    email: string,
+    phone: string,
+    about: string,
+    profileImgUrl: string,
+    headerImgUrl: string,
+    registeredAt: Date,
+    isVendor: boolean,
+    isAdmin: boolean,
+    companyName?: string,
+    siteLocation?: string,
+    website?: string,
+    takesCustomOrders?: boolean,
+}
+
+@Injectable()
+export class UserService {
+
+  constructor(private http: HttpClient) { }
+
+  rootURL = '/api';
+
+  getProduct() {
+    return this.http.get<User>(this.rootURL + '/user',);
+  }
+  
+}
+
 export class User{
     /**
      *

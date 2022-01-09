@@ -37,8 +37,7 @@ import { ScrollBlockDirective } from './scroll-block.directive';
 import { ReviewFormComponent } from './product-detail/review-form/review-form.component';
 import { CartComponent } from './cart/cart.component';
 import { AddToCartComponent } from './product-detail/add-to-cart/add-to-cart.component';
-import { ProductService } from './product-detail/product-detail.service';
-import { ProductListService } from './model/product';
+import { ProductService } from './services/product.service';
 
 @NgModule({
   declarations: [
@@ -86,8 +85,7 @@ import { ProductListService } from './model/product';
     FontAwesomeModule
   ],
   providers: [
-    ProductService,
-    ProductListService
+    ProductService
   ],
   bootstrap: [AppComponent]
 })

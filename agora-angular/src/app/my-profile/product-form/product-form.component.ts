@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Product, tags } from '../../model/product';
+import { Product, tags } from '../../services/product.service';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { faTruck, faBoxes, IconPrefix, faTree, faHandPaper, faBalanceScale} from '@fortawesome/free-solid-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';

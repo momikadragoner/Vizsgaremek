@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Product, productListShort } from "../model/product";
+import { Product, productListShort } from "../services/product.service";
 import { faShoppingCart, faChevronRight, faTrash, faHeart } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
