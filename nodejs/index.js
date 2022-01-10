@@ -44,6 +44,25 @@ const productListLong = [
   { id: 8, name: "Túrós-fahéjas hajtogatós", seller: "Szekszárdi Katalin", price: 1999, discountAvailable: false, imgUrl: "assets/item8.jpg"},
 ];
 
+const user = {
+    id: 1, 
+    name: "Nagy Erzsébet", 
+    follows: 16, 
+    followers: 54, 
+    email: "erzsi.nagy@mail.hu", 
+    phone: "301234567", 
+    about: "Sziasztok, Aranyoskák! Erzsi néni vagyok. Szabadidőmben szeretek ékszereket és egyéb apróságokat készíteni. ✨💎",
+    profileImgUrl: "assets/profilepic.jpg",
+    headerImgUrl: "assets/header2.jpg",
+    registeredAt: new Date(2021, 11, 2),
+    isVendor: true,
+    isAdmin: false,
+    companyName: undefined,
+    siteLocation: "Nagybajcs",
+    website: "erzsiekszer.hu",
+    takesCustomOrders: true 
+}
+
 app.use(bodyParser.json());
 
 app.get('/api/product', (req, res, next) => {
@@ -60,6 +79,10 @@ app.get('/api/product-list', (req, res, next) => {
 
 app.get('/api/product-list-long', (req, res, next) => {
   res.json(productListLong);
+});
+
+app.get('/api/user', (req, res, next) => {
+  res.json(user);
 });
 
 app.post('/api/user', (req, res) => {

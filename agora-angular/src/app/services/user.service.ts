@@ -27,7 +27,7 @@ export class UserService {
 
   rootURL = '/api';
 
-  getProduct() {
+  getUser() {
     return this.http.get<User>(this.rootURL + '/user',);
   }
   

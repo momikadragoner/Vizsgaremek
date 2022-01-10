@@ -4,10 +4,11 @@ import { faHandPaper, faEdit, faBalanceScale, faTree, faEnvelope, faShoppingCart
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { Form } from '@angular/forms';
 //import { productDetailed, productListShort, Product } from "../model/product";
-import { User, seller } from "../services/user.service";
+import { User as u, seller } from "../services/user.service";
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { HttpClient } from '@angular/common/http';
 import { ProductService, Product, Review, ProductShort, ratingToArray } from '../services/product.service';
+import { UserService, User } from '../services/user.service';
 import { asapScheduler } from 'rxjs';
 
 
@@ -37,9 +38,10 @@ export class ProductDetailComponent implements OnInit {
   product: Product = {id: 0, name: '', seller: '', price: -1, discountAvailable: false, inventory: -1, delivery: '', category: '', tags: [], materials: [], imgUrl: [], description: '', isPublic: true, rating: -1};
   reviews: Review[] =[{id: 0, username: "", title: "", review: "", rating: 0, points: 0, publishedAt: new Date()}];
   productList: ProductShort[] = [{ id: 0, name: "", seller: "", price: -1, discountAvailable: false, imgUrl: ""}];
+  seller: User = {id: 0, name: "", follows: -1, followers: -1, email: "", phone: "", about: "", profileImgUrl: "", headerImgUrl: "", registeredAt: new Date(), isVendor: true, isAdmin: false, companyName: undefined, siteLocation: "", website: "", takesCustomOrders: false};
   error:any;
   
-  constructor(library: FaIconLibrary, private productService: ProductService) {
+  constructor(library: FaIconLibrary, private productService: ProductService, private userService: UserService) {
     library.addIcons(faHandPaper, faTree, faBalanceScale);
   }
 
@@ -47,6 +49,7 @@ export class ProductDetailComponent implements OnInit {
     this.showProduct();
     this.ShowReviews();
     this.ShowProductList();
+    this.ShowUser();
   }
   
   showProduct() {
@@ -64,9 +67,13 @@ export class ProductDetailComponent implements OnInit {
     .subscribe((data: [ProductShort]) => this.productList = [...data], error => this.error = error);
   }
 
+  ShowUser() {
+    this.userService.getUser()
+    .subscribe((data: User) => this.seller = { ...data }, error => this.error = error);
+  }
+
   //public products= productListShort;
   //public productDetail:Product = productDetailed;
-  public seller:User = seller;
   public modalVisible = false;
   public imgOpen = false;
   public newReviewOpen = false;

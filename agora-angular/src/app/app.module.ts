@@ -38,6 +38,7 @@ import { ReviewFormComponent } from './product-detail/review-form/review-form.co
 import { CartComponent } from './cart/cart.component';
 import { AddToCartComponent } from './product-detail/add-to-cart/add-to-cart.component';
 import { ProductService } from './services/product.service';
+import { UserService } from './services/user.service';
 
 @NgModule({
   declarations: [
@@ -85,7 +86,8 @@ import { ProductService } from './services/product.service';
     FontAwesomeModule
   ],
   providers: [
-    ProductService
+    ProductService,
+    UserService
   ],
   bootstrap: [AppComponent]
 })
