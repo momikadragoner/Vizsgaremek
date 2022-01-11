@@ -3,7 +3,7 @@ const express = require('express');
 const app = express(),
       bodyParser = require("body-parser");
 
-const product = {
+const products = [{
     id: 1, 
     name: "Csodálatos arany nyaklánc medál", 
     seller: "Kiss Márta", 
@@ -18,7 +18,23 @@ const product = {
     description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore, quo voluptates nemo dolores at modi ipsam fuga odio architecto beatae aliquid molestiae enim qui obcaecati doloribus. Ex saepe voluptatem magnam!",
     isPublic: true,
     rating: 4.7
-};
+},
+{
+  id: 2, 
+  name: "Arany lánc", 
+  seller: "Nagy Erzsébet", 
+  price: 18599, 
+  discountAvailable: false, 
+  inventory: 10, 
+  delivery: "Azonnal szállítható", 
+  category: "Ékszer", 
+  tags: ["Környezetbarát", "Kézzel készült", "Etikusan beszerzett alapanyagok"], 
+  materials: ["arany", "ásvány"], 
+  imgUrl: ["assets/item1.jpg", "assets/item2.jpg", "assets/item4.jpg"],
+  description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore, quo voluptates nemo dolores at modi ipsam fuga odio architecto beatae aliquid molestiae enim qui obcaecati doloribus. Ex saepe voluptatem magnam!",
+  isPublic: true,
+  rating: 4.7
+}];
 
 const reviews = [
   { id: 0, username: "Anitaaa74", title: "Nagyszerű!!!", review: "Az unokámnak vettem szülinapjára és imádja!!!! Köszönöm!!!!!", rating: 5, points: 6, publishedAt: new Date(2021, 10, 28) },
@@ -65,8 +81,9 @@ const user = {
 
 app.use(bodyParser.json());
 
-app.get('/api/product', (req, res, next) => {
-  res.json(product);
+app.get('/api/product/:id', (req, res, next) => {
+  res.json(products[Number(req.params.id) - 1]);
+  //res.json(req.params.id);
 });
 
 app.get('/api/reviews', (req, res, next) => {

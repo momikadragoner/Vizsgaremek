@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Product, tags } from '../../services/product.service';
+import { Product, tags, toProductShort } from '../../services/product.service';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { faTruck, faBoxes, IconPrefix, faTree, faHandPaper, faBalanceScale} from '@fortawesome/free-solid-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -14,6 +14,7 @@ export class ProductFormComponent implements OnInit {
   iconPrefix: IconPrefix = 'fas';
   public newProduct = new Product(1,"", "" ,0,false,0,'Azonnal szállítható','',[''],[''],[''],"",false);
   tagsList = tags;
+  toProductShort = toProductShort;
 
   faTruck = faTruck;
   faBoxes = faBoxes;

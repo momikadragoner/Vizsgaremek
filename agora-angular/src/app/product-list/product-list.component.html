@@ -1,5 +1,5 @@
 <div [appHorizontalScroll]="sideScrollable" class="row gx-5" [ngClass]="{'side-scroll':sideScrollable}">
     <div *ngFor="let product of products" [ngClass]="{'col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3':wide, 'col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4':!wide, 'side-scroll-item mx-2 col-8':sideScrollable}">
-        <product-card [name]=product.name [seller]=product.seller [imgUrl]=product.imgUrl [price]=product.price [wide]=wide [sideScrollable]=sideScrollable></product-card>
+        <product-card [product]=product [wide]=wide [sideScrollable]=sideScrollable></product-card>
     </div>
 </div>

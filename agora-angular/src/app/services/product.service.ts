@@ -50,8 +50,8 @@ export class ProductService {
 
   rootURL = '/api';
 
-  getProduct() {
-    return this.http.get<Product>(this.rootURL + '/product',);
+  getProduct(id:any) {
+    return this.http.get<Product>(this.rootURL + '/product/' + id,);
   }
 
   getReviews() {
@@ -125,6 +125,12 @@ export const ratingToArray = function(rating:number):number[]{
   }
   return stars;
 }
+
+export const toProductShort = function(product:Product):ProductShort{
+  let productShort:ProductShort = {id: product.id, name: product.name, seller: product.seller, price: product.price, discountAvailable: product.discountAvailable, imgUrl:product.imgUrl[0]};
+  return productShort;
+}
+
 
 // export const productListLong = [
 //     new Product( 1, "Gyöngy nyakék", "Kiss Márta", 12599, false, 12, "Azonnal szállítható", "Ékszer", ["Környezetbarát", "Kézzel készült", "Etikusan beszerzett alapanyagok"], ["arany", "ásvány"], ["assets/item2.jpg"], "Lorem ipsum", true),

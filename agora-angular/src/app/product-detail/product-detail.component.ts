@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { faHandPaper, faEdit, faBalanceScale, faTree, faEnvelope, faShoppingCart, faHeart, faTruck, faGem, faBoxes, faStar, IconPrefix, IconName, faChevronLeft, faChevronRight} from '@fortawesome/free-solid-svg-icons';
 // import { faStar } from '@fortawesome/free-regular-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -39,21 +40,32 @@ export class ProductDetailComponent implements OnInit {
   reviews: Review[] =[{id: 0, username: "", title: "", review: "", rating: 0, points: 0, publishedAt: new Date()}];
   productList: ProductShort[] = [{ id: 0, name: "", seller: "", price: -1, discountAvailable: false, imgUrl: ""}];
   seller: User = {id: 0, name: "", follows: -1, followers: -1, email: "", phone: "", about: "", profileImgUrl: "", headerImgUrl: "", registeredAt: new Date(), isVendor: true, isAdmin: false, companyName: undefined, siteLocation: "", website: "", takesCustomOrders: false};
+  id:any;
   error:any;
   
-  constructor(library: FaIconLibrary, private productService: ProductService, private userService: UserService) {
+  constructor(
+    library: FaIconLibrary, 
+    private productService: ProductService, 
+    private userService: UserService,
+    private route: ActivatedRoute,
+    ) {
     library.addIcons(faHandPaper, faTree, faBalanceScale);
   }
 
   ngOnInit(): void {
-    this.showProduct();
+    // this.route.queryParams.subscribe(params => {
+    //   this.id = params['id'];
+    //   console.log(params['id'])
+    // });
+    this.id = this.route.snapshot.paramMap.get('id');
+    this.ShowProduct();
     this.ShowReviews();
     this.ShowProductList();
     this.ShowUser();
   }
   
-  showProduct() {
-    this.productService.getProduct()
+  ShowProduct() {
+    this.productService.getProduct(this.id)
     .subscribe((data: Product) => this.product = { ...data }, error => this.error = error);
   }
 

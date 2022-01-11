@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { ProductShort as Product } from 'src/app/services/product.service';
 
 @Component({
   selector: 'product-card',
@@ -8,10 +9,7 @@ import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 })
 export class ProductCardComponent implements OnInit {
 
-  @Input() public name: string = "";
-  @Input() public seller: string =  "";
-  @Input() public price: number = 0;
-  @Input() public imgUrl: string =  "";
+  @Input() public product: Product = {id: 0, name: "", seller: "", price: -1, discountAvailable: false, imgUrl:''};
   @Input() public wide: boolean =  true;
   @Input() public sideScrollable: boolean = false;
 
