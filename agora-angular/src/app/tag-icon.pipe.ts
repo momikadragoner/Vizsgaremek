@@ -3,9 +3,13 @@ import { IconName } from '@fortawesome/fontawesome-svg-core';
 
 @Pipe({name: 'icon'})
 export class TagIconPipe implements PipeTransform {
-  transform(value: string) {
+  transform(value: string, type: string) {
     let iconName: IconName;
-    switch (value) {
+
+    if(type == "tag")
+    {
+      switch (value) 
+      {
         case "Környezetbarát":
             iconName = 'tree';
             return iconName;
@@ -17,8 +21,19 @@ export class TagIconPipe implements PipeTransform {
             return iconName;
         default:
             break;
+      }
+    }else if (type == "category") 
+    {
+      switch (value) 
+      {
+        case "Ékszer":
+            iconName = 'gem';
+            return iconName;
+        default:
+            break;
+      }
     }
-    iconName = 'hand-paper';
+    iconName = 'exclamation-circle';
     return iconName;
   }
 }
