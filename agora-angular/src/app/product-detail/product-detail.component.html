@@ -50,22 +50,26 @@
                         <div class="shadow rounded px-4 pt-3 pb-2 m-2">
                             <div class="row mx-auto">
                                 <div class="col-2 text-center">
-                                    <fa-icon [icon]="faGem"></fa-icon>
+                                    <fa-icon [icon]="[iconPrefix, (product.category|icon:'category')]"></fa-icon>
                                 </div>
-                                <div class="ps-0 col-10">
-                                    <p>Kategória: Ékszer</p>
+                                <div class="ps-0 col-10" [ngClass]="{'placeholder col-4':product.category == ''}">
+                                    <p>Kategória: {{product.category}}</p>
                                 </div>
                                 <div class="col-2 text-center">
                                     <fa-icon [icon]="faBoxes"></fa-icon>
                                 </div>
                                 <div class="ps-0 col-10">
-                                    <p>Anyaga: ásvány, arany</p>
+                                    <p *ngIf="product.materials != []">Anyaga: 
+                                        <span *ngFor="let material of product.materials; let i = index">
+                                            {{material}}<span *ngIf="i != product.materials.length - 1">, </span>
+                                        </span>
+                                    </p>
                                 </div>
                                 <div class="col-2 text-center">
                                     <fa-icon [icon]="faTruck"></fa-icon>
                                 </div>
-                                <div class="ps-0 col-10">
-                                    <p>Azonnal szállítható</p>
+                                <div class="ps-0 col-10" [ngClass]="{'placeholder col-4':product.delivery == ''}">
+                                    <p>{{product.delivery}}</p>
                                 </div>
                             </div>
                         </div>
@@ -81,7 +85,7 @@
                         <div class="shadow rounded px-4 pt-3 pb-2 m-2">
                             <div *ngFor="let tag of product.tags" class="row mx-auto">
                                 <div class="col-2 text-center">
-                                    <fa-icon [icon]="[iconPrefix, (tag|icon)]"></fa-icon>
+                                    <fa-icon [icon]="[iconPrefix, (tag|icon:'tag')]"></fa-icon>
                                 </div>
                                 <div class="ps-0 col-10">
                                     <p>{{tag}}</p>

@@ -107,7 +107,9 @@ const user = {
 app.use(bodyParser.json());
 
 app.get('/api/product/:id', (req, res, next) => {
-  res.json(products[Number(req.params.id) - 1]);
+  if (products[Number(req.params.id) - 1]) {
+    res.json(products[Number(req.params.id) - 1]);
+  }
   //res.json(req.params.id);
 });
 
