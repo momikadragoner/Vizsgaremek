@@ -3,30 +3,6 @@ var mysql = require('mysql');
 
 const app = express(),
   bodyParser = require("body-parser");
-  
-// app.get('/api/prods', (req, res, next) => {
-
-//   const con = mysql.createConnection({
-//     host: "localhost",
-//     user: "root",
-//     password: "",
-//     database: "agora-webshop"
-//   });
-  
-//   con.connect(function (err) {
-//     if (err) throw err;
-//     console.log("Connected!");
-//   });
-
-//   con.connect(function(err) {
-//     if (err) throw err;
-//     con.query("SELECT * FROM member", function (err, result, fields) {
-//       //if (err) throw err;
-//       //console.log(result);
-//       res.json(result);
-//     });
-//   });
-// });
 
 const products = [{
   id: 1,
@@ -105,6 +81,40 @@ const user = {
 }
 
 app.use(bodyParser.json());
+
+function connectDb() {
+  var connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'agora-webshop'
+  })
+
+  connection.connect()
+  return connection;
+}
+
+app.get('/api/users-db', (req, res, next) => {
+  conn = connectDb()
+  conn.query('SELECT * FROM member', function (err, rows, fields) {
+    if (err) throw err
+    
+    res.json(rows);
+    console.log('The solution is: ', rows[0])
+  })
+    conn.end()
+})
+
+app.get('/api/product-db', (req, res, next) => {
+  conn = connectDb()
+  conn.query('SELECT * FROM product', function (err, rows, fields) {
+    if (err) throw err
+    
+    res.json(rows);
+    console.log('The solution is: ', rows[0])
+  })
+    conn.end()
+})
 
 app.get('/api/product/:id', (req, res, next) => {
   if (products[Number(req.params.id) - 1]) {
