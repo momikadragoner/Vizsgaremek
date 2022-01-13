@@ -12,7 +12,7 @@ import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 export class ProductFormComponent implements OnInit {
 
   iconPrefix: IconPrefix = 'fas';
-  public newProduct = new Product(1,"", "" ,0,false,0,'Azonnal szállítható','',[''],[''],[''],"",false);
+  public newProduct: Product = {productId: 0, name: '', sellerFirstName: '', sellerLastName: '', price: -1, inventory: -1, delivery: '', category: '', tags: [], materials: [], imgUrl: [], description: '', isPublic: true, rating: -1};
   tagsList = tags;
   toProductShort = toProductShort;
 
@@ -25,7 +25,7 @@ export class ProductFormComponent implements OnInit {
     name: [this.newProduct.name, Validators.required],
     price: [this.newProduct.price],
     id: [this.newProduct.price],
-    discountAvailable: [this.newProduct.discountAvailable],
+    //discountAvailable: [this.newProduct.discountAvailable],
     inventory: [this.newProduct.inventory],
     delivery: [this.newProduct.delivery],
     category: [this.newProduct.category],

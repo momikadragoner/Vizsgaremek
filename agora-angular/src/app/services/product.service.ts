@@ -6,22 +6,27 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 
 export interface Product {
-  id: number,
+  productId: number,
   name: string,
-  seller: string,
   price: number,
-  discountAvailable: boolean,
+  //discountAvailable: boolean,
   inventory: number,
   delivery: string,
   category: string,
-  tags: string[],
+  sellerFirstName: string,
+  sellerLastName: string,
   materials: string[],
+  tags: string[],
   imgUrl: string[],
   description: string,
   isPublic: boolean,
+  publishedAt?: Date,
+  createdAt?: Date,
+  lastUpdatedAt?: Date,
   discount?: number,
   rating?: number,
   sellerId?: number,
+  reviews?: Review[]
 }
 
 export interface ProductShort {
@@ -29,14 +34,15 @@ export interface ProductShort {
   name: string,
   seller: string,
   price: number,
-  discountAvailable: boolean,
   imgUrl: string,
   discount?: number,
 }
 
 export interface Review {
-  id: number,
-  username: string,
+  reviewId: number,
+  userId: number,
+  userFirstName: string,
+  userLastName: string,
   title: string,
   review: string,
   rating: number,
@@ -58,9 +64,9 @@ export class ProductService {
     );
   }
 
-  getReviews() {
-    return this.http.get<[Review]>(this.rootURL + '/reviews');
-  }
+  // getReviews() {
+  //   return this.http.get<[Review]>(this.rootURL + '/reviews');
+  // }
 
   getProductList() {
     return this.http.get<[ProductShort]>(this.rootURL + '/product-list');
@@ -92,11 +98,12 @@ export class Product {
    *
    */
   constructor(
-    public id: number,
+    public productId: number,
     public name: string,
-    public seller: string,
+    public sellerFirstName: string,
+    public sellerLastName: string,
     public price: number,
-    public discountAvailable: boolean,
+    //public discountAvailable: boolean,
     public inventory: number,
     public delivery: string,
     public category: string,
@@ -113,17 +120,17 @@ export class Product {
 }
 
 export const productListShort = [
-  new Product(1, "Gyöngy nyakék", "Kiss Márta", 12599, false, 12, "Azonnal szállítható", "Ékszer", ["Környezetbarát", "Kézzel készült", "Etikusan beszerzett alapanyagok"], ["arany", "ásvány"], ["assets/item2.jpg"], "Lorem ipsum", true),
-  new Product(2, "Arany lánc", "Nagy Erzsébet", 18599, false, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item1.jpg"], "Lorem ipsum", true),
-  new Product(3, "Ásvány medál ékszer", "Széles Lajos", 11999, false, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item3.jfif"], "Lorem ipsum", true),
-  new Product(4, "Arany és kristály nyaklánc", "Közepes Borbála", 19599, false, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item4.jpg"], "Lorem ipsum", true),
+  new Product(1, "Gyöngy nyakék", "Kiss", "Márta", 12599, 12, "Azonnal szállítható", "Ékszer", ["Környezetbarát", "Kézzel készült", "Etikusan beszerzett alapanyagok"], ["arany", "ásvány"], ["assets/item2.jpg"], "Lorem ipsum", true),
+  new Product(2, "Arany lánc", "Nagy", "Erzsébet", 18599, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item1.jpg"], "Lorem ipsum", true),
+  new Product(3, "Ásvány medál ékszer", "Széles", "Lajos", 11999, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item3.jfif"], "Lorem ipsum", true),
+  new Product(4, "Arany és kristály nyaklánc", "Közepes", "Borbála", 19599, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item4.jpg"], "Lorem ipsum", true),
 ];
 
 export const myProductList = [
-  new Product(1, "Gyöngy nyakék", "Nagy Erzsébet", 12599, false, 12, "Azonnal szállítható", "Ékszer", ["Környezetbarát", "Kézzel készült", "Etikusan beszerzett alapanyagok"], ["arany", "ásvány"], ["assets/item2.jpg"], "Lorem ipsum", false),
-  new Product(2, "Arany lánc", "Nagy Erzsébet", 18599, false, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item1.jpg"], "Lorem ipsum", true),
-  new Product(3, "Ásvány medál ékszer", "Nagy Erzsébet", 11999, false, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item3.jfif"], "Lorem ipsum", true),
-  new Product(4, "Arany és kristály nyaklánc", "Nagy Erzsébet", 19599, false, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item4.jpg"], "Lorem ipsum", true),
+  new Product(1, "Gyöngy nyakék", "Nagy", "Erzsébet", 12599, 12, "Azonnal szállítható", "Ékszer", ["Környezetbarát", "Kézzel készült", "Etikusan beszerzett alapanyagok"], ["arany", "ásvány"], ["assets/item2.jpg"], "Lorem ipsum", false),
+  new Product(2, "Arany lánc", "Nagy", "Erzsébet", 18599, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item1.jpg"], "Lorem ipsum", true),
+  new Product(3, "Ásvány medál ékszer", "Nagy", "Erzsébet", 11999, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item3.jfif"], "Lorem ipsum", true),
+  new Product(4, "Arany és kristály nyaklánc", "Nagy", "Erzsébet", 19599, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item4.jpg"], "Lorem ipsum", true),
 ];
 
 export const tags = [
@@ -146,7 +153,7 @@ export const ratingToArray = function(rating:number):number[]{
 }
 
 export const toProductShort = function(product:Product):ProductShort{
-  let productShort:ProductShort = {id: product.id, name: product.name, seller: product.seller, price: product.price, discountAvailable: product.discountAvailable, imgUrl:product.imgUrl[0]};
+  let productShort:ProductShort = {id: product.productId, name: product.name, seller: product.sellerFirstName, price: product.price, imgUrl:product.imgUrl[0]};
   return productShort;
 }
 

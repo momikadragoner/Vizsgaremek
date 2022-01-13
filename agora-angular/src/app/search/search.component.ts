@@ -8,7 +8,7 @@ import { ProductShort as Product, ProductService, tags} from '../services/produc
 })
 export class SearchComponent implements OnInit {
   
-  products: Product[] = [{ id: 0, name: "", seller: "", price: -1, discountAvailable: false, imgUrl: ""}];
+  products: Product[] = [{ id: 0, name: "", seller: "", price: -1, imgUrl: ""}];
   error: string = "";
   tags = tags;
 

@@ -119,7 +119,7 @@
                                     <img src="assets/profilepic.jpg" class="round img-fluid">
                                 </div>
                                 <div class="col-8">
-                                    <h5><a [routerLink]="['/profile']" class="text-decoration-none fw-bold">{{product.seller}}</a>
+                                    <h5><a [routerLink]="['/profile']" class="text-decoration-none fw-bold">{{product.sellerFirstName}} {{product.sellerLastName}}</a>
                                     </h5>
                                     <div class="btn-group">
                                         <a href="#" class="btn btn-primary my-2 px-3">Követés</a>
@@ -151,7 +151,7 @@
             <div class="scrollmenu row">
                 <a href="#" *ngFor="let review of reviews"
                     class="shadow rounded review m-2 col-12 col-md-6 text-decoration-none text-dark placeholder-glow"
-                    (click)="openModal([review.id], $event)">
+                    (click)="openModal([review.reviewId], $event)">
                     <div class="row">
                         <div class="col">
                             <h5 class="m-2 fw-bold" [ngClass]="{'placeholder col-8':review.title == ''}">
@@ -171,7 +171,7 @@
                         </div>
                         <div class="col text-end me-2 ps-0 ms-0">
                             <small class="text-secondary"
-                                [ngClass]="{'placeholder col-8':review.username == ''}">{{review.username}}</small>
+                                [ngClass]="{'placeholder col-8':review.userLastName == ''}">{{review.userLastName}} {{review.userFirstName}}</small>
                         </div>
                     </div>
                     <p class="m-2" [ngClass]="{'placeholder col-11':review.review == ''}">{{review.review|trim: 75}}</p>

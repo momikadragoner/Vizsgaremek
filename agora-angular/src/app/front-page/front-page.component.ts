@@ -13,7 +13,7 @@ export class FrontPageComponent implements OnInit {
   faSearch = faSearch;
   faChevronDown = faChevronDown;
 
-  products: Product[] = [{ id: 0, name: "", seller: "", price: -1, discountAvailable: false, imgUrl: ""}];
+  products: Product[] = [{ id: 0, name: "", seller: "", price: -1, imgUrl: ""}];
   error: string = "";
 
   constructor(private productService: ProductService) { }

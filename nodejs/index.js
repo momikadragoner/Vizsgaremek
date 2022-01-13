@@ -98,25 +98,79 @@ app.get('/api/users-db', (req, res, next) => {
   conn = connectDb()
   conn.query('SELECT * FROM member', function (err, rows, fields) {
     if (err) throw err
-    
-    res.json(rows);
-    console.log('The solution is: ', rows[0])
-  })
-    conn.end()
-})
 
-app.get('/api/product-db', (req, res, next) => {
-  conn = connectDb()
-  conn.query('SELECT * FROM product', function (err, rows, fields) {
-    if (err) throw err
-    
     res.json(rows);
-    console.log('The solution is: ', rows[0])
+    console.log('Users: ', rows[0])
   })
-    conn.end()
+  conn.end()
 })
 
 app.get('/api/product/:id', (req, res, next) => {
+
+  conn = connectDb()
+
+  if (!Number(req.params.id)) return res.json('Error: This URL does not lead to any products.');
+
+  let id = Number(req.params.id);
+  let materials = [];
+  let tags = [];
+  let imgUrl = [];
+  let reviews = [];
+
+  conn.query('SELECT material_name FROM material INNER JOIN product_material ON material.material_id = product_material.material_id WHERE product_material.product_id = ?',
+    [id], (err, rows, fields) => {
+      if (err) res.json("Query error: " + err)
+      else {
+        rows.forEach((rows) => { materials.push(rows.material_name) });
+      }
+    }
+  );
+  conn.query('SELECT tag_name FROM tag INNER JOIN product_tag ON tag.tag_id = product_tag.tag_id WHERE product_tag.product_id = ?',
+    [id], (err, rows, fields) => {
+      if (err) res.json("Query error: " + err)
+      else {
+        rows.forEach((rows) => { tags.push(rows.tag_name) });
+      }
+    }
+  );
+  conn.query('SELECT product_picture.resource_link FROM product_picture WHERE product_picture.product_id = ?',
+    [id], (err, rows, fields) => {
+      if (err) res.json("Query error: " + err)
+      else {
+        rows.forEach((rows) => { imgUrl.push(rows.resource_link) });
+      }
+    }
+  );
+  conn.query('SELECT review.review_id AS reviewId, review.member_id AS userId, review.rating, review.title, review.content, review.published_at AS publishedAt, member.first_name AS userFirstName, member.last_name AS userLastName FROM review INNER JOIN member ON member.member_id = review.member_id WHERE review.product_id = ?;',
+    [id], (err, rows, fields) => {
+      if (err) res.json("Query error: " + err)
+      else {
+        rows.forEach((rows) => { reviews.push(rows) });
+      }
+    }
+  );
+  conn.query('SELECT product.product_id AS productId, product.name, product.price, product.description, product.inventory, product.delivery, product.category, product.rating, product.vendor_id AS sellerId, product.discount, product.is_published AS isPublished, product.created_at AS createdAt, product.last_updated_at AS lastUpdatedAt, product.published_at AS publishedAt, member.first_name AS sellerFirstName, member.last_name AS sellerLastName FROM product INNER JOIN member ON member.member_id = product.vendor_id WHERE product_id = ?',
+  [id], (err, rows, fields) => {
+    if (err) res.json("Query error: " + err)
+    else if (rows[0] == undefined) {
+      res.json('Error: This product does not exist.');
+    }
+    else {
+      rows[0].materials = materials;
+      rows[0].tags = tags;
+      rows[0].imgUrl = imgUrl;
+      rows[0].reviews = reviews;
+      let product = rows[0];
+        res.json(product);  
+      }
+    }
+  );
+
+  conn.end();
+
+})
+
+app.get('/api/product-old/:id', (req, res, next) => {
   if (products[Number(req.params.id) - 1]) {
     res.json(products[Number(req.params.id) - 1]);
   }
