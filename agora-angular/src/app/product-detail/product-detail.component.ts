@@ -37,7 +37,7 @@ export class ProductDetailComponent implements OnInit {
   faEdit = faEdit;
 
   product: Product = { productId: 0, name: '', sellerFirstName: '', sellerLastName: '', price: -1, inventory: -1, delivery: '', category: '', tags: [], materials: [], imgUrl: [], description: '', isPublic: true, rating: -1 };
-  reviews: Review[] = [{ reviewId: 0, userId: 0, userLastName: "", userFirstName: "", title: "", review: "", rating: 0, points: 0, publishedAt: new Date() }];
+  review: Review = { reviewId: 0, userId: 0, userLastName: "", userFirstName: "", title: "", content: "", rating: 0, points: 0, publishedAt: new Date() };
   productList: ProductShort[] = [{ id: 0, name: "", seller: "", price: -1, imgUrl: "" }];
   seller: User = { id: 0, name: "", follows: -1, followers: -1, email: "", phone: "", about: "", profileImgUrl: "", headerImgUrl: "", registeredAt: new Date(), isVendor: true, isAdmin: false, companyName: undefined, siteLocation: "", website: "", takesCustomOrders: false };
   id: any;
@@ -79,7 +79,6 @@ export class ProductDetailComponent implements OnInit {
     this.selectedImgIndex = 0;
     this.id = this.route.snapshot.paramMap.get('id');
     this.ShowProduct();
-    //this.ShowReviews();
     this.ShowProductList();
     this.ShowUser();
     // this.route.queryParams.subscribe(params => {
@@ -91,14 +90,15 @@ export class ProductDetailComponent implements OnInit {
   ShowProduct() {
     this.productService.getProduct(this.id)
       .subscribe((data: Product) => this.product = { ... data}, error => this.error = error);
-    console.log(this.product);
-    console.log(this.error);
+    // console.log(this.product);
+    // console.log(this.error);
   }
 
-  // ShowReviews() {
-  //   this.productService.getReviews()
-  //   .subscribe((data: [Review]) => this.reviews = [...data], error => this.error = error);
-  // }
+  ShowReview(id:any) {
+    this.productService.getReview(id)
+    .subscribe((data: Review) => this.review = { ... data}, error => this.error = error);
+    console.log(this.review);
+  }
 
   ShowProductList() {
     this.productService.getProductList()
@@ -110,20 +110,19 @@ export class ProductDetailComponent implements OnInit {
       .subscribe((data: User) => this.seller = { ...data }, error => this.error = error);
   }
 
-  //public products= productListShort;
-  //public productDetail:Product = productDetailed;
   public modalVisible = false;
   public imgOpen = false;
   public newReviewOpen = false;
   public cartOpen = false;
-  public reviewContent?: Review = { reviewId: 0, userId: 0, userLastName: "", userFirstName: "", title: "", review: "", rating: 0, points: 0, publishedAt: new Date() };
   public selectedImg: string = this.product.imgUrl[0];
   public selectedImgIndex: number = 0;
 
   openModal(id: number[], $event: any) {
     $event.preventDefault();
+    this.review = { reviewId: 0, userId: 0, userLastName: "", userFirstName: "", title: "", content: "", rating: -1, points: -1, publishedAt: new Date() };
     this.modalVisible = true;
-    this.reviewContent = this.reviews?.[id[0]];
+    //console.log(id);
+    this.ShowReview(id[0]);
   }
 
   selectImg(id: number, $event: any) {

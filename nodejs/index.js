@@ -160,8 +160,7 @@ app.get('/api/product/:id', (req, res, next) => {
       rows[0].tags = tags;
       rows[0].imgUrl = imgUrl;
       rows[0].reviews = reviews;
-      let product = rows[0];
-        res.json(product);  
+      res.json(rows[0]);
       }
     }
   );
@@ -177,8 +176,22 @@ app.get('/api/product-old/:id', (req, res, next) => {
   //res.json(req.params.id);
 });
 
-app.get('/api/reviews', (req, res, next) => {
-  res.json(reviews);
+app.get('/api/review/:id', (req, res, next) => {
+
+  conn = connectDb()
+
+  if (!Number(req.params.id)) return res.json('Error: This URL does not lead to any products.');
+
+  let id = Number(req.params.id);
+
+  conn.query('SELECT review.review_id AS reviewId, review.product_id AS productId, review.member_id AS memberId, review.rating, review.points, review.title, review.content, review.published_at AS publishedAt, member.first_name AS userFirstName, member.last_name AS userLastName FROM review INNER JOIN member ON member.member_id = review.review_id WHERE review.review_id = ?',
+    [id], (err, rows, fields) => {
+      if (err) res.json("Query error: " + err)
+      else {
+        res.json(rows[0]);
+      }
+    }
+  );
 });
 
 app.get('/api/product-list', (req, res, next) => {

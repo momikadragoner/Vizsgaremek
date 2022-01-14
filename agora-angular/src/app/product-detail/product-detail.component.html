@@ -119,7 +119,7 @@
                                     <img src="assets/profilepic.jpg" class="round img-fluid">
                                 </div>
                                 <div class="col-8">
-                                    <h5><a [routerLink]="['/profile']" class="text-decoration-none fw-bold">{{product.sellerFirstName}} {{product.sellerLastName}}</a>
+                                    <h5><a [routerLink]="['/profile']" class="text-decoration-none fw-bold">{{product.sellerLastName}} {{product.sellerFirstName}}</a>
                                     </h5>
                                     <div class="btn-group">
                                         <a href="#" class="btn btn-primary my-2 px-3">Követés</a>
@@ -149,13 +149,12 @@
             <h3>Értékelések</h3>
             <h1 class="fw-bold big ms-3" [ngClass]="{'placeholder col-1':product.rating == -1}">{{product.rating}}<small class="fw-normal small">/ 5</small></h1>
             <div class="scrollmenu row">
-                <a href="#" *ngFor="let review of reviews"
+                <a href="#" *ngFor="let review of product.reviews"
                     class="shadow rounded review m-2 col-12 col-md-6 text-decoration-none text-dark placeholder-glow"
                     (click)="openModal([review.reviewId], $event)">
                     <div class="row">
                         <div class="col">
-                            <h5 class="m-2 fw-bold" [ngClass]="{'placeholder col-8':review.title == ''}">
-                                {{review.title}}</h5>
+                            <h5 class="m-2 fw-bold" [ngClass]="{'placeholder col-8':review.title == ''}">{{review.title}}</h5>
                         </div>
                         <div class="text-end col-auto m-2 ps-0 ms-0">
                             <small class="text-secondary">{{review.publishedAt|date}}</small>
@@ -174,8 +173,8 @@
                                 [ngClass]="{'placeholder col-8':review.userLastName == ''}">{{review.userLastName}} {{review.userFirstName}}</small>
                         </div>
                     </div>
-                    <p class="m-2" [ngClass]="{'placeholder col-11':review.review == ''}">{{review.review|trim: 75}}</p>
-                    <p *ngIf="review.review == ''" class="mx-2 mb-2">
+                    <p class="m-2" [ngClass]="{'placeholder col-11':review.content == ''}">{{review.content|trim: 75}}</p>
+                    <p *ngIf="review.content == ''" class="mx-2 mb-2">
                         <span class="placeholder col-4"></span>
                         <span class="placeholder col-4"></span>
                         <span class="placeholder col-4"></span>
@@ -203,7 +202,7 @@
 <page-footer></page-footer>
 <!-- Review detailed -->
 <modal-window [(modalVisible)]="modalVisible">
-    <app-review [(content)]="reviewContent"></app-review>
+    <app-review [(content)]="review"></app-review>
 </modal-window>
 <!-- Képnézegető -->
 <modal-window [(modalVisible)]="imgOpen">

@@ -44,7 +44,7 @@ export interface Review {
   userFirstName: string,
   userLastName: string,
   title: string,
-  review: string,
+  content: string,
   rating: number,
   points: number,
   publishedAt: Date
@@ -64,9 +64,9 @@ export class ProductService {
     );
   }
 
-  // getReviews() {
-  //   return this.http.get<[Review]>(this.rootURL + '/reviews');
-  // }
+  getReview(id:any) {
+    return this.http.get<Review>(this.rootURL + '/review/' + id);
+  }
 
   getProductList() {
     return this.http.get<[ProductShort]>(this.rootURL + '/product-list');
