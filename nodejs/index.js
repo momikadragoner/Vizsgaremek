@@ -184,7 +184,7 @@ app.get('/api/review/:id', (req, res, next) => {
 
   let id = Number(req.params.id);
 
-  conn.query('SELECT review.review_id AS reviewId, review.product_id AS productId, review.member_id AS memberId, review.rating, review.points, review.title, review.content, review.published_at AS publishedAt, member.first_name AS userFirstName, member.last_name AS userLastName FROM review INNER JOIN member ON member.member_id = review.review_id WHERE review.review_id = ?',
+  conn.query('SELECT review.review_id AS reviewId, review.product_id AS productId, review.member_id AS memberId, review.rating, review.points, review.title, review.content, review.published_at AS publishedAt, member.first_name AS userFirstName, member.last_name AS userLastName FROM review INNER JOIN member ON member.member_id = review.member_id WHERE review.review_id = ?',
     [id], (err, rows, fields) => {
       if (err) res.json("Query error: " + err)
       else {
@@ -194,16 +194,41 @@ app.get('/api/review/:id', (req, res, next) => {
   );
 });
 
-app.get('/api/product-list', (req, res, next) => {
-  res.json(productList);
+app.get('/api/list-all-products', (req, res, next) => {
+  conn = connectDb()
+
+  conn.query('SELECT product.product_id AS productId, product.name, product.price, product.vendor_id AS sellerId, product.discount, member.first_name AS sellerFirstName, member.last_name AS sellerLastName, ( SELECT product_picture.resource_link FROM product_picture WHERE product_picture.is_thumbnail = TRUE AND product.product_id = product_picture.product_id LIMIT 1 ) AS imgUrl FROM product INNER JOIN member ON member.member_id = product.vendor_id WHERE product.is_published = TRUE AND product.inventory > 0;',
+     (err, rows, fields) => {
+      if (err) res.json("Query error: " + err)
+      else {
+        res.json(rows);
+      }
+    }
+  );
 });
 
-app.get('/api/product-list-long', (req, res, next) => {
+app.get('/api/recommended-products/:user/:product', (req, res, next) => {
   res.json(productListLong);
 });
 
-app.get('/api/user', (req, res, next) => {
-  res.json(user);
+
+
+app.get('/api/user/:id', (req, res, next) => {
+  
+  conn = connectDb()
+
+  if (!Number(req.params.id)) return res.json('Error: This URL does not lead to any products.');
+
+  let id = Number(req.params.id);
+
+  conn.query('SELECT member.member_id AS userId, member.first_name AS firstName, member.last_name AS lastName, member.about, member.profile_picture_link AS profileImgUrl, vendor_detail.takes_custom_orders AS takesCustomOrders FROM member INNER JOIN vendor_detail ON vendor_detail.member_id = member.member_id WHERE member.member_id = ?',
+    [id], (err, rows, fields) => {
+      if (err) res.json("Query error: " + err)
+      else {
+        res.json(rows[0]);
+      }
+    }
+  );
 });
 
 app.post('/api/user', (req, res) => {

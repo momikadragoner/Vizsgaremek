@@ -17,7 +17,7 @@ const routes: Routes = [
   {path: '', component: FrontPageComponent},
   {path: 'login', component: LoginComponent},
   {path: 'product-details/:id', component: ProductDetailComponent},
-  {path: 'profile', component: ProfilePageComponent},
+  {path: 'profile/:id', component: ProfilePageComponent},
   {path: 'signup', component: SignupCustomerComponent},
   {path: 'signup-vendor', component: SignupVendorComponent},
   {path: 'messages', component: MessagesPageComponent},

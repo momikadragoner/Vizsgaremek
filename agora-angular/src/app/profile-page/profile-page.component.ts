@@ -15,7 +15,7 @@ export class ProfilePageComponent implements OnInit {
   faLocationArrow = faLocationArrow;
   faCalendar = faCalendarAlt;
 
-  products: Product[] = [{ id: 0, name: "", seller: "", price: 0, imgUrl: ""}];
+  products: Product[] = [{productId: 0, name: "", sellerLastName: "", sellerFirstName: "", price: -1, imgUrl:''}];
   error: string = "";
   user = seller;
 

@@ -13,7 +13,7 @@ export class FrontPageComponent implements OnInit {
   faSearch = faSearch;
   faChevronDown = faChevronDown;
 
-  products: Product[] = [{ id: 0, name: "", seller: "", price: -1, imgUrl: ""}];
+  products: Product[] = [{productId: 0, name: "", sellerLastName: "", sellerFirstName: "", price: -1, imgUrl:''}];
   error: string = "";
 
   constructor(private productService: ProductService) { }
@@ -23,7 +23,7 @@ export class FrontPageComponent implements OnInit {
   }
 
   ShowProductList() {
-    this.productService.getProductListLong()
+    this.productService.getAllProducts()
     .subscribe((data: [Product]) => this.products = [...data], error => this.error = error);
   }
 

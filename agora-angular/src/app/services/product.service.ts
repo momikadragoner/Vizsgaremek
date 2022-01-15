@@ -30,9 +30,11 @@ export interface Product {
 }
 
 export interface ProductShort {
-  id: number,
+  productId: number,
+  sellerId?: number,
   name: string,
-  seller: string,
+  sellerFirstName: string,
+  sellerLastName: string,
   price: number,
   imgUrl: string,
   discount?: number,
@@ -68,8 +70,8 @@ export class ProductService {
     return this.http.get<Review>(this.rootURL + '/review/' + id);
   }
 
-  getProductList() {
-    return this.http.get<[ProductShort]>(this.rootURL + '/product-list');
+  getAllProducts() {
+    return this.http.get<[ProductShort]>(this.rootURL + '/list-all-products');
   }
 
   getProductListLong() {
@@ -153,7 +155,7 @@ export const ratingToArray = function(rating:number):number[]{
 }
 
 export const toProductShort = function(product:Product):ProductShort{
-  let productShort:ProductShort = {id: product.productId, name: product.name, seller: product.sellerFirstName, price: product.price, imgUrl:product.imgUrl[0]};
+  let productShort:ProductShort = {productId: product.productId, sellerId: product.sellerId, name: product.name, sellerFirstName: product.sellerFirstName, sellerLastName: product.sellerLastName, price: product.price, imgUrl:product.imgUrl[0]};
   return productShort;
 }
 

@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 export interface User{
-    id: number,
-    name: string,
+    userId: number,
+    firstName: string,
+    lastName: string,
     follows: number,
     followers: number,
     email: string,
@@ -20,6 +21,16 @@ export interface User{
     takesCustomOrders?: boolean,
 }
 
+export interface UserShort{
+  userId: number,
+  firstName: string,
+  lastName: string,
+  about: string,
+  profileImgUrl: string,
+  companyName?: string,
+  takesCustomOrders?: boolean,
+}
+
 @Injectable()
 export class UserService {
 
@@ -27,8 +38,8 @@ export class UserService {
 
   rootURL = '/api';
 
-  getUser() {
-    return this.http.get<User>(this.rootURL + '/user',);
+  getUserShort(id:any) {
+    return this.http.get<UserShort>(this.rootURL + '/user/' + id,);
   }
   
 }
@@ -38,8 +49,9 @@ export class User{
      *
      */
     constructor(
-        public id: number,
-        public name: string,
+        public userId: number,
+        public firstName: string,
+        public lastName: string,
         public follows: number,
         public followers: number,
         public email: string,
@@ -62,7 +74,7 @@ export class User{
 
 export const seller = new User( 
     1, 
-    "Nagy Erzsébet", 
+    "Nagy", "Erzsébet", 
     16, 54, 
     "erzsi.nagy@mail.hu", 
     "301234567", 

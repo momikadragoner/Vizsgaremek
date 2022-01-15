@@ -7,11 +7,11 @@
     </div>
     <div class="card-body card-body-product text-center placeholder-glow">
         <h5 class="card-title fw-bold" [ngClass]="{'placeholder col-10':product.name == ''}" [class.fit-text]="product.name.length> 20">{{product.name}}</h5>
-        <p class="card-text text-primary m-1" [ngClass]="{'placeholder col-6':product.seller == ''}">{{product.seller}}</p>
+        <a class="card-text text-primary m-1 text-decoration-none" [routerLink]="['/profile', product.sellerId]" [ngClass]="{'placeholder col-6':product.sellerLastName == ''}">{{product.sellerLastName}} {{product.sellerFirstName}}</a>
         <h4 class="m-0 fw-bold" [ngClass]="{'placeholder col-7':product.price == -1}">{{product.price | price}}</h4>
     </div>
     <div class="btn-group mx-2 px-1 mb-3 bottom">
-        <a [routerLink]="['/product-details', product.id]" class="btn btn-primary w-75">Részletek</a>
+        <a [routerLink]="['/product-details', product.productId]" class="btn btn-primary w-75">Részletek</a>
         <a href="#" class="btn btn-secondary w-25">
             <fa-icon [icon]="faShoppingCart"></fa-icon>
         </a>
