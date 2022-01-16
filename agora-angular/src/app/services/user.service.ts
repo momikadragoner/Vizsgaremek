@@ -5,7 +5,7 @@ export interface User{
     userId: number,
     firstName: string,
     lastName: string,
-    follows: number,
+    following: number,
     followers: number,
     email: string,
     phone: string,
@@ -39,7 +39,11 @@ export class UserService {
   rootURL = '/api';
 
   getUserShort(id:any) {
-    return this.http.get<UserShort>(this.rootURL + '/user/' + id,);
+    return this.http.get<UserShort>(this.rootURL + '/user-short/' + id,);
+  }
+
+  getUser(id:any) {
+    return this.http.get<User>(this.rootURL + '/user/' + id,);
   }
   
 }
@@ -52,7 +56,7 @@ export class User{
         public userId: number,
         public firstName: string,
         public lastName: string,
-        public follows: number,
+        public following: number,
         public followers: number,
         public email: string,
         public phone: string,

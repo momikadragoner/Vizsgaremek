@@ -211,9 +211,25 @@ app.get('/api/recommended-products/:user/:product', (req, res, next) => {
   res.json(productListLong);
 });
 
+app.get('/api/products-by-seller/:id', (req, res, next) => {
 
+  conn = connectDb()
 
-app.get('/api/user/:id', (req, res, next) => {
+  if (!Number(req.params.id)) return res.json('Error: This URL does not lead to any products.');
+
+  let id = Number(req.params.id);
+
+  conn.query('SELECT product.product_id AS productId, product.name, product.price, product.vendor_id AS sellerId, product.discount, member.first_name AS sellerFirstName, member.last_name AS sellerLastName, ( SELECT product_picture.resource_link FROM product_picture WHERE product_picture.is_thumbnail = TRUE AND product.product_id = product_picture.product_id LIMIT 1 ) AS imgUrl FROM product INNER JOIN member ON member.member_id = product.vendor_id WHERE product.is_published = TRUE AND product.inventory > 0 AND product.vendor_id = ?',
+    [id], (err, rows, fields) => {
+      if (err) res.json("Query error: " + err)
+      else {
+        res.json(rows);
+      }
+    }
+  );
+});
+
+app.get('/api/user-short/:id', (req, res, next) => {
   
   conn = connectDb()
 
@@ -223,6 +239,24 @@ app.get('/api/user/:id', (req, res, next) => {
 
   conn.query('SELECT member.member_id AS userId, member.first_name AS firstName, member.last_name AS lastName, member.about, member.profile_picture_link AS profileImgUrl, vendor_detail.takes_custom_orders AS takesCustomOrders FROM member INNER JOIN vendor_detail ON vendor_detail.member_id = member.member_id WHERE member.member_id = ?',
     [id], (err, rows, fields) => {
+      if (err) res.json("Query error: " + err)
+      else {
+        res.json(rows[0]);
+      }
+    }
+  );
+});
+
+app.get('/api/user/:id', (req, res, next) => {
+  
+  conn = connectDb()
+
+  if (!Number(req.params.id)) return res.json('Error: This URL does not lead to any products.');
+
+  let id = Number(req.params.id);
+
+  conn.query('SELECT member.member_id AS userId, member.first_name AS firstName, member.last_name AS lastName, member.about, member.profile_picture_link AS profileImgUrl, member.header_picture_link AS headerImgUrl, member.registered_at AS registeredAt, v.company_name AS companyName, v.site_location AS siteLocation, v.website, v.takes_custom_orders AS takesCustomOrders, (SELECT COUNT(follower_relations.following_id = ?) FROM follower_relations) AS followers, (SELECT COUNT(follower_relations.follower_id = ?) FROM follower_relations ) AS following FROM member INNER JOIN vendor_detail AS v ON v.member_id = member.member_id WHERE member.member_id = ?',
+    [id, id, id], (err, rows, fields) => {
       if (err) res.json("Query error: " + err)
       else {
         res.json(rows[0]);

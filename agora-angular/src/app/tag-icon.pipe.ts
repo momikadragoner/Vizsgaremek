@@ -23,6 +23,15 @@ export class TagIconPipe implements PipeTransform {
         case "Csomagolás mentes":
           iconName = 'box-open';
           return iconName;
+        case "Vegán":
+          iconName = 'seedling';
+          return iconName;
+        case "Vegetáriánus":
+          iconName = 'carrot';
+          return iconName;
+        case "Bio":
+          iconName = 'apple-alt';
+          return iconName;
         default:
           break;
       }
@@ -30,6 +39,9 @@ export class TagIconPipe implements PipeTransform {
       switch (value) {
         case "Ékszer":
           iconName = 'gem';
+          return iconName;
+        case "Tejtermék":
+          iconName = 'cheese';
           return iconName;
         default:
           break;
