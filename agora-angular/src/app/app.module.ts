@@ -39,6 +39,7 @@ import { CartComponent } from './cart/cart.component';
 import { AddToCartComponent } from './product-detail/add-to-cart/add-to-cart.component';
 import { ProductService } from './services/product.service';
 import { UserService } from './services/user.service';
+import { RootComponent } from './account-forms/root/root.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +73,8 @@ import { UserService } from './services/user.service';
     ScrollBlockDirective,
     ReviewFormComponent,
     CartComponent,
-    AddToCartComponent
+    AddToCartComponent,
+    RootComponent
   ],
   imports: [
     BrowserModule,

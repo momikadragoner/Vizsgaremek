@@ -1,4 +1,6 @@
 const express = require('express');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
 const app = express(),
       bodyParser = require("body-parser");
@@ -44,7 +46,7 @@ const productListLong = [
   { id: 8, name: "Túrós-fahéjas hajtogatós", seller: "Szekszárdi Katalin", price: 1999, discountAvailable: false, imgUrl: "assets/item8.jpg"},
 ];
 
-const user = {
+const users = {
     id: 1, 
     name: "Nagy Erzsébet", 
     follows: 16, 
@@ -60,8 +62,10 @@ const user = {
     companyName: undefined,
     siteLocation: "Nagybajcs",
     website: "erzsiekszer.hu",
-    takesCustomOrders: true 
+    takesCustomOrders: true
 }
+
+
 
 app.use(bodyParser.json());
 
@@ -81,18 +85,76 @@ app.get('/api/product-list-long', (req, res, next) => {
   res.json(productListLong);
 });
 
-app.get('/api/user', (req, res, next) => {
-  res.json(user);
+app.get('/api/users', (req, res, next) => {
+  res.json(users);
 });
 
-app.post('/api/user', (req, res) => {
-  const user = req.body.user;
+app.post('/api/users', (req, res) => {
+  const user = req.body.users;
   users.push(user);
   res.json("user addedd");
 });
 
-app.get('/', (req,res) => {
-    res.send('App Works !!!!');
+
+
+
+
+const auth = () => {
+  return (req,res,next) => {
+    passport.authenticate('local', (error, user,info)=>{
+      if(error) res.status(400).json({"statusCode":400, "message":error});
+      
+      req.login(user, function(error){
+        if(error) return next(error); 
+        next();
+      });
+    })(req,res,next);
+    
+  }
+}
+
+app.post('/authenticate', auth(), (req,res)=>{
+  res.status(200).json({"statusCode":200, "message":"Minden jó"});
+});
+
+
+
+passport.serializeUser(function(user, done){
+  if(user) done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done){
+  done(null,id);
+});
+
+passport.use(new LocalStrategy(
+  function(emailAddress,password,done){
+    if(emailAddress==="erzsi.nagy@mail.hu" && password==="Teszt123"){
+      return done(null, emailAddress);
+    } else{
+      return done("Illetéktelen hozzáférés", false);
+    }
+  }
+));
+
+app.use(passport.initialize());
+
+app.use(passport.session());
+
+const isLoggedIn=(req,res,next)=>{
+  if(req.isAuthenticated()){
+    return next();
+  }
+  return res.status(400).json({"statusCode": 400, "message": "Nincs hitelesítve"});
+}
+
+
+
+app.get('/', isLoggedIn, (req,res) => {
+  
+  res.json("data")
+  
+  res.send('App Works !!!!');
 });
 
 // app.get('/', (req,res) => {

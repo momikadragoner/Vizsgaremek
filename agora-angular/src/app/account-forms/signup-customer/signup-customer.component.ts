@@ -15,11 +15,11 @@ export class SignupCustomerComponent implements OnInit {
     password: new FormControl('', [Validators.required, Validators.minLength(8)])
   });
 
+  constructor() { }
+
   onSubmit(){
 
   }
-
-  constructor() { }
 
   ngOnInit(): void {
   }

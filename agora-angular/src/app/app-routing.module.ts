@@ -12,9 +12,10 @@ import { MyProfileComponent } from './my-profile/my-profile.component';
 import { EditProfileComponent } from './my-profile/edit-profile/edit-profile.component';
 import { SearchComponent } from './search/search.component';
 import { CartComponent } from './cart/cart.component';
+import { AuthGuardService as AuthGuard } from './account-forms/auth-guard.service';
 
 const routes: Routes = [
-  {path: '', component: FrontPageComponent},
+  {path: '', component: FrontPageComponent, canActivate:[AuthGuard]},
   {path: 'login', component: LoginComponent},
   {path: 'product-details', component: ProductDetailComponent},
   {path: 'profile', component: ProfilePageComponent},
