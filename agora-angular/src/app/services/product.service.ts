@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 import { Observable, throwError } from 'rxjs';
@@ -78,8 +78,14 @@ export class ProductService {
     return this.http.get<[ProductShort]>(this.rootURL + '/product-list-long');
   }
 
-  getProductsBySeller(id:any) {
-    return this.http.get<[ProductShort]>(this.rootURL + '/products-by-seller/' + id);
+  getProductsBySeller(id:any, order?:string, term?:string) {
+    let params = new HttpParams();
+    //if(term) params.append('term', term);
+    //if(order) params.append('orderby', order);
+    const options =  order ? { params: new HttpParams().append('orderby', order)} : {};
+
+    //const options = params == new HttpParams() ? {} : {params: params};
+    return this.http.get<[ProductShort]>(this.rootURL + '/products-by-seller/' + id, options);
   }
 
   private handleError(error: HttpErrorResponse) {

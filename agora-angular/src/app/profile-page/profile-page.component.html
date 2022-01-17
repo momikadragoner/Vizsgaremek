@@ -57,20 +57,18 @@
     </div>
     <h3 class="m-3 pt-2">Termékeim</h3>
     <hr>
-    <div class="row d-flex justify-content-between">
-        <div class="col-12 col-md-4 mt-2">
-            <input class="form-control search" type="search" placeholder="Keresés" aria-label="Search">
+    <form action="" [formGroup]="searchForm">
+        <div class="row d-flex justify-content-between">
+            <div class="col-12 col-md-4 mt-2">
+                <input class="form-control search" type="search" placeholder="Keresés" aria-label="Search" (input)="searchChange()" formControlName="searchTerm">
+            </div>
+            <div class="col-12 col-md-4 mt-2">
+                <select class="form-select" aria-label="Default select example" (change)="orderSelect()" formControlName="order" id="order" name="order">
+                    <option *ngFor="let option of orderOptions" [value]="option">{{option}}</option>
+                </select>
+            </div>
         </div>
-        <div class="col-12 col-md-4 mt-2">
-            <select class="form-select" aria-label="Default select example">
-                <option selected>Legújabb</option>
-                <option value="2">Legrégebbi</option>
-                <option value="3">Ár szerint csőkkenő</option>
-                <option value="4">Ár szerint növekvő</option>
-                <option value="5">Készleten</option>
-              </select>
-        </div>
-    </div>
+    </form>
     <app-product-list [products]="products"></app-product-list>
 </div>
 <page-footer></page-footer>
