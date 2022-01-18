@@ -21,11 +21,11 @@
                 </div>
             </div>
             <div class="row justify-content-start">
-                <div class="m-2 mt-0 pt-0 col-auto">
+                <div *ngIf="user.website != null" class="m-2 mt-0 pt-0 col-auto">
                     <fa-icon class="pe-2" [icon]="faLink"></fa-icon>
                     <a href="" class="text-decoration-none">{{user.website}}</a>
                 </div>
-                <div class="m-2 mt-0 pt-0 col-auto">
+                <div *ngIf="user.siteLocation != null" class="m-2 mt-0 pt-0 col-auto">
                     <fa-icon class="pe-2" [icon]="faLocationArrow"></fa-icon>
                     {{user.siteLocation}}
                 </div>
