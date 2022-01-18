@@ -82,7 +82,11 @@ export class ProductService {
     let params = new HttpParams();
     //if(term) params.append('term', term);
     //if(order) params.append('orderby', order);
-    const options =  order ? { params: new HttpParams().append('orderby', order)} : {};
+    //const options =  order && term ? { params: new HttpParams().set('orderby', order).set('term',term)} : {};
+    let options =  order && !term ? { params: new HttpParams().set('orderby', order)} : 
+    order && term ? { params: new HttpParams().set('orderby', order).set('term', term.trim())} : 
+    !order && term ? { params: new HttpParams().set('term', term.trim())} : {};
+    //options =  !order && term ? { params: new HttpParams().set('term', term.trim())} : {};
 
     //const options = params == new HttpParams() ? {} : {params: params};
     return this.http.get<[ProductShort]>(this.rootURL + '/products-by-seller/' + id, options);

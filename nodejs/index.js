@@ -221,6 +221,10 @@ app.get('/api/products-by-seller/:id', (req, res, next) => {
   let sorter = req.query.orderby;
   //console.log(sorter);
   var sql = 'SELECT product.product_id AS productId, product.name, product.price, product.vendor_id AS sellerId, product.discount, member.first_name AS sellerFirstName, member.last_name AS sellerLastName, ( SELECT product_picture.resource_link FROM product_picture WHERE product_picture.is_thumbnail = TRUE AND product.product_id = product_picture.product_id LIMIT 1 ) AS imgUrl FROM product INNER JOIN member ON member.member_id = product.vendor_id WHERE product.is_published = TRUE AND product.vendor_id = ?';
+  if (req.query.term){
+    //console.log(req.query.term);
+    sql += " AND product.name LIKE " + conn.escape('%' + req.query.term + '%');
+  }
   if (sorter != undefined) {
     let order;
     switch (sorter) {
