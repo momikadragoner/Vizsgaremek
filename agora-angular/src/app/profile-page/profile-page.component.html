@@ -55,20 +55,58 @@
             </div>
         </div>
     </div>
-    <h3 class="m-3 pt-2">Termékeim</h3>
-    <hr>
-    <form action="" [formGroup]="searchForm">
-        <div class="row d-flex justify-content-between">
-            <div class="col-12 col-md-4 mt-2">
-                <input class="form-control search" type="search" placeholder="Keresés" aria-label="Search" (input)="searchChange()" formControlName="searchTerm">
+    <div class="d-grid justify-content-md-center border-bottom mt-3 mb-2">
+        <ul class="nav col-12 col-md-auto justify-content-center">
+            <li><a (click)="tabOpen = 1" [ngClass]="{'border-bottom border-dark fw-bold':(tabOpen == 1)}"
+                    class="nav-link-selectable nav-link px-2 link-dark">Termékek</a></li>
+            <li><a (click)="tabOpen = 2" [ngClass]="{'border-bottom border-dark fw-bold':(tabOpen == 2)}"
+                    class="nav-link-selectable nav-link px-2 link-dark">Kívánság lista</a></li>
+        </ul>
+    </div>
+    <!-- <h3 class="m-3 pt-2">Termékek</h3>
+    <hr> -->
+    <div *ngIf="tabOpen == 1">
+        <form action="" [formGroup]="searchForm">
+            <div class="row d-flex justify-content-between">
+                <div class="col-12 col-md-4 mt-2">
+                    <input class="form-control search" type="search" placeholder="Keresés" aria-label="Search" (input)="searchChange()" formControlName="searchTerm">
+                </div>
+                <div class="col-12 col-md-4 mt-2">
+                    <select class="form-select" aria-label="Default select example" (change)="orderSelect()" formControlName="order" id="order" name="order">
+                        <option *ngFor="let option of orderOptions" [value]="option">{{option}}</option>
+                    </select>
+                </div>
             </div>
-            <div class="col-12 col-md-4 mt-2">
-                <select class="form-select" aria-label="Default select example" (change)="orderSelect()" formControlName="order" id="order" name="order">
-                    <option *ngFor="let option of orderOptions" [value]="option">{{option}}</option>
-                </select>
+        </form>
+        <app-product-list [products]="products"></app-product-list>
+    </div>
+    <div *ngIf="tabOpen == 2">
+        <div class="mx-5">
+            <div *ngFor="let product of products" class="border-bottom">
+                <div class="row p-2 pb-0 mt-2">
+                    <div class="col-4 col-lg-1 mb-3">
+                        <img src="{{product.imgUrl}}" alt="" class="img img-fluid rounded">
+                    </div>
+                    <div class="col-8 col-lg-5">
+                        <h5 class="fw-bold">{{product.name}}</h5>
+                        <a href="" class="text-decoration-none">{{product.sellerLastName}} {{product.sellerFirstName}}</a>
+                    </div>
+                    <div class="col-6 col-lg-2 mt-3">
+                        <h4 class="fw-bold">{{product.price|price}}</h4>
+                    </div>
+                    <div class="col mt-3 mb-2">
+                        <div class="d-flex justify-content-end">
+                            <div class="me-3">
+                                <a href="" class="btn btn-primary">
+                                    <fa-icon [icon]="faHeart"></fa-icon>
+                                    Vásárlás
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </form>
-    <app-product-list [products]="products"></app-product-list>
+    </div>
 </div>
 <page-footer></page-footer>

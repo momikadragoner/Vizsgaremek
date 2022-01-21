@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductShort as Product, ProductService} from '../services/product.service';
 import { User, seller, UserService } from "../services/user.service";
-import { faEnvelope, faLink, faLocationArrow, faCalendarAlt} from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faLink, faLocationArrow, faCalendarAlt, faTrash, faHeart} from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 
@@ -16,6 +16,10 @@ export class ProfilePageComponent implements OnInit {
   faLink = faLink;
   faLocationArrow = faLocationArrow;
   faCalendar = faCalendarAlt;
+  faTrash = faTrash;
+  faHeart = faHeart
+
+  tabOpen = 1;
 
   products: Product[] = [{productId: 0, name: "", sellerLastName: "", sellerFirstName: "", price: -1, imgUrl:''}];
   error: string = "";
