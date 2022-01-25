@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Product, tags, toProductShort } from '../../services/product.service';
+import { Product, tags, toProductShort, ProductShort } from '../../services/product.service';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { faTruck, faBoxes, IconPrefix, faTree, faHandPaper, faBalanceScale} from '@fortawesome/free-solid-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { asapScheduler } from 'rxjs';
 
 @Component({
   selector: 'app-product-form',
@@ -12,29 +13,33 @@ import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 export class ProductFormComponent implements OnInit {
 
   iconPrefix: IconPrefix = 'fas';
-  public newProduct: Product = {productId: 0, name: '', sellerFirstName: '', sellerLastName: '', price: -1, inventory: -1, delivery: '', category: '', tags: [], materials: [], imgUrl: [], description: '', isPublic: true, rating: -1};
+  //newProduct: Product = {productId: 0, name: '', sellerFirstName: '', sellerLastName: '', price: -1, inventory: -1, delivery: '', category: '', tags: [], materials: [], imgUrl: [], description: '', isPublic: true, rating: -1};
   tagsList = tags;
   toProductShort = toProductShort;
 
   faTruck = faTruck;
   faBoxes = faBoxes;
-
+  
+  discountAvailable = false;
   submitted = false;
-
+  
   productForm = this.fb.group({
-    name: [this.newProduct.name, Validators.required],
-    price: [this.newProduct.price],
-    id: [this.newProduct.price],
-    //discountAvailable: [this.newProduct.discountAvailable],
-    inventory: [this.newProduct.inventory],
-    delivery: [this.newProduct.delivery],
-    category: [this.newProduct.category],
-    picrureUrl: [this.newProduct.imgUrl],
+    name: ['', Validators.required],
+    price: [-1],
+    discount: [null],
+    id: [0],
+    inventory: [-1],
+    delivery: [''],
+    category: [''],
+    picrureUrl: [''],
     tags: this.fb.array([
     ]),
     materials: this.fb.array([
     ])
   });
+
+  asd = new ProductShort(0, this.productForm.value.name, this.productForm.value.name, this.productForm.value.name, 
+    this.productForm.value.price, this.productForm.value.imgUrl, undefined, this.productForm.value.discount );
 
   get tags() {
     return this.productForm.get('tags') as FormArray;
@@ -51,7 +56,7 @@ export class ProductFormComponent implements OnInit {
   
   getMaterials(){
     let materialLabel:string = "";
-    this.materials.value.forEach((material: string) => {
+    this.productForm.value.materials.value.forEach((material: string) => {
       materialLabel += material;
       materialLabel += ", ";
     });

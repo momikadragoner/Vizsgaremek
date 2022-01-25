@@ -59,14 +59,14 @@ export class ProductService {
 
   rootURL = '/api';
 
-  getProduct(id:any) {
+  getProduct(id: any) {
     return this.http.get<Product>(this.rootURL + '/product/' + id,)
-    .pipe(
-      catchError(this.handleError)
-    );
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
-  getReview(id:any) {
+  getReview(id: any) {
     return this.http.get<Review>(this.rootURL + '/review/' + id);
   }
 
@@ -78,14 +78,14 @@ export class ProductService {
     return this.http.get<[ProductShort]>(this.rootURL + '/product-list-long');
   }
 
-  getProductsBySeller(id:any, order?:string, term?:string) {
+  getProductsBySeller(id: any, order?: string, term?: string) {
     let params = new HttpParams();
     //if(term) params.append('term', term);
     //if(order) params.append('orderby', order);
     //const options =  order && term ? { params: new HttpParams().set('orderby', order).set('term',term)} : {};
-    let options =  order && !term ? { params: new HttpParams().set('orderby', order)} : 
-    order && term ? { params: new HttpParams().set('orderby', order).set('term', term.trim())} : 
-    !order && term ? { params: new HttpParams().set('term', term.trim())} : {};
+    let options = order && !term ? { params: new HttpParams().set('orderby', order) } :
+      order && term ? { params: new HttpParams().set('orderby', order).set('term', term.trim()) } :
+        !order && term ? { params: new HttpParams().set('term', term.trim()) } : {};
     //options =  !order && term ? { params: new HttpParams().set('term', term.trim())} : {};
 
     //const options = params == new HttpParams() ? {} : {params: params};
@@ -135,6 +135,23 @@ export class Product {
   }
 }
 
+export class ProductShort {
+  /**
+   *
+   */
+  constructor(
+    public productId: number,
+    public name: string,
+    public sellerFirstName: string,
+    public sellerLastName: string,
+    public price: number,
+    public imgUrl: string,
+    public sellerId?: number,
+    public discount?: number
+  ) {
+  }
+}
+
 export const productListShort = [
   new Product(1, "Gyöngy nyakék", "Kiss", "Márta", 12599, 12, "Azonnal szállítható", "Ékszer", ["Környezetbarát", "Kézzel készült", "Etikusan beszerzett alapanyagok"], ["arany", "ásvány"], ["assets/item2.jpg"], "Lorem ipsum", true),
   new Product(2, "Arany lánc", "Nagy", "Erzsébet", 18599, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item1.jpg"], "Lorem ipsum", true),
@@ -160,16 +177,16 @@ export const tags = [
   "Helyben termesztett",
 ]
 
-export const ratingToArray = function(rating:number):number[]{
-  let stars:number[] = [];
+export const ratingToArray = function (rating: number): number[] {
+  let stars: number[] = [];
   for (let index = 0; index < rating; index++) {
     stars.push(index);
   }
   return stars;
 }
 
-export const toProductShort = function(product:Product):ProductShort{
-  let productShort:ProductShort = {productId: product.productId, sellerId: product.sellerId, name: product.name, sellerFirstName: product.sellerFirstName, sellerLastName: product.sellerLastName, price: product.price, imgUrl:product.imgUrl[0]};
+export const toProductShort = function (product: Product): ProductShort {
+  let productShort: ProductShort = { productId: product.productId, sellerId: product.sellerId, name: product.name, sellerFirstName: product.sellerFirstName, sellerLastName: product.sellerLastName, price: product.price, imgUrl: product.imgUrl[0] };
   return productShort;
 }
 

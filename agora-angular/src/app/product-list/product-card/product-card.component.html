@@ -1,6 +1,6 @@
 <div class="card my-3 shadow" [ngClass]="{'card-product':wide, 'card-narrow':!wide}">
     <div [ngClass]="{'img-placeholder':wide, 'img-placeholder-narrow':!wide}">
-        <img *ngIf="product.imgUrl != ''" src="{{product.imgUrl}}" class="card-img-top" [ngClass]="{'img-product':wide, 'img-product-wide':!wide}" alt="...">
+        <img *ngIf="product.imgUrl != '' && product.imgUrl != null" src="{{product.imgUrl}}" class="card-img-top" [ngClass]="{'img-product':wide, 'img-product-wide':!wide}" alt="...">
         <svg *ngIf="product.imgUrl == '' || product.imgUrl == null" class="card-img-top img-placeholder">
             <rect width="100%" height="100%" fill="#868e96"></rect>
         </svg>

@@ -5,10 +5,16 @@
                 <h1>Szűrés</h1>
                 <product-categories></product-categories>
                 <collapse-panel [title]="'Ár'">
-                    <label for="customRange1" class="form-label"></label>
-                    <input type="range" class="form-range" id="customRange1">
-                    <label for="" class="form-label">Max. ár</label>
-                    <input type="number" name="" id="" class="form-control">
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="" class="form-label ms-2 mb-0">Min. ár</label>
+                            <input type="number" name="" id="" class="form-control">
+                        </div>
+                        <div class="col-6">
+                            <label for="" class="form-label ms-2 mb-0">Max. ár</label>
+                            <input type="number" name="" id="" class="form-control">
+                        </div>
+                    </div>
                 </collapse-panel>
                 <collapse-panel [title]="'Címkék'">
                     <form action="">

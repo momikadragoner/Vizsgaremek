@@ -1,14 +1,41 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductShort as Product, ProductService} from '../services/product.service';
 import { User, seller, UserService } from "../services/user.service";
-import { faEnvelope, faLink, faLocationArrow, faCalendarAlt, faTrash, faHeart} from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faLink, faLocationArrow, faCalendarAlt, faTrash, faHeart, faTimesCircle} from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
+import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-profile-page',
   templateUrl: './profile-page.component.html',
-  styleUrls: ['./profile-page.component.scss']
+  styleUrls: ['./profile-page.component.scss'],
+  animations: [
+    trigger('tabChange', [
+      transition(':increment', [
+        style({ transform: 'translateX(-100%)'}),
+        animate('0.3s',
+          style({ transform: 'translateX(0)'}))
+      ]),
+      transition(':decrement', [
+        style({ transform: 'translateX(100%)'}),
+        animate('0.3s',
+          style({ transform: 'translateX(0)'}))
+      ]),
+    ]),
+    trigger('visibilityChange',[
+      transition(':leave', [
+        style({ opacity: 1}),
+        animate('0.2s',
+          style({ opacity: 0,}))
+      ]),
+      transition(':enter', [
+        style({ opacity: 0}),
+        animate('0.2s',
+          style({ opacity: 1,}))
+      ])
+    ])
+  ]
 })
 export class ProfilePageComponent implements OnInit {
 
@@ -18,6 +45,7 @@ export class ProfilePageComponent implements OnInit {
   faCalendar = faCalendarAlt;
   faTrash = faTrash;
   faHeart = faHeart
+  faTimesCircle = faTimesCircle;
 
   tabOpen = 1;
 

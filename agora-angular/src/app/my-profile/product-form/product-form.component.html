@@ -6,28 +6,28 @@
                 <div class="mb-3">
                     <label for="name" class="form-label mb-1">Termék megnevezése</label>
                     <input type="text" class="form-control" formControlName="name" id="name"
-                        [(ngModel)]="newProduct.name">
+                        >
                 </div>
                 <div class="mb-3">
                     <label for="price" class="form-label mb-1">Ár <small>(HUF)</small></label>
                     <input type="number" class="form-control" formControlName="price" id="price"
-                        [(ngModel)]="newProduct.price">
+                        >
                 </div>
                 <div class="mb-3">
                     <label for="discount" class="form-label mb-1">Kedvezmény</label>
                     <div class="form-check">
-                        <!-- <input class="form-check-input" type="checkbox" value="" formControlName="discountAvailable"
-                            [(ngModel)]="newProduct.discountAvailable" id="discountAvailable"> -->
+                        <input class="form-check-input" type="checkbox"
+                            [value]="discountAvailable" id="discountAvailable">
                         <label class="form-check-label" for="discountAvailable">
                             Kedvezmény elérhető
                         </label>
                     </div>
-                    <!-- <input type="number" class="form-control" formControlName="discount" id="discount" [attr.disabled]="newProduct.discountAvailable ? null : true"> -->
+                    <input type="number" class="form-control" formControlName="discount" id="discount" [attr.disabled]="discountAvailable ? null : true">
                 </div>
                 <div class="mb-3">
                     <label for="inventory" class="form-label mb-1">Raktáron <small>(db)</small></label>
                     <input type="number" class="form-control" formControlName="inventory" id="inventory"
-                        [(ngModel)]="newProduct.inventory">
+                        >
                 </div>
                 <div class="mb-3">
                     <label for="delivery" class="form-label mb-1">Kiszállítás</label>
@@ -42,7 +42,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="category" class="form-label mb-1">Kategória</label>
-                    <input type="text" class="form-control" formControlName="category" id="category" [(ngModel)]="newProduct.category">
+                    <input type="text" class="form-control" formControlName="category" id="category" >
                 </div>
                 <div class="mb-3">
                     <div formArrayName="tags">
@@ -50,7 +50,7 @@
                         <div *ngFor="let tag of tags.controls; let i=index">
                             <!-- <label for="alias-{{ i }}">Címke:</label> -->
                             <input id="tag-{{ i }}" type="text" class="form-control mb-2" [formControlName]="i"
-                                [(ngModel)]="newProduct.tags[i]">
+                                >
                         </div>
                         <button (click)="addTag()" type="button" class="btn btn-primary">+ Címke hozzáadása</button>
                     </div>
@@ -60,7 +60,7 @@
                         <label class="mb-2">Alapanyagok</label> <br>
                         <div *ngFor="let material of materials.controls; let i=index">
                             <input id="material-{{ i }}" type="text" class="form-control mb-2" [formControlName]="i"
-                                [(ngModel)]="newProduct.materials[i]">
+                                >
                         </div>
                         <button (click)="addMaterial()" type="button" class="btn btn-primary">+ Alapanyag hozzáadása</button>
                     </div>
@@ -78,11 +78,11 @@
         <div class="col-12 col-md-5 p-3 border-start">
             <h4 class="text-center">Előnézet</h4>
             <div class="d-flex justify-content-center">
-                <product-card [product]="toProductShort(newProduct)"></product-card>
+                <product-card [product]="asd"></product-card>
             </div>
-            <div *ngIf="newProduct.tags" class="d-flex justify-content-center">
+            <div *ngIf="productForm.value.tags" class="d-flex justify-content-center">
                 <div class="shadow rounded px-4 pt-3 pb-2 m-2 card-preview">
-                    <div *ngFor="let tag of newProduct.tags" class="row mx-auto">
+                    <div *ngFor="let tag of productForm.value.tags" class="row mx-auto">
                         <div class="col-2 text-center">
                             <fa-icon [icon]="[iconPrefix, (tag|icon:'tag')]"></fa-icon> 
                         </div>
@@ -94,14 +94,14 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="newProduct.tags" class="d-flex justify-content-center">
+            <div *ngIf="productForm.value.tags" class="d-flex justify-content-center">
                 <div class="shadow rounded px-4 pt-3 pb-2 m-2 card-preview">
                     <div class="row mx-auto">
                         <div class="col-2 text-center">
                             <!-- <fa-icon [icon]="faGem"></fa-icon> -->
                         </div>
                         <div class="ps-0 col-10">
-                            <p>Kategória: {{newProduct.category}}</p>
+                            <p>Kategória: {{productForm.value.category}}</p>
                         </div>
                         <div class="col-2 text-center">
                             <fa-icon [icon]="faBoxes"></fa-icon>
@@ -113,7 +113,7 @@
                             <fa-icon [icon]="faTruck"></fa-icon>
                         </div>
                         <div class="ps-0 col-10">
-                            <p>{{newProduct.delivery}}</p>
+                            <p>{{productForm.value.delivery}}</p>
                         </div>
                     </div>
                 </div>
