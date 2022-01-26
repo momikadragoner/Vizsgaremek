@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Product, tags, toProductShort, ProductShort } from '../../services/product.service';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
-import { faTruck, faBoxes, IconPrefix, faTree, faHandPaper, faBalanceScale} from '@fortawesome/free-solid-svg-icons';
+import { faTruck, faBoxes, IconPrefix, faTree, faHandPaper, faBalanceScale, faExclamationCircle, faGem, faBoxOpen, faLeaf, faSeedling, faAppleAlt, faCarrot, faCheese, faTrash} from '@fortawesome/free-solid-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { asapScheduler } from 'rxjs';
 
@@ -19,7 +19,8 @@ export class ProductFormComponent implements OnInit {
 
   faTruck = faTruck;
   faBoxes = faBoxes;
-  
+  faTrash = faTrash;
+
   discountAvailable = false;
   submitted = false;
   
@@ -38,33 +39,49 @@ export class ProductFormComponent implements OnInit {
     ])
   });
 
-  asd = new ProductShort(0, this.productForm.value.name, this.productForm.value.name, this.productForm.value.name, 
-    this.productForm.value.price, this.productForm.value.imgUrl, undefined, this.productForm.value.discount );
+  newProduct = new ProductShort (0, this.productForm.value.name, this.productForm.value.name, this.productForm.value.name, 
+    this.productForm.value.price, this.productForm.value.imgUrl, undefined, this.productForm.value.discount 
+  );
+    
+  addTag() {
+    this.tags.push(this.fb.control(''));
+  }
+  
+  removeTag(id:any, $event:any){
+    $event.preventDefault();
+    this.tags.removeAt(id);
+  }
+  
+  addMaterial() {
+    this.materials.push(this.fb.control(''));
+  }
+
+  removeMaterial(id:any, $event:any){
+    $event.preventDefault();
+    this.materials.removeAt(id);
+  }
 
   get tags() {
     return this.productForm.get('tags') as FormArray;
-  }
-
-  addTag() {
-    this.tags.push(this.fb.control(''));
   }
 
   get materials() {
     return this.productForm.get('materials') as FormArray;
   }
 
-  
-  getMaterials(){
-    let materialLabel:string = "";
-    this.productForm.value.materials.value.forEach((material: string) => {
-      materialLabel += material;
-      materialLabel += ", ";
-    });
-    return materialLabel;
+  inputChange(){
+    this.newProduct = new ProductShort (0, this.productForm.value.name, this.productForm.value.name, this.productForm.value.name, 
+      this.productForm.value.price, this.productForm.value.imgUrl, undefined, this.productForm.value.discount 
+    );
   }
 
-  addMaterial() {
-    this.materials.push(this.fb.control(''));
+  getMaterials(){
+    let materialLabel:string = "";
+    this.productForm.value.materials.forEach((material: string) => {
+      materialLabel += material;
+      if(this.productForm.value.materials[this.productForm.value.materials.length - 1] != material) materialLabel += ", ";
+    });
+    return materialLabel;
   }
 
   onSubmit() {
@@ -72,7 +89,7 @@ export class ProductFormComponent implements OnInit {
   }
 
   constructor( private fb: FormBuilder, library:FaIconLibrary) {
-    library.addIcons(faHandPaper, faTree, faBalanceScale);
+    library.addIcons(faHandPaper, faTree, faBalanceScale, faExclamationCircle, faGem, faBoxOpen, faLeaf, faSeedling, faAppleAlt, faCarrot, faCheese);
   }
 
   ngOnInit(): void {
