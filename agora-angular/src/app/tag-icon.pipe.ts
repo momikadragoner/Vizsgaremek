@@ -43,6 +43,24 @@ export class TagIconPipe implements PipeTransform {
         case "Tejtermék":
           iconName = 'cheese';
           return iconName;
+        case "Zöldség":
+          iconName = 'carrot';
+          return iconName;
+        case "Gyümölcs":
+          iconName = 'apple-alt';
+          return iconName;
+        case "Pékáru":
+          iconName = 'bread-slice';
+          return iconName;
+        case "Ital":
+          iconName = 'glass-martini-alt';
+          return iconName;
+        case "Művészet":
+          iconName = 'palette';
+          return iconName;
+        case "Divat":
+          iconName = 'tshirt';
+          return iconName;
         default:
           break;
       }

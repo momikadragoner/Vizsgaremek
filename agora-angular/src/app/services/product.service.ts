@@ -177,6 +177,17 @@ export const tags = [
   "Helyben termesztett",
 ]
 
+export const categories = [
+  "Zöldség",
+  "Gyümölcs",
+  "Pékáru",
+  "Tejtermék",
+  "Ital",
+  "Ékszer",
+  "Művészet",
+  "Divat"
+]
+
 export const ratingToArray = function (rating: number): number[] {
   let stars: number[] = [];
   for (let index = 0; index < rating; index++) {
