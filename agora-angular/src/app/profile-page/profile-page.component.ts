@@ -57,7 +57,7 @@ export class ProfilePageComponent implements OnInit {
   order?:any;
   searchTerm?: string;
 
-  orderOptions:string[] = ["Legújabb", "Legrégebbi", "Ár szerint csökkenő", "Ár szerint növekvő", "Készleten"];
+  orderOptions:string[] = ["Összes","Legújabb", "Legrégebbi", "Ár szerint csökkenő", "Ár szerint növekvő", "Készleten"];
 
   constructor(
     private productService: ProductService, 

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faShoppingCart, faPlus, faTrash, faEdit, faEllipsisV, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { Product, productListShort, myProductList } from "../../services/product.service";
+import { ProductShort as Product, productListShort, myProductList } from "../../services/product.service";
 
 @Component({
   selector: 'my-product-list',

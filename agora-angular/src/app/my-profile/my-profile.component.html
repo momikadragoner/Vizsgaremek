@@ -1,13 +1,13 @@
-<div class="container-fluid header" style="background-image: url('../../{{profileDetail.headerImgUrl}}');"></div>
+<div class="container-fluid header" style="background-image: url('../../{{user.headerImgUrl}}');"></div>
 <div class="container">
     <div class="d-grid justify-content-md-center">
         <div class="round profile-picture ms-4 mt-4 bg-white shadow">
-            <img class="p-2 round profile-picture" src="{{profileDetail.profileImgUrl}}" alt="">
+            <img class="p-2 round profile-picture" src="{{user.profileImgUrl}}" alt="">
         </div>
         <div class="shadow rounded px-4 pt-5 pb-2 about">
             <div class="row">
                 <div class="col-7 col-md-5">
-                    <h4 class="fw-bold m-2">{{profileDetail.lastName}} {{profileDetail.firstName}}</h4>
+                    <h4 class="fw-bold m-2">{{user.lastName}} {{user.firstName}}</h4>
                 </div>
                 <div class="col-5 col-md-7">
                     <div class="d-grid gap-1 d-flex justify-content-end mb-2">
@@ -18,33 +18,33 @@
                 </div>
             </div>
             <div class="row justify-content-start">
-                <div class="m-2 mt-0 pt-0 col-auto">
+                <div *ngIf="user.website != null" class="m-2 mt-0 pt-0 col-auto">
                     <fa-icon class="pe-2" [icon]="faLink"></fa-icon>
-                    <a href="https://{{profileDetail.website}}" class="text-decoration-none"> {{profileDetail.website}}</a>
+                    <a href="https://{{user.website}}" class="text-decoration-none"> {{user.website}}</a>
                 </div>
-                <div class="m-2 mt-0 pt-0 col-auto">
+                <div *ngIf="user.siteLocation != null" class="m-2 mt-0 pt-0 col-auto">
                     <fa-icon class="pe-2" [icon]="faLocationArrow"></fa-icon>
-                    {{profileDetail.siteLocation}}
+                    {{user.siteLocation}}
                 </div>
                 <div class="m-2 mt-0 pt-0 col-auto">
                     <fa-icon class="pe-2" [icon]="faCalendar"></fa-icon>
-                    {{profileDetail.registeredAt | date}}
+                    {{user.registeredAt | date}}
                 </div>
             </div>
             <div class="row">
                 <div class="col-5 col-md-3 col-lg-2">
-                    <h5 class="fw-bold m-2">{{profileDetail.followers}} <small class="fw-normal">követő</small></h5>
+                    <h5 class="fw-bold m-2">{{user.followers}} <small class="fw-normal">követő</small></h5>
                 </div>
                 <div class="col-5 col-md-3 col-lg-2">
-                    <h5 class="fw-bold m-2">{{profileDetail.following}} <small class="fw-normal">követ</small></h5>
+                    <h5 class="fw-bold m-2">{{user.following}} <small class="fw-normal">követ</small></h5>
                 </div>
             </div>
             <div class="row">
                 <p class="mt-3">
-                   {{profileDetail.about}}
+                   {{user.about}}
                 </p>
             </div>
-            <div *ngIf="profileDetail.takesCustomOrders" class="row">
+            <div *ngIf="user.takesCustomOrders" class="row">
                 <hr>
                 <p>Egyedi rendeléseket is vállal.
                     <a href="#" class="text-decoration-none">Tudj meg többet.</a>
@@ -52,9 +52,36 @@
             </div>
         </div>
     </div>
-    <h3 class="m-3 pt-2">Termékeim</h3>
-    <hr>
-    <div class="row d-flex justify-content-between">
+    <div class="d-grid justify-content-md-center border-bottom mt-3 mb-2">
+        <ul class="nav col-12 col-md-auto justify-content-center">
+            <li><a href="" (click)="tabOpen = 1; $event.preventDefault();" [ngClass]="{'fw-bold':(tabOpen == 1)}"
+                    class="nav-link-selectable nav-link px-2 link-dark">Termékek</a><div [@tabChange]="tabOpen" [ngClass]="{'border-bottom border-dark':(tabOpen == 1)}"></div></li>
+            <li><a href="" (click)="tabOpen = 2; $event.preventDefault();" [ngClass]="{'fw-bold':(tabOpen == 2)}"
+                    class="nav-link-selectable nav-link px-2 link-dark">Kívánság lista</a><div [@tabChange]="tabOpen" [ngClass]="{'border-bottom border-dark':(tabOpen == 2)}"></div></li>
+        </ul>
+    </div>
+    <div [@visibilityChange] *ngIf="tabOpen == 1">
+        <form action="" [formGroup]="searchForm">
+            <div class="row d-flex justify-content-between">
+                <div class="col-12 col-md-4 mt-2">
+                    <input class="form-control search" type="search" placeholder="Keresés" aria-label="Search" (input)="searchChange()" formControlName="searchTerm">
+                </div>
+                <div class="col-12 col-md-4 mt-2">
+                    <select class="form-select" aria-label="Default select example" (change)="orderSelect()" formControlName="order" id="order" name="order">
+                        <option *ngFor="let option of orderOptions" [value]="option">{{option}}</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+        <!-- <app-product-list [products]="products"></app-product-list> -->
+        <my-product-list class="row p-0 gx-5" [products]="products"></my-product-list>
+        <div *ngIf="!products[0]" class="text-center mt-4 pt-4">
+            <h1><fa-icon [icon]="faTimesCircle"></fa-icon></h1>
+            <h2>Nem találtunk termékeket</h2>
+            <p>amit keresel nics itt</p>
+        </div>
+    </div>
+    <!-- <div class="row d-flex justify-content-between">
         <div class="col-12 col-md-4 mt-2">
             <input class="form-control search" type="search" placeholder="Keresés" aria-label="Search">
         </div>
@@ -67,7 +94,6 @@
                 <option value="5">Készleten</option>
               </select>
         </div>
-    </div>
-    <my-product-list class="row p-0 gx-5" [products]="products"></my-product-list>
+    </div> -->
 </div>
 <page-footer></page-footer>

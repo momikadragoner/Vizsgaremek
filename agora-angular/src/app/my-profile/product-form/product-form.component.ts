@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Product, tags, toProductShort, ProductShort, categories } from '../../services/product.service';
+import { Product, tags, ProductShort, categories } from '../../services/product.service';
 import { FormGroup, FormArray, FormBuilder, Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
-import { faTruck, faBoxes, IconPrefix, faTree, faHandPaper, faBalanceScale, faExclamationCircle, faGem, faBoxOpen, faLeaf, faSeedling, faAppleAlt, faCarrot, faCheese, faTrash, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt} from '@fortawesome/free-solid-svg-icons';
+import { faTruck, faBoxes, IconPrefix, faTree, faHandPaper, faBalanceScale, faExclamationCircle, faGem, faBoxOpen, faLeaf, faSeedling, faAppleAlt, faCarrot, faCheese, faTrash, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt, faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { asapScheduler } from 'rxjs';
 import { JsonPipe } from '@angular/common';
+import { ThrowStmt } from '@angular/compiler';
+import { Auth } from 'src/app/services/auth';
 
 @Component({
   selector: 'app-product-form',
@@ -17,31 +19,34 @@ export class ProductFormComponent implements OnInit {
   //newProduct: Product = {productId: 0, name: '', sellerFirstName: '', sellerLastName: '', price: -1, inventory: -1, delivery: '', category: '', tags: [], materials: [], imgUrl: [], description: '', isPublic: true, rating: -1};
   tagsList = tags;
   categories = categories;
-  toProductShort = toProductShort;
+  currentUser = Auth.currentUser;
 
   faTruck = faTruck;
   faBoxes = faBoxes;
   faTrash = faTrash;
+  faInfoCircle = faInfoCircle;
 
   discountAvailable = false;
   submitted = false;
+  toolTipOpen:boolean[] = [];
   
   productForm = this.fb.group({
     name: ['', Validators.required],
-    price: [-1, [Validators.required, Validators.min(0)]],
+    price: [null, [Validators.required, Validators.min(0)]],
     discount: [null, [Validators.max(99), Validators.min(1)]],
-    inventory: [0],
+    inventory: [null],
     delivery: ['', Validators.required],
     category: ['', Validators.required],
-    picrureUrl: [''],
+    pictureUrl: [''],
     tags: this.fb.array([
     ]),
     materials: this.fb.array([
-    ])
+    ]),
+    description: ['']
   });
 
-  newProduct = new ProductShort (0, this.productForm.value.name, this.productForm.value.name, this.productForm.value.name, 
-    this.productForm.value.price, this.productForm.value.imgUrl, undefined, this.productForm.value.discount 
+  newProduct = new ProductShort (0, this.productForm.value.name, '', '', 
+    this.productForm.value.price, this.productForm.value.imgUrl, undefined, undefined, this.productForm.value.discount 
   );
     
   addTag() {
@@ -71,8 +76,8 @@ export class ProductFormComponent implements OnInit {
   }
 
   inputChange(){
-    this.newProduct = new ProductShort (0, this.productForm.value.name, this.productForm.value.name, this.productForm.value.name, 
-      this.productForm.value.price, this.productForm.value.imgUrl, undefined, this.productForm.value.discount 
+    this.newProduct = new ProductShort (0, this.productForm.value.name, this.currentUser.firstName, this.currentUser.lastName, 
+      this.productForm.value.price, this.productForm.value.imgUrl, undefined, undefined,  this.productForm.value.discount 
     );
   }
 
@@ -83,6 +88,61 @@ export class ProductFormComponent implements OnInit {
       if(this.productForm.value.materials[this.productForm.value.materials.length - 1] != material) materialLabel += ", ";
     });
     return materialLabel;
+  }
+
+  discountChange(){
+    this.discountAvailable = !this.discountAvailable;
+    let update = this.productForm.value;
+    update.discount = null;
+    this.productForm.setValue(update);
+  }
+
+  tagOptions:string[] = [
+    "Környezetbarát",
+    "Kézzel készült",
+    "Etikusan beszerzett alapanyagok",
+    "Fenntartható",
+    "Csomagolás mentes",
+    "Vegetáriánus",
+    "Vegán",
+    "Bio"
+  ];
+
+  tagsShown:string[] = [];
+
+  searchTag(id:number){
+    if(this.productForm.value.tags[id] == "") this.tagsShown = [...this.tagOptions];
+    let result: string[] = [];
+    this.tagOptions.forEach((option)=>{
+      let regex = new RegExp(this.productForm.value.tags[id].trim(), "i");
+      // let regex = new RegExp(/this.productForm.value.tags[id]/);
+      if (option.match(regex)) {
+        result.push(option);
+      }
+    })
+    //console.log(result);
+    this.tagsShown = result;
+  }
+
+  autoFillTag(id:number, option:number){
+    let update = this.productForm.value;
+    update.tags[id] = this.tagsShown[option];
+    this.productForm.setValue(update);
+    this.onTagFocusChange(id);
+  }
+
+  tagOpen:boolean[] = [];
+
+  onTagFocusChange(id:number){
+    this.tagOpen[id] = !this.tagOpen[id];
+  }
+
+  deliveryChange(){
+    if (this.productForm.value.delivery == "Megrendelésre készül") {
+      let update = this.productForm.value;
+      update.inventory = null;
+      this.productForm.setValue(update);
+    }
   }
 
   onSubmit() {

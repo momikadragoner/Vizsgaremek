@@ -72,7 +72,7 @@ import { UserService } from './services/user.service';
     ScrollBlockDirective,
     ReviewFormComponent,
     CartComponent,
-    AddToCartComponent
+    AddToCartComponent,
   ],
   imports: [
     BrowserModule,

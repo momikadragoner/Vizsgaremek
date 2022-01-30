@@ -5,31 +5,50 @@
             <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
                 <div class="mb-3">
                     <label for="name" class="form-label mb-1">Termék megnevezése</label>
-                    <input type="text" class="form-control" formControlName="name" id="name" (keyup)="inputChange()">
+                    <input type="text" class="form-control" formControlName="name" id="name" (change)="inputChange()" (keyup)="inputChange()">
                 </div>
                 <div class="mb-3">
                     <label for="price" class="form-label mb-1">Ár <small>(HUF)</small></label>
-                    <input type="number" class="form-control" formControlName="price" id="price" (keyup)="inputChange()" step="1" min="0">
+                    <input type="number" class="form-control" formControlName="price" id="price" (change)="inputChange()" (keyup)="inputChange()" step="1" min="0">
                 </div>
                 <div class="mb-3">
-                    <label for="discount" class="form-label mb-1">Kedvezmény <small>(%)</small></label>
+                    <label for="discount" class="form-label mb-1">Kedvezmény <small>(%) </small><a href="" (click)="$event.preventDefault(); toolTipOpen[0] = true"><fa-icon [icon]="faInfoCircle"></fa-icon></a>
+                        <div *ngIf="toolTipOpen[0]" class="menu-bg" (click)="toolTipOpen[0] = false"></div>
+                        <span *ngIf="toolTipOpen[0]" class="shadow rounded p-2 px-3 info" (mouseleave)="toolTipOpen[0] = false">
+                        <small>
+                            Százalékban értendő, nem kötelező megadni. A beviteli mező a jelölő négyzet kipipálásával válik aktívvá.
+                            <a href="">További információ.</a>
+                        </small>
+                        </span>
+                    </label>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox"
-                            (change)="discountAvailable = !discountAvailable" id="discountAvailable">
+                            (change)="discountChange(); inputChange()" id="discountAvailable">
                         <label class="form-check-label" for="discountAvailable">
                             Kedvezmény elérhető
                         </label>
                     </div>
-                    <input type="number" class="form-control" formControlName="discount" id="discount" [attr.disabled]="discountAvailable ? null : true" (change)="inputChange" step="1" max="99" min="0">
+                    <input type="number" class="form-control" formControlName="discount" id="discount" [attr.disabled]="discountAvailable ? null : true" 
+                        (keyup)="inputChange()" (change)="inputChange()" step="1" max="99" min="0">
                 </div>
                 <div class="mb-3">
-                    <label for="delivery" class="form-label mb-1">Kiszállítás</label>
+                    <label for="delivery" class="form-label mb-1">Elérhetőség
+                        <a href="" (click)="$event.preventDefault(); toolTipOpen[3] = true"><fa-icon [icon]="faInfoCircle"></fa-icon></a>
+                            <div *ngIf="toolTipOpen[3]" class="menu-bg" (click)="toolTipOpen[3] = false"></div>
+                            <span *ngIf="toolTipOpen[3]" class="shadow rounded p-2 px-3 info" (mouseleave)="toolTipOpen[3] = false">
+                            <small>
+                                Adja meg, hogy a termék előre elkészített vagy csak megrendelésre elérhető. 
+                                A 'Raktáron' beviteli mező az 'előre elkészített termék' opció kiválasztása esetén lesz aktív.
+                                <a [routerLink]="['']">További információ.</a>
+                            </small>
+                            </span>
+                    </label>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" name="delivery" id="available" value="Azonnal szállítható" formControlName="delivery">
-                        <label class="form-check-label" for="available">Azonnal szállítható</label>
+                        <input type="radio" class="form-check-input" name="delivery" id="available" value="Azonnal szállítható" formControlName="delivery" (change)="deliveryChange()">
+                        <label class="form-check-label" for="available">Azonnal szállítható (késztermék)</label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" name="delivery" id="order" value="Megrendelésre készül" formControlName="delivery">
+                        <input type="radio" class="form-check-input" name="delivery" id="order" value="Megrendelésre készül" formControlName="delivery" (change)="deliveryChange()">
                         <label class="form-check-label" for="order">Megrendelésre készül</label>
                     </div>
                 </div>
@@ -40,20 +59,39 @@
                 <div class="mb-3">
                     <label for="category" class="form-label mb-1">Kategória</label>
                     <!-- <input type="text" class="form-control" formControlName="category" id="category" > -->
-                    <select class="form-select" aria-label="Default select example" formControlName="category" id="category" name="category">
+                    <select class="form-select custom-select" aria-label="Default select example" formControlName="category" id="category" name="category">
                         <option *ngFor="let option of categories" [value]="option">{{option}}</option>
                     </select>
                 </div>
                 <div class="mb-3">
                     <div formArrayName="tags">
-                        <label class="mb-2">Címkék</label> <br>
+                        <label class="mb-2">Címkék <a href="" (click)="$event.preventDefault(); toolTipOpen[1] = true"><fa-icon [icon]="faInfoCircle"></fa-icon></a>
+                            <div *ngIf="toolTipOpen[1]" class="menu-bg" (click)="toolTipOpen[1] = false"></div>
+                            <span *ngIf="toolTipOpen[1]" class="shadow rounded p-2 px-3 info" (mouseleave)="toolTipOpen[1] = false">
+                            <small>
+                                A cimkék a termékek keresésében és szűrésében segítenek, ezért ajánlott megadni őket. 
+                                Kattintos a 'Címke hozzáadása' gombra, majd kezdjen el gépelni és válasszon a megjelenő opciók közül.
+                                <a [routerLink]="['']">További információ.</a>
+                            </small>
+                            </span>
+                        </label> <br>
                         <div *ngIf="productForm.value.tags">
-                            <div *ngFor="let tag of tags.controls; let i=index" class="d-flex justify-content-between">
-                                <!-- <label for="tag-{{ i }}">Címke:</label> -->
-                                <input id="tag-{{ i }}" type="text" class="form-control mb-2" [formControlName]="i">
-                                <a class="text-decoration-none text-center m-2" (click)="removeTag(i, $event)">
-                                    <fa-icon [icon]="faTrash"></fa-icon>
-                                </a>
+                            <div *ngFor="let tag of tags.controls; let i=index">
+                                <div class="d-flex justify-content-between">
+                                    <input id="tag-{{ i }}" type="text" class="form-control mb-2" [formControlName]="i" (focus)="onTagFocusChange(i); searchTag(i)" 
+                                        autocomplete="off" value="{{productForm.value.tags[i]}}" (keyup)="searchTag(i)" (keyup.enter)="autoFillTag(i,0)">
+                                    <a class="text-decoration-none text-center m-2" (click)="removeTag(i, $event)">
+                                        <fa-icon [icon]="faTrash"></fa-icon>
+                                    </a>
+                                </div>
+                                <div *ngIf="tagOpen[i] == true">
+                                    <div class="menu-bg" (click)="onTagFocusChange(i)"></div>
+                                    <div class="rounded shadow menu">
+                                        <ul *ngFor="let option of tagsShown; let j = index" class="list-unstyled mb-0">
+                                            <li (click)="autoFillTag(i,j)"><a class="dropdown-item">{{option}}</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <button (click)="addTag()" type="button" class="btn btn-primary">+ Címke hozzáadása</button>
@@ -61,7 +99,16 @@
                 </div>
                 <div class="mb-3">
                     <div formArrayName="materials">
-                        <label class="mb-2">Alapanyagok</label> <br>
+                        <label class="mb-2">Alapanyagok
+                            <a href="" (click)="$event.preventDefault(); toolTipOpen[2] = true"><fa-icon [icon]="faInfoCircle"></fa-icon></a>
+                            <div *ngIf="toolTipOpen[2]" class="menu-bg" (click)="toolTipOpen[2] = false"></div>
+                            <span *ngIf="toolTipOpen[2]" class="shadow rounded p-2 px-3 info" (mouseleave)="toolTipOpen[2] = false">
+                            <small>
+                                Alapanyagok, hozzávalók listája, a cimkékhez hasonlóan adhatja meg. Kérjük az allergén vagy káros anyagokat mindenképp tüntesse fel!
+                                <a [routerLink]="['']">További információ.</a>
+                            </small>
+                            </span>
+                        </label> <br>
                         <div *ngIf="productForm.value.materials">
                             <div *ngFor="let material of materials.controls; let i=index" class="d-flex justify-content-between">
                                 <input id="material-{{ i }}" type="text" class="form-control mb-2" [formControlName]="i">
@@ -75,7 +122,11 @@
                 </div>
                 <div class="mb-3">
                     <label for="picture" class="form-label mb-1">Kép</label>
-                    <input type="file" class="form-control" id="picture">
+                    <input type="file" class="form-control" id="picture" formControlName="pictureUrl">
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label mb-1">Leírás</label>
+                    <textarea name="description" id="description" cols="30" rows="5" class="form-control" formControlName="description"></textarea>
                 </div>
                 <div class="mb-3">
                     <button type="submit" class="btn btn-secondary p-2 m-2">Mentés</button>
@@ -85,6 +136,7 @@
         </div>
         <div class="col-12 col-md-5 p-3 border-start">
             <h4 class="text-center">Előnézet</h4>
+            <!-- <div>{{productForm.value|json}}</div> -->
             <div class="d-flex justify-content-center">
                 <product-card [product]="newProduct"></product-card>
             </div>
@@ -105,10 +157,10 @@
             <div *ngIf="productForm.value.category != '' || productForm.value.materials != '' || productForm.value.delivery != ''" class="d-flex justify-content-center">
                 <div class="shadow rounded px-4 pt-3 pb-2 m-2 card-preview">
                     <div class="row mx-auto">
-                        <div class="col-2 text-center">
+                        <div class="col-2 text-center" *ngIf="productForm.value.category != ''">
                             <fa-icon [icon]="[iconPrefix, (productForm.value.category|icon:'category')]"></fa-icon>
                         </div>
-                        <div class="ps-0 col-10">
+                        <div class="ps-0 col-10" *ngIf="productForm.value.category != ''">
                             <p>Kategória: {{productForm.value.category}}</p>
                         </div>
                         <div class="col-2 text-center" *ngIf="productForm.value.materials[0]">

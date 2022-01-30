@@ -12,10 +12,44 @@ input.ng-untouched{
 input.ng-valid{
     border-bottom: #859C62 thin solid;
 }
+textarea.ng-untouched{
+    border-color: lightgray;
+}
+textarea.ng-valid{
+    border-bottom: #859C62 thin solid;
+}
 .form-control:focus {   
     color: #212529;
     background-color: #fff;
     border-color: #859C62;
     outline: 0;
     box-shadow: 0 0 0 0.25rem #859c625b;
+}
+.menu{
+    position: absolute;
+    z-index: 3;
+    top: auto;
+    left: auto;
+    min-width: 18rem;
+}
+.info{
+    max-width: 18rem;
+    position: absolute;
+    z-index: 3;
+    top: auto;
+    left: auto;
+    background-color: #fbf7f5;
+    margin-left: .2rem;
+    margin-top: -2.5rem ;
+}
+.menu-bg{
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 3;
+}
+.dropdown-item{
+    border-radius: 1rem;
 }

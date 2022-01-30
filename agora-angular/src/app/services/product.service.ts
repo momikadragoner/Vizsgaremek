@@ -4,6 +4,7 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
+import { Auth } from './auth';
 
 export interface Product {
   productId: number,
@@ -37,6 +38,7 @@ export interface ProductShort {
   sellerLastName: string,
   price: number,
   imgUrl: string,
+  isPublic?: boolean,
   discount?: number,
 }
 
@@ -56,6 +58,8 @@ export interface Review {
 export class ProductService {
 
   constructor(private http: HttpClient) { }
+
+  currentUser = Auth.currentUser;
 
   rootURL = '/api';
 
@@ -80,16 +84,24 @@ export class ProductService {
 
   getProductsBySeller(id: any, order?: string, term?: string) {
     let params = new HttpParams();
-    //if(term) params.append('term', term);
-    //if(order) params.append('orderby', order);
-    //const options =  order && term ? { params: new HttpParams().set('orderby', order).set('term',term)} : {};
+
     let options = order && !term ? { params: new HttpParams().set('orderby', order) } :
       order && term ? { params: new HttpParams().set('orderby', order).set('term', term.trim()) } :
         !order && term ? { params: new HttpParams().set('term', term.trim()) } : {};
-    //options =  !order && term ? { params: new HttpParams().set('term', term.trim())} : {};
 
-    //const options = params == new HttpParams() ? {} : {params: params};
     return this.http.get<[ProductShort]>(this.rootURL + '/products-by-seller/' + id, options);
+  }
+
+  getMyProducts(order?: string, term?: string){
+    let id = this.currentUser.userId;
+    console.log(id);
+    let params = new HttpParams();
+
+    let options = order && !term ? { params: new HttpParams().set('orderby', order) } :
+      order && term ? { params: new HttpParams().set('orderby', order).set('term', term.trim()) } :
+        !order && term ? { params: new HttpParams().set('term', term.trim()) } : {};
+
+    return this.http.get<[ProductShort]>(this.rootURL + '/my-products/' + id, options);
   }
 
   private handleError(error: HttpErrorResponse) {
@@ -146,6 +158,7 @@ export class ProductShort {
     public sellerLastName: string,
     public price: number,
     public imgUrl: string,
+    public isPublic?: boolean,
     public sellerId?: number,
     public discount?: number
   ) {
@@ -196,10 +209,10 @@ export const ratingToArray = function (rating: number): number[] {
   return stars;
 }
 
-export const toProductShort = function (product: Product): ProductShort {
-  let productShort: ProductShort = { productId: product.productId, sellerId: product.sellerId, name: product.name, sellerFirstName: product.sellerFirstName, sellerLastName: product.sellerLastName, price: product.price, imgUrl: product.imgUrl[0] };
-  return productShort;
-}
+// export const toProductShort = function (product: Product): ProductShort {
+//   let productShort: ProductShort = { productId: product.productId, sellerId: product.sellerId, name: product.name, sellerFirstName: product.sellerFirstName, sellerLastName: product.sellerLastName, price: product.price, imgUrl: product.imgUrl[0] };
+//   return productShort;
+// }
 
 
 // export const productListLong = [
