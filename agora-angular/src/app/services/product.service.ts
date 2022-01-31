@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 import { Observable, throwError } from 'rxjs';
@@ -102,6 +102,18 @@ export class ProductService {
         !order && term ? { params: new HttpParams().set('term', term.trim()) } : {};
 
     return this.http.get<[ProductShort]>(this.rootURL + '/my-products/' + id, options);
+  }
+
+  addProduct(product: Product): Observable<Product> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+      })
+    };
+    return this.http.post<Product>(this.rootURL + '/add-product', product, httpOptions)
+      .pipe(
+        catchError((error)=>this.handleError(error))
+      );
   }
 
   private handleError(error: HttpErrorResponse) {

@@ -83,6 +83,8 @@ const app = express();
 
 app.use(express.urlencoded({ extended: false }));
 
+app.use(express.json())
+
 const shopRoutes = require('./routes/shop');
 const userRoutes = require('./routes/user');
 

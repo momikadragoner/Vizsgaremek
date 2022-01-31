@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Product, tags, ProductShort, categories } from '../../services/product.service';
+import { Product, tags, ProductShort, categories, ProductService } from '../../services/product.service';
 import { FormGroup, FormArray, FormBuilder, Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { faTruck, faBoxes, IconPrefix, faTree, faHandPaper, faBalanceScale, faExclamationCircle, faGem, faBoxOpen, faLeaf, faSeedling, faAppleAlt, faCarrot, faCheese, faTrash, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt, faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { asapScheduler } from 'rxjs';
+import { asapScheduler, fromEventPattern } from 'rxjs';
 import { JsonPipe } from '@angular/common';
 import { ThrowStmt } from '@angular/compiler';
 import { Auth } from 'src/app/services/auth';
@@ -29,6 +29,16 @@ export class ProductFormComponent implements OnInit {
   discountAvailable = false;
   submitted = false;
   toolTipOpen:boolean[] = [];
+  products:Product[] = [];
+
+  constructor( 
+    private fb: FormBuilder, 
+    private productService: ProductService, 
+    library:FaIconLibrary, 
+  ) 
+  {
+    library.addIcons(faHandPaper, faTree, faBalanceScale, faExclamationCircle, faGem, faBoxOpen, faLeaf, faSeedling, faAppleAlt, faCarrot, faCheese, faCarrot, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt );
+  }
   
   productForm = this.fb.group({
     name: ['', Validators.required],
@@ -145,13 +155,35 @@ export class ProductFormComponent implements OnInit {
     }
   }
 
-  onSubmit() {
-    this.submitted = true;
-    console.log(JSON.stringify(this.productForm.value))
+  postProduct(isPublic:boolean){
+    let form = this.productForm.value;
+    let newProduct:Product = 
+    { 
+      productId: 0, 
+      name: form.name, 
+      price: form.price, 
+      inventory: form.inventory, 
+      delivery: form.delivery, 
+      category: form.category,
+      sellerFirstName: this.currentUser.firstName,
+      sellerLastName: this.currentUser.lastName,
+      sellerId: this.currentUser.userId,
+      materials: form.materials,
+      tags: form.tags,
+      imgUrl: form.pictureUrl,
+      description: form.description,
+      isPublic: isPublic
+    }
+    this.productService
+      .addProduct(newProduct)
+      .subscribe(product => this.products.push(product));
+    console.log(newProduct);
   }
 
-  constructor( private fb: FormBuilder, library:FaIconLibrary) {
-    library.addIcons(faHandPaper, faTree, faBalanceScale, faExclamationCircle, faGem, faBoxOpen, faLeaf, faSeedling, faAppleAlt, faCarrot, faCheese, faCarrot, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt );
+  onSubmit() {
+    this.submitted = true;
+    this.postProduct(true);
+    //console.log(JSON.stringify(this.productForm.value))
   }
 
   ngOnInit(): void {

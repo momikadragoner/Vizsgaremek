@@ -4,8 +4,6 @@ const bodyParser = require("body-parser");
 const db = require('../util/connect-db')
 const connectDb = db.connectDb;
 
-app.use(bodyParser.json());
-
 exports.getMyProducts = (req, res, next) => {
 
     conn = connectDb()
@@ -58,4 +56,31 @@ exports.getMyProducts = (req, res, next) => {
         }
       }
     );
+};
+exports.postNewProduct = (req, res, next) => {
+  product = req.body;
+  var publshedAt = product.isPublic ? new Date() : null; 
+  var sql = 'INSERT INTO `product`(`name`, `price`, `description`, `inventory`, `delivery`, `category`, `vendor_id`, `discount`, `is_published`, `created_at`, `published_at`)'; 
+  sql += 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  conn = connectDb()
+  conn.query(sql,
+    [
+      product.name,
+      product.price,
+      product.description,
+      product.inventory,
+      product.delivery,
+      product.category,
+      product.sellerId,
+      product.discount,
+      product.isPublic,
+      new Date(),
+      publshedAt
+    ], (err, rows, fields) => {
+      if (err) res.json("Query error: " + err)
+      else {
+        res.json(rows);
+      }
+    }
+  );
 };
