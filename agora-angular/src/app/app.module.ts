@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -40,6 +42,7 @@ import { AddToCartComponent } from './product-detail/add-to-cart/add-to-cart.com
 import { ProductService } from './services/product.service';
 import { UserService } from './services/user.service';
 import { RootComponent } from './account-forms/root/root.component';
+
 
 @NgModule({
   declarations: [
@@ -83,6 +86,9 @@ import { RootComponent } from './account-forms/root/root.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
+    FormsModule,
+    RouterModule,
+    
   ],
   exports: [
     FontAwesomeModule

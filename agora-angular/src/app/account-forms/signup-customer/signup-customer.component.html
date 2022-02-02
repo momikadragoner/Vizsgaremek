@@ -1,24 +1,24 @@
 <account-form>
     <h2 class="text-center mb-3">Regisztráció</h2>
-    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
-        <div class="mb-3">
+    <form #myform="ngForm" (ngSubmit)="onSubmit(myform)">
+        <div class="mb-3 form-group">
             <label for="last-name" class="form-label mb-1">Vezetéknév </label>
-            <input id="last-name" type="text" formControlName="lastName" class="form-control short">
+            <input id="last-name" type="text" name="lastName" class="form-control short" ngModel>
         </div>
-        <div class="mb-3">
+        <div class="mb-3 form-group">
             <label for="first-name" class="form-label mb-1">Keresztnév </label>
-            <input id="first-name" type="text" formControlName="firstName" class="form-control short">
+            <input id="first-name" type="text" name="firstName" class="form-control short" ngModel>
         </div>
-        <div class="mb-3">
+        <div class="mb-3 form-group">
             <label for="email" class="form-label mb-1">Email cím</label>
-            <input type="email" class="form-control short" formControlName="email" id="email" placeholder="name@example.com">
+            <input type="email" class="form-control short" name="email" id="email" placeholder="name@example.com" ngModel>
         </div>
-        <div class="mb-3">
+        <div class="mb-3 form-group">
             <label for="password" class="form-label mb-1">Jelszó</label>
-            <input type="password" class="form-control short" formControlName="password" id="password" placeholder="">
+            <input type="password" class="form-control short" name="password" id="password" placeholder="" ngModel>
         </div>
         <div class="mb-3">
-            <button type="submit" [disabled]="!profileForm.valid" class="btn btn-primary w-100">Regisztráció</button>
+            <button type="submit" class="btn btn-primary w-100">Regisztráció</button>
         </div>
         <div class="text-center mb-0 pb-0">
             <a class="btn small" [routerLink]="['/login']">Már van fiókom</a>

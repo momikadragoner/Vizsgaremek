@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { AuthService } from '../auth.service';
+import { NgForm } from '@angular/forms';
+import { ApiService } from '../services/api.service';
+import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+
+
+
 
 @Component({
   selector: 'app-login',
@@ -10,25 +14,41 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  userEmail:String="";
-  userPassword:String="";
+  
+  errorMessage=""
     
     
     
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private _api:ApiService, 
+    private _auth:AuthService, 
+    private _router:Router) { }
 
   ngOnInit(){
     
   }
 
-  login(){
-    this.authService.validate(this.userEmail, this.userPassword)
-    .then((response:any)=>{
-      this.authService.setUserInfo({'user': response['user']});
-      this.router.navigate(['']);
-    })
-    
+  onSubmit(form:NgForm){
+    this._api.postTypeRequest('user/login',form.value).subscribe((res:any)=>{
+      if(res.status){
+        this._auth.setDataInLocalStorage('userData',JSON.stringify(res.data));
+        this._auth.setDataInLocalStorage('token',res.token);
+        this._router.navigate(['']);
+      } else{
+        
+      }
+    }, err=>{
+      this.errorMessage=err['error'].message;
+    });
   }
+
+
+  
+
+  
+
+  
+
+  
 
   
 

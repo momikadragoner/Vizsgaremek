@@ -1,6 +1,6 @@
 const express = require('express');
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+const indexRouter=require('./routes/index_2');
+const cors=require('cors');
 
 const app = express(),
       bodyParser = require("body-parser");
@@ -66,7 +66,9 @@ const users = {
 }
 
 
-
+app.get('/', (req,res) => {
+  res.send('App Works !!!!');
+});
 app.use(bodyParser.json());
 
 app.get('/api/product', (req, res, next) => {
@@ -95,67 +97,10 @@ app.post('/api/users', (req, res) => {
   res.json("user addedd");
 });
 
+app.use(cors());
+app.use(express.json());
+app.use('/', indexRouter);
 
-
-
-
-const auth = () => {
-  return (req,res,next) => {
-    passport.authenticate('local', (error, user,info)=>{
-      if(error) res.status(400).json({"statusCode":400, "message":error});
-      
-      req.login(user, function(error){
-        if(error) return next(error); 
-        next();
-      });
-    })(req,res,next);
-    
-  }
-}
-
-app.post('/authenticate', auth(), (req,res)=>{
-  res.status(200).json({"statusCode":200, "message":"Minden jó"});
-});
-
-
-
-passport.serializeUser(function(user, done){
-  if(user) done(null, user.id);
-});
-
-passport.deserializeUser(function(id, done){
-  done(null,id);
-});
-
-passport.use(new LocalStrategy(
-  function(emailAddress,password,done){
-    if(emailAddress==="erzsi.nagy@mail.hu" && password==="Teszt123"){
-      return done(null, emailAddress);
-    } else{
-      return done("Illetéktelen hozzáférés", false);
-    }
-  }
-));
-
-app.use(passport.initialize());
-
-app.use(passport.session());
-
-const isLoggedIn=(req,res,next)=>{
-  if(req.isAuthenticated()){
-    return next();
-  }
-  return res.status(400).json({"statusCode": 400, "message": "Nincs hitelesítve"});
-}
-
-
-
-app.get('/', isLoggedIn, (req,res) => {
-  
-  res.json("data")
-  
-  res.send('App Works !!!!');
-});
 
 // app.get('/', (req,res) => {
 //     res.sendFile(process.cwd()+"/my-app/dist/angular-nodejs-example/index.html")
