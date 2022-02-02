@@ -35,15 +35,18 @@ router.post('/signup', async function(req,res,next)
     }
 });
 
+
+
 router.post('/login', async function(req,res,next){
     try{
-        let{email, password}=req.body;
-        const hashed_password=md5(password.toString())
+        let{userEmail, userPassword}=req.body;
+        const hashed_password=md5(userPassword.toString())
         const sql=`select * from member where email=? and password=?`
-        con.query(sql,[email, hashed_password], function(err, result,fields){
-            if(err){
+        con.query(sql,[userEmail, hashed_password], function(err, result,fields){
+            if(!result.length){
                 res.send({status:0, data:err});
             } else{
+                
                 let token = jwt.sign({data:result}, 'secret')
                 res.send({status:1, data:result, token:token})
             }
@@ -52,5 +55,8 @@ router.post('/login', async function(req,res,next){
         res.send({status:0, error:error});
     }
 });
+
+
+
 
 module.exports=router;

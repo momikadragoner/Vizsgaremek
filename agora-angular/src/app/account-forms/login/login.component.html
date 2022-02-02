@@ -2,12 +2,12 @@
       <h2 class="text-center mb-3">Belépés</h2>
       <form #myform="ngForm" (ngSubmit)="onSubmit(myform)">
           <div class="mb-3 form-group">
-              <label for="email" class="form-label mb-1">Email cím</label>
-              <input type="text" class="form-control short" name="email" id="email" ngModel>
+              <label for="userEmail" class="form-label mb-1">Email cím</label>
+              <input type="text" class="form-control short" name="userEmail" id="userEmail" ngModel>
           </div>
           <div class="mb-1 form-group">
-              <label for="password" class="form-label mb-1">Jelszó</label>
-              <input type="password" class="form-control short" name="password" id="password" placeholder="" ngModel>
+              <label for="userPassword" class="form-label mb-1">Jelszó</label>
+              <input type="password" class="form-control short" name="userPassword" id="userPassword" placeholder="" ngModel>
           </div>
           
           <div class="form-check mb-2 mt-0">

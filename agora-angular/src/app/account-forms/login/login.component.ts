@@ -28,8 +28,10 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(form:NgForm){
+    console.log('Your form data: ', form.value);
     this._api.postTypeRequest('user/login',form.value).subscribe((res:any)=>{
       if(res.status){
+        console.log(res)
         this._auth.setDataInLocalStorage('userData',JSON.stringify(res.data));
         this._auth.setDataInLocalStorage('token',res.token);
         this._router.navigate(['']);
