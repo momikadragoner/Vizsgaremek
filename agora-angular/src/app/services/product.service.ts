@@ -27,7 +27,7 @@ export interface Product {
   discount?: number,
   rating?: number,
   sellerId?: number,
-  reviews?: Review[]
+  reviews: Review[]
 }
 
 export interface ProductShort {
@@ -152,9 +152,9 @@ export class Product {
     public imgUrl: string[],
     public description: string,
     public isPublic: boolean,
+    public reviews: Review[],
     public discount?: number,
     public rating?: number,
-    public reviews?: Review[],
   ) {
   }
 }
@@ -177,19 +177,19 @@ export class ProductShort {
   }
 }
 
-export const productListShort = [
-  new Product(1, "Gyöngy nyakék", "Kiss", "Márta", 12599, 12, "Azonnal szállítható", "Ékszer", ["Környezetbarát", "Kézzel készült", "Etikusan beszerzett alapanyagok"], ["arany", "ásvány"], ["assets/item2.jpg"], "Lorem ipsum", true),
-  new Product(2, "Arany lánc", "Nagy", "Erzsébet", 18599, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item1.jpg"], "Lorem ipsum", true),
-  new Product(3, "Ásvány medál ékszer", "Széles", "Lajos", 11999, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item3.jfif"], "Lorem ipsum", true),
-  new Product(4, "Arany és kristály nyaklánc", "Közepes", "Borbála", 19599, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item4.jpg"], "Lorem ipsum", true),
-];
+// export const productListShort = [
+//   new Product(1, "Gyöngy nyakék", "Kiss", "Márta", 12599, 12, "Azonnal szállítható", "Ékszer", ["Környezetbarát", "Kézzel készült", "Etikusan beszerzett alapanyagok"], ["arany", "ásvány"], ["assets/item2.jpg"], "Lorem ipsum", true),
+//   new Product(2, "Arany lánc", "Nagy", "Erzsébet", 18599, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item1.jpg"], "Lorem ipsum", true),
+//   new Product(3, "Ásvány medál ékszer", "Széles", "Lajos", 11999, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item3.jfif"], "Lorem ipsum", true),
+//   new Product(4, "Arany és kristály nyaklánc", "Közepes", "Borbála", 19599, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item4.jpg"], "Lorem ipsum", true),
+// ];
 
-export const myProductList = [
-  new Product(1, "Gyöngy nyakék", "Nagy", "Erzsébet", 12599, 12, "Azonnal szállítható", "Ékszer", ["Környezetbarát", "Kézzel készült", "Etikusan beszerzett alapanyagok"], ["arany", "ásvány"], ["assets/item2.jpg"], "Lorem ipsum", false),
-  new Product(2, "Arany lánc", "Nagy", "Erzsébet", 18599, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item1.jpg"], "Lorem ipsum", true),
-  new Product(3, "Ásvány medál ékszer", "Nagy", "Erzsébet", 11999, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item3.jfif"], "Lorem ipsum", true),
-  new Product(4, "Arany és kristály nyaklánc", "Nagy", "Erzsébet", 19599, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item4.jpg"], "Lorem ipsum", true),
-];
+// export const myProductList = [
+//   new Product(1, "Gyöngy nyakék", "Nagy", "Erzsébet", 12599, 12, "Azonnal szállítható", "Ékszer", ["Környezetbarát", "Kézzel készült", "Etikusan beszerzett alapanyagok"], ["arany", "ásvány"], ["assets/item2.jpg"], "Lorem ipsum", false),
+//   new Product(2, "Arany lánc", "Nagy", "Erzsébet", 18599, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item1.jpg"], "Lorem ipsum", true),
+//   new Product(3, "Ásvány medál ékszer", "Nagy", "Erzsébet", 11999, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item3.jfif"], "Lorem ipsum", true),
+//   new Product(4, "Arany és kristály nyaklánc", "Nagy", "Erzsébet", 19599, 12, "Azonnal szállítható", "Ékszer", ["környezetbarát", "kézzel készült"], ["arany", "ásvány"], ["assets/item4.jpg"], "Lorem ipsum", true),
+// ];
 
 export const tags = [
   "Környezetbarát",

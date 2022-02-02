@@ -58,10 +58,10 @@
                                 <div class="ps-0 col-10" [ngClass]="{'placeholder col-4':product.category == ''}">
                                     <p>Kategória: {{product.category}}</p>
                                 </div>
-                                <div class="col-2 text-center">
+                                <div *ngIf="product.materials[0] != null" class="col-2 text-center">
                                     <fa-icon [icon]="faBoxes"></fa-icon>
                                 </div>
-                                <div class="ps-0 col-10">
+                                <div *ngIf="product.materials[0] != null" class="ps-0 col-10">
                                     <p *ngIf="product.materials != []">Anyaga: 
                                         <span *ngFor="let material of product.materials; let i = index">
                                             {{material}}<span *ngIf="i != product.materials.length - 1">, </span>
@@ -88,7 +88,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-lg-6">
-                        <div class="shadow rounded px-4 pt-3 pb-2 m-2">
+                        <div *ngIf="product.tags[0] != undefined" class="shadow rounded px-4 pt-3 pb-2 m-2">
                             <div *ngFor="let tag of product.tags" class="row mx-auto">
                                 <div class="col-2 text-center">
                                     <fa-icon [icon]="[iconPrefix, (tag|icon:'tag')]"></fa-icon>
@@ -153,7 +153,7 @@
         <hr>
         <div class="row">
             <h3>Értékelések</h3>
-            <h1 class="fw-bold big ms-3" [ngClass]="{'placeholder col-1':product.rating == -1}">{{product.rating}}<small class="fw-normal small">/ 5</small></h1>
+            <h1 *ngIf="product.rating != null" class="fw-bold big ms-3" [ngClass]="{'placeholder col-1':product.rating == -1}">{{product.rating}}<small class="fw-normal small">/ 5</small></h1>
             <div class="scrollmenu row">
                 <a href="#" *ngFor="let review of product.reviews"
                     class="shadow rounded review m-2 col-12 col-md-6 text-decoration-none text-dark placeholder-glow"
@@ -188,19 +188,26 @@
                     </p>
                 </a>
             </div>
+            <div *ngIf="product.reviews.length == 0">
+                <div class="text-center">
+                    <h1><fa-icon [icon]="faFolderOpen"></fa-icon></h1>
+                    <h3>Még senki nem értékelte ezt a terméket.</h3>
+                    <h4>Légy te az első!</h4>
+                    <a href="#" (click)="writeReview($event)" class="text-decoration-none pt-3 ms-3">
+                        <h5>
+                            <fa-icon [icon]="faEdit"></fa-icon>
+                            Vélemény írása
+                        </h5>
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="mt-3">
+        <div *ngIf="product.reviews.length != 0" class="mt-3">
             <a href="#" (click)="writeReview($event)" class="text-decoration-none pt-3 ms-3">
                 <fa-icon [icon]="faEdit"></fa-icon>
                 Vélemény írása
             </a>
         </div>
-        <!-- <div class="row mt-3">
-            <h5>Értékeld a terméket</h5>
-            <div>
-                <fa-icon *ngFor="let number of [1,2,3,4,5]" [icon]="faStar"></fa-icon>
-            </div>
-        </div> -->
     </div>
     <h3 class="m-3 pt-2">További ajánlatok</h3>
     <app-product-list class="row" [products]="productList" [sideScrollable]="true"></app-product-list>

@@ -172,7 +172,8 @@ export class ProductFormComponent implements OnInit {
       tags: form.tags,
       imgUrl: form.pictureUrl,
       description: form.description,
-      isPublic: isPublic
+      isPublic: isPublic,
+      reviews: []
     }
     this.productService
       .addProduct(newProduct)

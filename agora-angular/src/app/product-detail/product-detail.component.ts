@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap, NavigationStart, NavigationEnd, NavigationError } from '@angular/router';
-import { faHandPaper, faEdit, faBalanceScale, faTree, faEnvelope, faShoppingCart, faHeart, faTruck, faGem, faBoxes, faStar, IconPrefix, IconName, faChevronLeft, faChevronRight, faExclamationCircle, faBoxOpen, faLeaf, faSeedling, faAppleAlt, faCarrot, faCheese, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt } from '@fortawesome/free-solid-svg-icons';
+import { faHandPaper, faEdit, faBalanceScale, faTree, faEnvelope, faShoppingCart, faHeart, faTruck, faGem, faBoxes, faStar, IconPrefix, IconName, faChevronLeft, faChevronRight, faExclamationCircle, faBoxOpen, faLeaf, faSeedling, faAppleAlt, faCarrot, faCheese, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 // import { faStar } from '@fortawesome/free-regular-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { Form } from '@angular/forms';
@@ -35,9 +35,11 @@ export class ProductDetailComponent implements OnInit {
   faChevronRight = faChevronRight;
   faChevronLeft = faChevronLeft;
   faEdit = faEdit;
+  faFolderOpen = faFolderOpen;
 
-  product: Product = { productId: 0, name: '', sellerFirstName: '', sellerLastName: '', price: -1, inventory: -1, delivery: '', category: '', tags: [], materials: [], imgUrl: [], description: '', isPublic: true, rating: -1 };
   review: Review = { reviewId: 0, userId: 0, userLastName: "", userFirstName: "", title: "", content: "", rating: 0, points: 0, publishedAt: new Date() };
+  reviews: Review[] = [this.review];
+  product: Product = { productId: 0, name: '', sellerFirstName: '', sellerLastName: '', price: -1, inventory: -1, delivery: '', category: '', tags: [], materials: [], imgUrl: [], description: '', isPublic: true, rating: -1, reviews: this.reviews };
   productList: ProductShort[] = [{ productId: 0, name: "", sellerFirstName: "", sellerLastName: "", price: -1, imgUrl: "" }];
   seller: User = { userId: 0, firstName: '', lastName: '', about: "", profileImgUrl: "", companyName: undefined, takesCustomOrders: true };
   id: any;
@@ -80,24 +82,16 @@ export class ProductDetailComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id');
     this.ShowProduct();
     this.ShowProductList();
-    //this.ShowUser(this.product.sellerId);
-    // this.route.queryParams.subscribe(params => {
-    //   this.id = params['id'];
-    //   console.log(params['id'])
-    // });
   }
 
   ShowProduct() {
     this.productService.getProduct(this.id)
       .subscribe((data: Product) => {this.product = { ... data}, this.ShowUser(this.product.sellerId)}, error => this.error = error);
-    // console.log(this.product);
-    // console.log(this.error);
   }
 
   ShowReview(id:any) {
     this.productService.getReview(id)
     .subscribe((data: Review) => this.review = { ... data}, error => this.error = error);
-    console.log(this.review);
   }
 
   ShowProductList() {

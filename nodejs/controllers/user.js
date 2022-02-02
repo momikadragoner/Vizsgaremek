@@ -78,23 +78,24 @@ exports.postNewProduct = (req, res, next) => {
       new Date(),
       publshedAt
     ], (err, results, fields) => {
-      if (err) res.json("Query error: " + err)
+      if (err) res.json("Query " + err)
       else {
         productId = results.insertId;
         insertMaterials(productId, product.materials);
+        insertTags(productId, product.tags);
       }
     }
   )
 };
 async function insertMaterials(productId, materials) {
   materials.forEach(material => {
-    let sql = 'SELECT material.material_id FROM material WHERE material.material_name = ?';
+    let sql = 'SELECT material.material_id FROM material WHERE material.material_name = ? LIMIT 1';
     conn.query(sql, [material], (err, rows, fields) => {
       if (err) res.json("Query error: " + err)
       else if (rows[0] == undefined) {
         let sql = 'INSERT INTO `material`(`material_name`) VALUES (?)'
         conn.query(sql, [material], (err, results, fields) => {
-          if (err) res.json("Query error: " + err)
+          if (err) return "Query " + err;
           else {
             insertMaterial(results.insertId, productId);
           }
@@ -109,7 +110,29 @@ async function insertMaterials(productId, materials) {
 async function insertMaterial(materialId, productId) {
   let sql = 'INSERT INTO `product_material`(`material_id`, `product_id`) VALUES (?, ?)'
   conn.query(sql, [materialId, productId], (err, rows, fields) => {
-    if (err) res.json("Query error: " + err)
+    if (err) return "Query " + err;
+    else {
+      return true;
+    }
+  })
+}
+async function insertTags(productId, tags) {
+  tags.forEach( tag => {
+    let sql ='SELECT `tag_id` FROM `tag` WHERE tag_name = ? LIMIT 1';
+    conn.query(sql, [tag], (err, result, fields) => {
+      if (err) return "Query " + err;
+      else {
+        if (result[0] != undefined){
+          insertTag(result[0].tag_id, productId);
+        }
+      }
+    });
+  });
+}
+async function insertTag(tagId, productId) {
+  let sql = 'INSERT INTO `product_tag`(`tag_id`, `product_id`) VALUES (?, ?)';
+  conn.query(sql, [tagId, productId], (err, rows, fields) => {
+    if (err) return "Query " + err;
     else {
       return true;
     }
