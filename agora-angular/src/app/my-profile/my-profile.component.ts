@@ -59,6 +59,7 @@ export class MyProfileComponent implements OnInit {
   error: string = "";
   products: Product[] = [{productId: 0, name: "", sellerLastName: "", sellerFirstName: "", price: -1, imgUrl:''}];
   user: User = { userId: 0, firstName: '', lastName: '', following: -1, followers: -0, email: "", phone: "", about: "", profileImgUrl: "", headerImgUrl: "", registeredAt: new Date(), isVendor: false, isAdmin: false, companyName: undefined, takesCustomOrders: true };
+  deleteId: number = 0;
 
   constructor(
     private productService: ProductService, 
@@ -99,4 +100,7 @@ export class MyProfileComponent implements OnInit {
     .subscribe((data: User) => this.user = {... data}, error => this.error = error);
   }
 
+  deleteProduct(){
+    console.log(this.deleteId);
+  }
 }

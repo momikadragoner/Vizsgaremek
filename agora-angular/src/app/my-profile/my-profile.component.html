@@ -74,7 +74,7 @@
             </div>
         </form>
         <!-- <app-product-list [products]="products"></app-product-list> -->
-        <my-product-list class="row p-0 gx-5" [products]="products"></my-product-list>
+        <my-product-list (deleteClick)="deleteId" (click)="deleteProduct()" class="row p-0 gx-5" [products]="products"></my-product-list>
         <div *ngIf="!products[0]" class="text-center mt-4 pt-4">
             <h1><fa-icon [icon]="faTimesCircle"></fa-icon></h1>
             <h2>Nem találtunk termékeket</h2>

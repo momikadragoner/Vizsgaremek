@@ -68,7 +68,7 @@
             <a href="#" class="btn btn-primary">
                 <fa-icon [icon]="faEdit"></fa-icon>
             </a>
-            <a href="#" class="btn btn-danger">
+            <a href="#" (click)="delete($event, product.productId)" class="btn btn-danger">
                 <fa-icon [icon]="faTrash"></fa-icon>
             </a>
             <a href="#" class="btn btn-secondary">

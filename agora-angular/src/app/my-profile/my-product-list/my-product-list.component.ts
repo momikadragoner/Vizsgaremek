@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { faShoppingCart, faPlus, faTrash, faEdit, faEllipsisV, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { ProductShort as Product } from "../../services/product.service";
 
@@ -10,6 +10,8 @@ import { ProductShort as Product } from "../../services/product.service";
 export class MyProductListComponent implements OnInit {
 
   @Input() public products: Product[] = [];
+  @Output() deleteClick = new EventEmitter<number>();
+
 
   faShoppingCart = faShoppingCart;
   faPlus = faPlus;
@@ -21,6 +23,12 @@ export class MyProductListComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  delete($event:any, id: any){
+    $event.preventDefault();
+    console.log(id);
+    this.deleteClick.emit(id);
   }
 
 }
