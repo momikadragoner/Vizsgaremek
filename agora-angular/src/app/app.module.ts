@@ -42,6 +42,8 @@ import { AddToCartComponent } from './product-detail/add-to-cart/add-to-cart.com
 import { ProductService } from './services/product.service';
 import { UserService } from './services/user.service';
 import { RootComponent } from './account-forms/root/root.component';
+import { ApiService } from './account-forms/services/api.service';
+import { AuthService } from './account-forms/services/auth.service';
 
 
 @NgModule({
@@ -95,7 +97,9 @@ import { RootComponent } from './account-forms/root/root.component';
   ],
   providers: [
     ProductService,
-    UserService
+    UserService,
+    ApiService,
+    AuthService
   ],
   bootstrap: [AppComponent]
 })

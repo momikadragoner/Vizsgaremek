@@ -14,7 +14,7 @@ export class SignupCustomerComponent implements OnInit {
  
   errorMessage=""
 
-  constructor(private _api:ApiService, private _auth:AuthService, private _router:Router) { }
+  constructor(private _api: ApiService, private _auth:AuthService, private _router:Router) { }
 
   ngOnInit(){
    

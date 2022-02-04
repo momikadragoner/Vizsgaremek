@@ -80,6 +80,7 @@
 
 const express = require('express');
 const app = express();
+const cors = require('cors');
 
 app.use(express.urlencoded({ extended: false }));
 
@@ -87,19 +88,20 @@ app.use(express.json())
 
 const shopRoutes = require('./routes/shop');
 const userRoutes = require('./routes/user');
+const indexRouter = require('./routes/index_2');
 
 app.get('/', (req, res) => {
   res.send('API Works!');
 });
-app.get('/api/users', (req, res, next) => {
-  res.json(users);
-});
+// app.get('/api/users', (req, res, next) => {
+//   res.json(users);
+// });
 
-app.post('/api/users', (req, res) => {
-  const user = req.body.users;
-  users.push(user);
-  res.json("user addedd");
-});
+// app.post('/api/users', (req, res) => {
+//   const user = req.body.users;
+//   users.push(user);
+//   res.json("user addedd");
+// });
 
 app.use(cors());
 app.use(express.json());
