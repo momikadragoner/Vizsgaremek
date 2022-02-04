@@ -91,6 +91,20 @@ const userRoutes = require('./routes/user');
 app.get('/', (req, res) => {
   res.send('API Works!');
 });
+app.get('/api/users', (req, res, next) => {
+  res.json(users);
+});
+
+app.post('/api/users', (req, res) => {
+  const user = req.body.users;
+  users.push(user);
+  res.json("user addedd");
+});
+
+app.use(cors());
+app.use(express.json());
+app.use('/', indexRouter);
+
 
 app.use('/api', shopRoutes);
 app.use('/api', userRoutes);

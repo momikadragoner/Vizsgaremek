@@ -1,50 +1,54 @@
 <div>
     <header
         class="container d-flex flex-wrap align-items-center justify-content-center justify-content-md-between pt-3 mb-3">
+       
         <a [routerLink]="['/']" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
             <img src="assets/logo.svg" class="me-2 logo-img" height="32" alt="">
             <h3 class="mt-2 pt-1 logo-text">AGORA</h3>
         </a>
+        
+        
+            <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="#" (click)="toggleCategory($event)" [class.selected]="openView == 'category'"
+                        class="nav-link-selectable nav-link px-2 link-dark">Kategóriák</a></li>
+                <li><a href="#" (click)="toggleBestView($event)" [class.selected]="openView == 'best'"
+                        class="nav-link-selectable nav-link px-2 link-dark">A szezon legjobbjai</a></li>
+                <li><a href="#" (click)="toggleNowView($event)" [class.selected]="openView == 'now'"
+                        class="nav-link-selectable nav-link px-2 link-dark">Most</a></li>
+            </ul>
 
-        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-            <li><a href="#" (click)="toggleCategory($event)" [class.selected]="openView == 'category'"
-                    class="nav-link-selectable nav-link px-2 link-dark">Kategóriák</a></li>
-            <li><a href="#" (click)="toggleBestView($event)" [class.selected]="openView == 'best'"
-                    class="nav-link-selectable nav-link px-2 link-dark">A szezon legjobbjai</a></li>
-            <li><a href="#" (click)="toggleNowView($event)" [class.selected]="openView == 'now'"
-                    class="nav-link-selectable nav-link px-2 link-dark">Most</a></li>
-        </ul>
-
-        <div *ngIf="loggedIn" class="col-md-3 text-end loggedin-nav">
-            <a [routerLink]="['/cart']" class="btn p-1 m-1 btn-cart">
-                <fa-layers [fixedWidth]="true">
-                    <fa-icon [icon]="faShoppingCart"></fa-icon>
-                    <fa-layers-counter content=" "></fa-layers-counter>
-                </fa-layers>
-            </a>
-            <a (click)="toggleCart($event)" href="/my-profile" class="p-1 m-1">
-                <img class="profile-nav" src="assets/profilepic.jpg" alt="">
-            </a>
-            <div *ngIf="menuOpen">
-                <div class="menu-bg" (click)="toggleCart($event)"></div>
-                <div class="rounded shadow menu">
-                    <ul class="list-unstyled mb-0">
-                        <li class="text-start m-2 mx-3">
-                            <p class="small m-0">Bejelentkezve mint <span class="fw-bold">Nagy Erzsébet</span> </p>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider m-0">
-                        </li>
-                        <li><a class="dropdown-item" (click)="toggleCart($event)" [routerLink]="['/my-profile']">Profil</a></li>
-                        <li><a class="dropdown-item" (click)="toggleCart($event)" href="#">Kívánság lista</a></li>
-                        <li><a class="dropdown-item" (click)="toggleCart($event)" href="#">Beállítások</a></li>
-                        <li>
-                            <hr class="dropdown-divider m-0">
-                        </li>
-                        <li><a class="dropdown-item rounded-bottom" href="#">Kilépés</a></li>
-                    </ul>
+            <div *ngIf="loggedIn" class="col-md-3 text-end loggedin-nav">
+                <a [routerLink]="['/cart']" class="btn p-1 m-1 btn-cart">
+                    <fa-layers [fixedWidth]="true">
+                        <fa-icon [icon]="faShoppingCart"></fa-icon>
+                        <fa-layers-counter content=" "></fa-layers-counter>
+                    </fa-layers>
+                </a>
+                <a (click)="toggleCart($event)" href="/my-profile" class="p-1 m-1">
+                    <img class="profile-nav" src="assets/profilepic.jpg" alt="">
+                </a>
+                <div *ngIf="menuOpen">
+                    <div class="menu-bg" (click)="toggleCart($event)"></div>
+                    <div class="rounded shadow menu">
+                        <ul class="list-unstyled mb-0">
+                            <li class="text-start m-2 mx-3">
+                                <p class="small m-0">Bejelentkezve mint <span class="fw-bold">Nagy Erzsébet</span> </p>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider m-0">
+                            </li>
+                            <li><a class="dropdown-item" (click)="toggleCart($event)" [routerLink]="['/my-profile']">Profil</a></li>
+                            <li><a class="dropdown-item" (click)="toggleCart($event)" href="#">Kívánság lista</a></li>
+                            <li><a class="dropdown-item" (click)="toggleCart($event)" href="#">Beállítások</a></li>
+                            <li>
+                                <hr class="dropdown-divider m-0">
+                            </li>
+                            <li><a class="dropdown-item rounded-bottom" (click)="logout()">Kilépés</a></li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
+            
+        
         </div>
         <div *ngIf="loggedIn == false" class="col-md-3 text-end">
             <a [routerLink]="['/signup-vendor']" class="btn p-1 m-1 btn-sell">Eladok</a>

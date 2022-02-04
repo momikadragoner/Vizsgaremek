@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, animate, transition, query, stagger } from '@angular/animations';
 import { faCarrot, faAppleAlt, faBreadSlice, faCheese } from '@fortawesome/free-solid-svg-icons';
 import { faPalette, faGem, faTshirt, faGlassMartiniAlt, faShoppingCart, faBoxes } from '@fortawesome/free-solid-svg-icons';
+import { AuthService } from '../account-forms/services/auth.service';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-nav',
@@ -41,6 +44,8 @@ export class NavComponent implements OnInit {
   public openView = "";
   menuOpen = false;
 
+  isLogged:Boolean=false;
+
   toggleCategory($event: any) {
     $event.preventDefault();
     if (this.openView != "category") {
@@ -78,9 +83,25 @@ export class NavComponent implements OnInit {
 
   public loggedIn = true;
 
-  constructor() { }
+  constructor(private _auth:AuthService, private _router:Router) { 
+    
+  }
 
   ngOnInit(): void {
+    this.isLoggedIn();
+  }
+
+  logout(){
+    this._auth.clearStorage();
+    this._router.navigate(['login']);
+  }
+
+  isLoggedIn(){
+    console.log(this._auth.getUserDetails())
+    if(this._auth.getUserDetails() != null){
+        this.isLogged=true;
+    } 
+
   }
 
 }

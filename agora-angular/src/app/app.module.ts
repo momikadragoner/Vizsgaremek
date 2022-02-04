@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -39,6 +41,8 @@ import { CartComponent } from './cart/cart.component';
 import { AddToCartComponent } from './product-detail/add-to-cart/add-to-cart.component';
 import { ProductService } from './services/product.service';
 import { UserService } from './services/user.service';
+import { RootComponent } from './account-forms/root/root.component';
+
 
 @NgModule({
   declarations: [
@@ -73,6 +77,7 @@ import { UserService } from './services/user.service';
     ReviewFormComponent,
     CartComponent,
     AddToCartComponent,
+    RootComponent
   ],
   imports: [
     BrowserModule,
@@ -81,6 +86,9 @@ import { UserService } from './services/user.service';
     AppRoutingModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
+    FormsModule,
+    RouterModule,
+    
   ],
   exports: [
     FontAwesomeModule
