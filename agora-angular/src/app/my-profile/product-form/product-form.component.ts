@@ -8,11 +8,26 @@ import { JsonPipe } from '@angular/common';
 import { ThrowStmt } from '@angular/compiler';
 import { Auth } from 'src/app/services/auth';
 import { ActivatedRoute } from '@angular/router';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-product-form',
   templateUrl: './product-form.component.html',
-  styleUrls: ['./product-form.component.scss']
+  styleUrls: ['./product-form.component.scss'],
+  animations: [
+    trigger('visibilityChange',[
+      transition(':leave', [
+        style({ opacity: 1}),
+        animate('0.2s',
+          style({ opacity: 0,}))
+      ]),
+      transition(':enter', [
+        style({ opacity: 0}),
+        animate('0.2s',
+          style({ opacity: 1,}))
+      ])
+    ])
+  ]
 })
 export class ProductFormComponent implements OnInit {
 
@@ -177,10 +192,13 @@ export class ProductFormComponent implements OnInit {
       sellerId: this.currentUser.userId,
       materials: form.materials,
       tags: form.tags,
-      imgUrl: form.pictureUrl,
+      imgUrl: [form.pictureUrl],
       description: form.description,
       isPublic: isPublic,
       reviews: []
+    }
+    if (newProduct.imgUrl[0] == '') {
+      newProduct.imgUrl[0] = 'assets/default_assets/def-prod.png'
     }
     this.productService
       .addProduct(newProduct)

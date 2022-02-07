@@ -115,5 +115,7 @@ export class MyProfileComponent implements OnInit {
     $event.preventDefault();
     this.productService.deleteProduct(this.selectedProduct.productId)
     .subscribe();
+    this.products.splice(this.products.indexOf(this.selectedProduct),1);
+    this.alertOpen = false;
   }
 }

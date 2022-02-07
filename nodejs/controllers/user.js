@@ -83,6 +83,7 @@ exports.postNewProduct = (req, res, next) => {
         productId = results.insertId;
         insertMaterials(productId, product.materials);
         insertTags(productId, product.tags);
+        insertPicture(product.imgUrl[0], productId);
       }
     }
   )
@@ -117,12 +118,12 @@ async function insertMaterial(materialId, productId) {
   })
 }
 async function insertTags(productId, tags) {
-  tags.forEach( tag => {
-    let sql ='SELECT `tag_id` FROM `tag` WHERE tag_name = ? LIMIT 1';
+  tags.forEach(tag => {
+    let sql = 'SELECT `tag_id` FROM `tag` WHERE tag_name = ? LIMIT 1';
     conn.query(sql, [tag], (err, result, fields) => {
       if (err) return "Query " + err;
       else {
-        if (result[0] != undefined){
+        if (result[0] != undefined) {
           insertTag(result[0].tag_id, productId);
         }
       }
@@ -136,5 +137,45 @@ async function insertTag(tagId, productId) {
     else {
       return true;
     }
+  })
+}
+async function insertPicture(imgUrl, productId) {
+  let sql = 'INSERT INTO `product_picture`(`product_id`, `resource_link`, `is_thumbnail`) VALUES (?, ?, TRUE)';
+  conn.query(sql, [productId, imgUrl], (err, rows, fields) => {
+    if (err) return "Query " + err;
+    else {
+      return true;
+    }
+  })
+}
+exports.deleteProduct = (req, res, next) => {
+  if (!Number(req.params.id)) return res.json('Error: This product does not exist.');
+
+  let id = Number(req.params.id);
+  // check if an order not yet delivered exists 
+  // let sql =  '';
+  // conn.query(sql, [id], (err, results, fields) => {
+  //   if (err) res.json("Query " + err)
+  //   else {
+
+  //   }
+  // }
+  // )
+
+  let stmts = [
+    'DELETE FROM `product_material` WHERE product_id = ?',
+    'DELETE FROM `product_picture` WHERE product_id = ?',
+    'DELETE FROM `product_tag` WHERE product_id = ?',
+    'UPDATE `product` SET `name`="Eltávolított termék",`price`=NULL,`description`=NULL,`inventory`=NULL,`delivery`=NULL,`category`=NULL,`rating`=NULL,`vendor_id`=NULL,`discount`=NULL,`is_published`=FALSE,`is_removed`=TRUE,`created_at`=NULL,`last_updated_at`=NULL,`published_at`=NULL WHERE `product_id` = ?'
+  ];
+  conn = connectDb()
+  stmts.forEach(stmt => {
+    conn.query(stmt, [id], (err, results, fields) => {
+      if (err) console.log("Query " + err)
+      else {
+
+      }
+    }
+    )
   })
 }

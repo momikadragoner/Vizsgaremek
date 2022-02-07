@@ -117,7 +117,7 @@ export class ProductService {
   }
 
   deleteProduct(id: number): Observable<unknown> {
-    const url = this.rootURL + '/delete/' + id; // DELETE api/heroes/42
+    const url = this.rootURL + '/delete-product/' + id; // DELETE api/heroes/42
     return this.http.delete(url)
       .pipe(
         catchError(error=>this.handleError(error))
