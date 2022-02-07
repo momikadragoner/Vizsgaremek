@@ -17,7 +17,7 @@
             </p>
         </div>
         <div class="btn-group mx-2 mb-3">
-            <a [routerLink]="['/add-product']" class="btn btn-primary w-75">
+            <a [routerLink]="['/add-product']" [queryParams]="{edit: false}" class="btn btn-primary w-75">
                 <fa-icon [icon]="faPlus"></fa-icon>
             </a>
         </div>
@@ -65,7 +65,7 @@
             <h4 *ngIf="product.discount != null" class="m-0 fw-bold" [ngClass]="{'placeholder col-7':product.price == -1 || product.price == null}">{{product.price - (product.price * (product.discount/100)) | price}}</h4>
         </div>
         <div class="btn-group mx-2 px-1 mb-3 bottom">
-            <a href="#" class="btn btn-primary">
+            <a [routerLink]="['/add-product']" [queryParams]="{edit: true, id: product.productId}" class="btn btn-primary">
                 <fa-icon [icon]="faEdit"></fa-icon>
             </a>
             <a href="#" (click)="delete($event, product.productId)" class="btn btn-danger">

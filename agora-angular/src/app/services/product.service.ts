@@ -94,7 +94,7 @@ export class ProductService {
 
   getMyProducts(order?: string, term?: string){
     let id = this.currentUser.userId;
-    console.log(id);
+    //console.log(id);
     let params = new HttpParams();
 
     let options = order && !term ? { params: new HttpParams().set('orderby', order) } :
@@ -113,6 +113,14 @@ export class ProductService {
     return this.http.post<Product>(this.rootURL + '/add-product', product, httpOptions)
       .pipe(
         catchError((error)=>this.handleError(error))
+      );
+  }
+
+  deleteProduct(id: number): Observable<unknown> {
+    const url = this.rootURL + '/delete/' + id; // DELETE api/heroes/42
+    return this.http.delete(url)
+      .pipe(
+        catchError(error=>this.handleError(error))
       );
   }
 

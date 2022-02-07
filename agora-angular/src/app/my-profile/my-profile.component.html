@@ -74,7 +74,7 @@
             </div>
         </form>
         <!-- <app-product-list [products]="products"></app-product-list> -->
-        <my-product-list (deleteClick)="deleteId" (click)="deleteProduct()" class="row p-0 gx-5" [products]="products"></my-product-list>
+        <my-product-list (deleteClick)="alertDeleteProduct($event)" class="row p-0 gx-5" [products]="products"></my-product-list>
         <div *ngIf="!products[0]" class="text-center mt-4 pt-4">
             <h1><fa-icon [icon]="faTimesCircle"></fa-icon></h1>
             <h2>Nem találtunk termékeket</h2>
@@ -97,3 +97,15 @@
     </div> -->
 </div>
 <page-footer></page-footer>
+<modal-window [(modalVisible)]="alertOpen">
+    <div class="warning">
+        <div class="text-center p-3 border-top mt-2">
+            <p class="large">Biztosan törölni szeretné a(z) <span class="fw-bold">{{selectedProduct.name}}</span> megnevezésű terméket?</p>
+            <p class="mb-0 pb-0">Ezt a műveletet nem lehet visszavonni.</p>
+        </div>
+        <div class="d-flex justify-content-between border-top pt-2">
+            <a href="" (click)="$event.preventDefault(); alertOpen = false" class="btn btn-secondary me-1">Mégse</a>
+            <a href="" (click)="deleteProduct($event)" class="btn btn-danger mx-1">Törlés</a>
+        </div>
+    </div>
+</modal-window>

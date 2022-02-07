@@ -27,7 +27,6 @@ export class MyProductListComponent implements OnInit {
 
   delete($event:any, id: any){
     $event.preventDefault();
-    console.log(id);
     this.deleteClick.emit(id);
   }
 

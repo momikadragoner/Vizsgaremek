@@ -7,6 +7,7 @@ import { asapScheduler, fromEventPattern } from 'rxjs';
 import { JsonPipe } from '@angular/common';
 import { ThrowStmt } from '@angular/compiler';
 import { Auth } from 'src/app/services/auth';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-product-form',
@@ -30,14 +31,20 @@ export class ProductFormComponent implements OnInit {
   submitted = false;
   toolTipOpen:boolean[] = [];
   products:Product[] = [];
+  params:any;
 
   constructor( 
     private fb: FormBuilder, 
     private productService: ProductService, 
-    library:FaIconLibrary, 
+    library:FaIconLibrary,
+    activatedRoute: ActivatedRoute
   ) 
   {
     library.addIcons(faHandPaper, faTree, faBalanceScale, faExclamationCircle, faGem, faBoxOpen, faLeaf, faSeedling, faAppleAlt, faCarrot, faCheese, faCarrot, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt );
+    activatedRoute.queryParams.subscribe(param => this.params = { ...param['keys'], ...param });
+    if(this.params.edit == 'true'){
+      console.log(Number(this.params.id));
+    }
   }
   
   productForm = this.fb.group({

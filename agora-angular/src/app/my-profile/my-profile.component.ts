@@ -47,6 +47,7 @@ export class MyProfileComponent implements OnInit {
   orderOptions:string[] = ["Összes","Legújabb", "Legrégebbi", "Ár szerint csökkenő", "Ár szerint növekvő", "Készleten", "Közzétett", "Nincs közzétéve"];
 
   tabOpen = 1;
+  alertOpen = false;
 
   faEnvelope = faEnvelope;
   faLink = faLink;
@@ -59,7 +60,8 @@ export class MyProfileComponent implements OnInit {
   error: string = "";
   products: Product[] = [{productId: 0, name: "", sellerLastName: "", sellerFirstName: "", price: -1, imgUrl:''}];
   user: User = { userId: 0, firstName: '', lastName: '', following: -1, followers: -0, email: "", phone: "", about: "", profileImgUrl: "", headerImgUrl: "", registeredAt: new Date(), isVendor: false, isAdmin: false, companyName: undefined, takesCustomOrders: true };
-  deleteId: number = 0;
+  
+  selectedProduct: Product = {productId: 0, name: "", sellerLastName: "", sellerFirstName: "", price: -1, imgUrl:''};
 
   constructor(
     private productService: ProductService, 
@@ -100,7 +102,18 @@ export class MyProfileComponent implements OnInit {
     .subscribe((data: User) => this.user = {... data}, error => this.error = error);
   }
 
-  deleteProduct(){
-    console.log(this.deleteId);
+  alertDeleteProduct(deleteId:number){
+    this.alertOpen = true;
+    this.products.forEach(product => {
+      if(product.productId == deleteId){
+        this.selectedProduct = product;
+      }
+    })
+  }
+
+  deleteProduct($event:any){
+    $event.preventDefault();
+    this.productService.deleteProduct(this.selectedProduct.productId)
+    .subscribe();
   }
 }
