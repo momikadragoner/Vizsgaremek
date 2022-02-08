@@ -49,29 +49,42 @@
     </div> -->
     <div class="card my-3 shadow card-product">
         <div class="img-placeholder">
-            <p *ngIf="!product.isPublic" class="warning text-center"><fa-icon [icon]="faExclamationTriangle"></fa-icon> Ez a termék nem publikus. <a href="" class="text-dark">Tedd közzé.</a> </p>
-            <img *ngIf="product.imgUrl != '' && product.imgUrl != null" src="{{product.imgUrl}}" class="card-img-top img-product" alt="...">
+            <p *ngIf="!product.isPublic" class="warning text-center">
+                <fa-icon [icon]="faExclamationTriangle"></fa-icon> Ez a termék nem publikus. <a href=""
+                    class="text-dark">Tedd közzé.</a>
+            </p>
+            <img *ngIf="product.imgUrl != '' && product.imgUrl != null" src="{{product.imgUrl}}"
+                class="card-img-top img-product" alt="...">
             <svg *ngIf="product.imgUrl == '' || product.imgUrl == null" class="card-img-top img-placeholder">
                 <rect width="100%" height="100%" fill="#868e96"></rect>
             </svg>
         </div>
         <div class="card-body card-body-product text-center placeholder-glow">
-            <h5 class="card-title fw-bold" [ngClass]="{'placeholder col-10':product.name == ''}" [class.fit-text]="product.name.length> 20">{{product.name}}</h5>
+            <h5 class="card-title fw-bold" [ngClass]="{'placeholder col-10':product.name == ''}"
+                [class.fit-text]="product.name.length> 20">{{product.name}}</h5>
             <div *ngIf="product.discount != null" class="m-0 p-0">
-                <p class="mb-0"><s>{{product.price | price}} </s><span *ngIf="product.discount != null" class="badge bg-warning text-dark ms-1">-{{product.discount}}%</span></p>
+                <p class="mb-0"><s>{{product.price | price}} </s><span *ngIf="product.discount != null"
+                        class="badge bg-warning text-dark ms-1">-{{product.discount}}%</span></p>
             </div>
-            <a class="card-text text-primary m-1 text-decoration-none" [routerLink]="['/profile', product.sellerId]" [ngClass]="{'placeholder col-6':product.sellerLastName == ''}">{{product.sellerLastName}} {{product.sellerFirstName}}</a>
-            <h4 *ngIf="product.discount == null" class="m-0 fw-bold" [ngClass]="{'placeholder col-7':(product.price == -1 || product.price == null)}">{{product.price | price}}</h4>
-            <h4 *ngIf="product.discount != null" class="m-0 fw-bold" [ngClass]="{'placeholder col-7':product.price == -1 || product.price == null}">{{product.price - (product.price * (product.discount/100)) | price}}</h4>
+            <a class="card-text text-primary m-1 text-decoration-none" [routerLink]="['/profile', product.sellerId]"
+                [ngClass]="{'placeholder col-6':product.sellerLastName == ''}">{{product.sellerLastName}}
+                {{product.sellerFirstName}}</a>
+            <h4 *ngIf="product.discount == null" class="m-0 fw-bold"
+                [ngClass]="{'placeholder col-7':(product.price == -1 || product.price == null)}">{{product.price |
+                price}}</h4>
+            <h4 *ngIf="product.discount != null" class="m-0 fw-bold"
+                [ngClass]="{'placeholder col-7':product.price == -1 || product.price == null}">{{product.price -
+                (product.price * (product.discount/100)) | price}}</h4>
         </div>
         <div class="btn-group mx-2 px-1 mb-3 bottom">
-            <a [routerLink]="['/add-product']" [queryParams]="{edit: true, id: product.productId}" class="btn btn-primary">
+            <a [routerLink]="['/add-product']" [queryParams]="{edit: true, id: product.productId}"
+                class="btn btn-primary">
                 <fa-icon [icon]="faEdit"></fa-icon>
             </a>
             <a href="#" (click)="delete($event, product.productId)" class="btn btn-danger">
                 <fa-icon [icon]="faTrash"></fa-icon>
             </a>
-            <a href="#" class="btn btn-secondary">
+            <a href="#" (click)="showMore($event, product.productId)" class="btn btn-secondary">
                 <fa-icon [icon]="faMore"></fa-icon>
             </a>
         </div>

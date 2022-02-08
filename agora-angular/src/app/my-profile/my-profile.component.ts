@@ -48,6 +48,7 @@ export class MyProfileComponent implements OnInit {
 
   tabOpen = 1;
   alertOpen = false;
+  moreOptionsOpen = false;
 
   faEnvelope = faEnvelope;
   faLink = faLink;
@@ -106,6 +107,15 @@ export class MyProfileComponent implements OnInit {
     this.alertOpen = true;
     this.products.forEach(product => {
       if(product.productId == deleteId){
+        this.selectedProduct = product;
+      }
+    })
+  }
+
+  showMoreOptions(id:any){
+    this.moreOptionsOpen = !this.moreOptionsOpen;
+    this.products.forEach(product => {
+      if(product.productId == id){
         this.selectedProduct = product;
       }
     })

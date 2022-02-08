@@ -43,14 +43,14 @@ export class ProductFormComponent implements OnInit {
   faInfoCircle = faInfoCircle;
 
   discountAvailable = false;
-  submitted = false;
   toolTipOpen:boolean[] = [];
-  products:Product[] = [];
+  productPublic:boolean = true;
   params:any;
 
   tagOpen:boolean[] = [];
   tagsShown:string[] = [];
   modalOpen = false;
+  success?:boolean = undefined;
   message:string = 'Betöltés...';
 
   constructor( 
@@ -63,7 +63,34 @@ export class ProductFormComponent implements OnInit {
     library.addIcons(faHandPaper, faTree, faBalanceScale, faExclamationCircle, faGem, faBoxOpen, faLeaf, faSeedling, faAppleAlt, faCarrot, faCheese, faCarrot, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt );
     activatedRoute.queryParams.subscribe(param => this.params = { ...param['keys'], ...param });
     if(this.params.edit == 'true'){
-      console.log(Number(this.params.id));
+      let id = Number(this.params.id);
+      let form = this.productForm.value;
+      let product:Product = { productId: 0, name: '', sellerFirstName: '', sellerLastName: '', price: -1, inventory: -1, delivery: '', category: '', tags: [], materials: [], imgUrl: [], description: '', isPublic: true, rating: -1, reviews: [] };;
+      productService.getProduct(id)
+      .subscribe({
+        next: (data: Product) => { 
+          product = { ... data}
+          form.name = product.name;
+          form.price = product.price;
+          form.discount = product.discount;
+          form.inventory = product.inventory;
+          form.delivery = product.delivery;
+          form.category = product.category;
+          form.description = product.description;
+          this.productPublic = product.isPublic;
+          //form.pictureUrl = product.imgUrl[0];
+          this.productForm.setValue(form);
+          product.tags.forEach( tag => {
+            this.tags.push(this.fb.control(tag));
+          })
+          product.materials.forEach( material => {
+            this.materials.push(this.fb.control(material));
+          })
+          this.inputChange();
+          console.log(this.productPublic);
+        }, 
+        error: error => console.log(error)
+      });
     }
   }
   
@@ -203,11 +230,14 @@ export class ProductFormComponent implements OnInit {
     }
     this.productService
       .addProduct(newProduct)
-      .subscribe({next: data => this.message = "Termék sikeresen hozzáadva!", error: error => this.message = error});
+      .subscribe({
+        next: data => { this.message = "Termék sikeresen hozzáadva!"; this.success = true }, 
+        error: error => { this.message = error; this.success = false }
+      });
   }
 
   onSubmit() {
-    this.submitted = true;
+    this.modalOpen = true;
     this.postProduct(true);
     //console.log(JSON.stringify(this.productForm.value))
   }

@@ -11,7 +11,7 @@ export class MyProductListComponent implements OnInit {
 
   @Input() public products: Product[] = [];
   @Output() deleteClick = new EventEmitter<number>();
-
+  @Output() moreClick = new EventEmitter<number>();
 
   faShoppingCart = faShoppingCart;
   faPlus = faPlus;
@@ -23,6 +23,11 @@ export class MyProductListComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  showMore($event:any, id:any){
+    $event.preventDefault();
+    this.moreClick.emit(id);
   }
 
   delete($event:any, id: any){
