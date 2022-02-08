@@ -130,7 +130,7 @@
                     <textarea name="description" id="description" cols="30" rows="5" class="form-control" formControlName="description"></textarea>
                 </div>
                 <div *ngIf="params.edit == 'false'" class="mb-3">
-                    <button type="submit" class="btn btn-secondary p-2 m-2">Mentés</button>
+                    <a (click)="saveProduct()" class="btn btn-secondary p-2 m-2">Mentés</a>
                     <button type="submit" class="btn btn-primary p-2 m-2" [disabled]="!productForm.valid">Közzététel</button>
                 </div>
                 <div *ngIf="params.edit == 'true'" class="mb-3">
@@ -185,3 +185,14 @@
         </div>
     </div>
 </div>
+<modal-window [(modalVisible)]="modalOpen" [allowClose]="false" [title]="'Üzenet'">
+    <div>
+        <div class="text-center p-3 border-top mt-2">
+            <p class="large">{{message}}</p>
+            <!-- <p class="mb-0 pb-0">Ezt a műveletet nem lehet visszavonni.</p> -->
+        </div>
+        <div class="d-flex justify-content-end border-top pt-2">
+            <a [routerLink]="['/my-profile']" class="btn btn-primary mx-1">Tovább</a>
+        </div>
+    </div>
+</modal-window>

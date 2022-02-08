@@ -1,8 +1,11 @@
 <div scrollBlock [@openModal]="modalVisible" *ngIf="modalVisible">
     <div class="modal-background w-100 frosted-glass" (click)="toggleModal()">
         <div (click)="$event.stopPropagation()" class="modal-body position-fixed top-50 start-50 translate-middle shadow rounded">
-            <div class="d-grid gap-1 d-md-flex justify-content-md-end">
-                <button (click)="toggleModal()" class="btn m-0 p-0">
+            <div class="d-grid gap-1 d-md-flex justify-content-md-between">
+                <p class="fw-bold title p-0 m-0">
+                    {{title}}
+                </p>
+                <button *ngIf="allowClose" (click)="toggleModal()" class="btn m-0 p-0">
                     <fa-icon  [icon]="faClose"></fa-icon>
                 </button>
             </div>

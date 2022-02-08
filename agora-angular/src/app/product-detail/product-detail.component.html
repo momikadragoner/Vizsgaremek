@@ -2,8 +2,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a [routerLink]="['/search']" class="text-decoration-none">Kategóriák</a></li>
-            <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Ékszerek</a></li>
-            <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Nyakláncok</a></li>
+            <li class="breadcrumb-item"><a href="#" class="text-decoration-none">{{product.category}}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{product.name}}</li>
         </ol>
     </nav>

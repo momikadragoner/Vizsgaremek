@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ɵCompiler_compileModuleAndAllComponentsSync__POST_R3__ } from '@angular/core';
 import { Product, tags, ProductShort, categories, ProductService } from '../../services/product.service';
 import { FormGroup, FormArray, FormBuilder, Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { faTruck, faBoxes, IconPrefix, faTree, faHandPaper, faBalanceScale, faExclamationCircle, faGem, faBoxOpen, faLeaf, faSeedling, faAppleAlt, faCarrot, faCheese, faTrash, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt, faInfoCircle} from '@fortawesome/free-solid-svg-icons';
@@ -47,6 +47,11 @@ export class ProductFormComponent implements OnInit {
   toolTipOpen:boolean[] = [];
   products:Product[] = [];
   params:any;
+
+  tagOpen:boolean[] = [];
+  tagsShown:string[] = [];
+  modalOpen = false;
+  message:string = 'Betöltés...';
 
   constructor( 
     private fb: FormBuilder, 
@@ -140,8 +145,6 @@ export class ProductFormComponent implements OnInit {
     "Bio"
   ];
 
-  tagsShown:string[] = [];
-
   searchTag(id:number){
     if(this.productForm.value.tags[id] == "") this.tagsShown = [...this.tagOptions];
     let result: string[] = [];
@@ -162,8 +165,6 @@ export class ProductFormComponent implements OnInit {
     this.productForm.setValue(update);
     this.onTagFocusChange(id);
   }
-
-  tagOpen:boolean[] = [];
 
   onTagFocusChange(id:number){
     this.tagOpen[id] = !this.tagOpen[id];
@@ -202,14 +203,20 @@ export class ProductFormComponent implements OnInit {
     }
     this.productService
       .addProduct(newProduct)
-      .subscribe(product => this.products.push(product));
-    console.log(newProduct);
+      .subscribe({next: data => this.message = "Termék sikeresen hozzáadva!", error: error => this.message = error});
   }
 
   onSubmit() {
     this.submitted = true;
     this.postProduct(true);
     //console.log(JSON.stringify(this.productForm.value))
+  }
+
+  saveProduct(){
+    if (this.productForm.valid) {
+      this.modalOpen = true;
+      this.postProduct(false);
+    }
   }
 
   ngOnInit(): void {

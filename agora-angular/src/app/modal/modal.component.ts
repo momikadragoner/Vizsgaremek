@@ -1,4 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { templateJitUrl } from '@angular/compiler';
 import { Component, Input, OnInit, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { faStar, faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -30,6 +31,8 @@ export class ModalComponent implements OnInit {
   faClose = faTimes;
 
   @Input() modalVisible = false;
+  @Input() allowClose = true;
+  @Input() title = "";
   @Output() modalVisibleChange = new EventEmitter<boolean>();
 
 
@@ -38,8 +41,10 @@ export class ModalComponent implements OnInit {
   }
 
   toggleModal(){
-    this.modalVisible = !this.modalVisible;
-    this.addModalVisible(this.modalVisible);
+    if(this.allowClose){
+      this.modalVisible = !this.modalVisible;
+      this.addModalVisible(this.modalVisible);
+    }
   }
 
   constructor() { 
