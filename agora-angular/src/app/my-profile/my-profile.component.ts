@@ -92,7 +92,10 @@ export class MyProfileComponent implements OnInit {
 
   ShowProducts(orderby?:string, term?:string) {
     this.productService.getMyProducts(orderby, term)
-    .subscribe((data: [Product]) => this.products = [...data], error => this.error = error);
+    .subscribe({
+      next: (data: [Product]) => this.products = [...data], 
+      error: error => this.error = error
+    });
   }
 
   ngOnInit(): void {
@@ -100,7 +103,10 @@ export class MyProfileComponent implements OnInit {
 
   ShowUser() {
     this.userService.getUser(this.currentUser.userId)
-    .subscribe((data: User) => this.user = {... data}, error => this.error = error);
+    .subscribe({
+      next: (data: User) => this.user = {... data}, 
+      error: error => this.error = error
+    });
   }
 
   alertDeleteProduct(deleteId:number){

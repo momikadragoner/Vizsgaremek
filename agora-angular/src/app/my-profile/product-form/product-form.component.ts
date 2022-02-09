@@ -45,6 +45,7 @@ export class ProductFormComponent implements OnInit {
   discountAvailable = false;
   toolTipOpen:boolean[] = [];
   productPublic:boolean = true;
+  productPublishedAt?:Date;
   params:any;
 
   tagOpen:boolean[] = [];
@@ -78,6 +79,7 @@ export class ProductFormComponent implements OnInit {
           form.category = product.category;
           form.description = product.description;
           this.productPublic = product.isPublic;
+          this.productPublishedAt = product.publishedAt;
           //form.pictureUrl = product.imgUrl[0];
           this.productForm.setValue(form);
           product.tags.forEach( tag => {
@@ -87,7 +89,7 @@ export class ProductFormComponent implements OnInit {
             this.materials.push(this.fb.control(material));
           })
           this.inputChange();
-          console.log(this.productPublic);
+          //console.log(this.productPublic);
         }, 
         error: error => console.log(error)
       });
@@ -205,7 +207,7 @@ export class ProductFormComponent implements OnInit {
     }
   }
 
-  postProduct(isPublic:boolean){
+  loadProduct(isPublic:boolean, publishingNow?:boolean):Product{
     let form = this.productForm.value;
     let newProduct:Product = 
     { 
@@ -223,11 +225,20 @@ export class ProductFormComponent implements OnInit {
       imgUrl: [form.pictureUrl],
       description: form.description,
       isPublic: isPublic,
+      publishedAt: this.productPublishedAt,
       reviews: []
+    }
+    if (publishingNow){
+      newProduct.publishedAt = new Date();
     }
     if (newProduct.imgUrl[0] == '') {
       newProduct.imgUrl[0] = 'assets/default_assets/def-prod.png'
     }
+    return newProduct;
+  }
+
+  postProduct(isPublic:boolean){
+    let newProduct = this.loadProduct(isPublic);
     this.productService
       .addProduct(newProduct)
       .subscribe({
@@ -236,17 +247,38 @@ export class ProductFormComponent implements OnInit {
       });
   }
 
+  putProduct(isPublic:boolean, publishingNow:boolean){
+    let updatedProduct = this.loadProduct(isPublic, publishingNow);
+    this.productService
+      .updateProduct(updatedProduct, this.params.id)
+      .subscribe({
+        next: data => { this.message = "Termék sikeresen frissítve!"; this.success = true }, 
+        error: error => { this.message = error; this.success = false }
+      });
+  }
+
   onSubmit() {
     this.modalOpen = true;
     this.postProduct(true);
-    //console.log(JSON.stringify(this.productForm.value))
   }
 
   saveProduct(){
-    if (this.productForm.valid) {
-      this.modalOpen = true;
-      this.postProduct(false);
-    }
+    if (!this.productForm.valid) return;
+    this.postProduct(false);
+    this.modalOpen = true;
+  }
+  
+  saveProductChange(){
+    if (!this.productForm.valid) return;
+    this.putProduct(false, false);
+    this.modalOpen = true;
+  }
+
+  publishProductChange() {
+    if (!this.productForm.valid) return;
+    let publishingNow = (this.productPublic == false)
+    this.putProduct(true, publishingNow);
+    this.modalOpen = true;
   }
 
   ngOnInit(): void {

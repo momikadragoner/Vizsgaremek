@@ -6,13 +6,12 @@ const connectDb = db.connectDb;
 
 exports.getMyProducts = (req, res, next) => {
 
-  conn = connectDb()
-
   if (!Number(req.params.id)) return res.json('Error: This URL does not lead to any products.');
 
+  conn = connectDb()
   let id = Number(req.params.id);
   let sorter = req.query.orderby;
-  //console.log(sorter);
+
   var sql = 'SELECT product.product_id AS productId, product.name, product.price, product.vendor_id AS sellerId, product.discount, member.first_name AS sellerFirstName, member.last_name AS sellerLastName, product.is_published AS isPublic, ( SELECT product_picture.resource_link FROM product_picture WHERE product_picture.is_thumbnail = TRUE AND product.product_id = product_picture.product_id LIMIT 1 ) AS imgUrl FROM product INNER JOIN member ON member.member_id = product.vendor_id WHERE product.vendor_id = ?';
   if (req.query.term) {
     //console.log(req.query.term);
@@ -56,6 +55,7 @@ exports.getMyProducts = (req, res, next) => {
       }
     }
   );
+  conn.end();
 };
 exports.postNewProduct = (req, res, next) => {
   product = req.body;
@@ -89,12 +89,13 @@ exports.postNewProduct = (req, res, next) => {
       }
     }
   )
+  conn.end();
 };
 async function insertMaterials(productId, materials) {
   materials.forEach(material => {
     let sql = 'SELECT material.material_id FROM material WHERE material.material_name = ? LIMIT 1';
     conn.query(sql, [material], (err, rows, fields) => {
-      if (err) res.json("Query error: " + err)
+      if (err) return ("Query " + err)
       else if (rows[0] == undefined) {
         let sql = 'INSERT INTO `material`(`material_name`) VALUES (?)'
         conn.query(sql, [material], (err, results, fields) => {
@@ -175,9 +176,39 @@ exports.deleteProduct = (req, res, next) => {
     conn.query(stmt, [id], (err, results, fields) => {
       if (err) console.log("Query " + err)
       else {
-
+        res.sendStatus(204);
       }
     }
     )
-  })
+  });
+  conn.end();
+}
+exports.updateProduct = (req, res, next) => {
+  product = req.body;
+  if (!Number(req.params.id)) return res.json('Error: This product does not exist.');
+  let id = Number(req.params.id);
+  let sql = 'UPDATE `product` SET `name`=?,`price`=?,`description`=?,`inventory`=?,`delivery`=?,`category`=?,`discount`=?,`is_published`=?,`last_updated_at`=?,`published_at`=? WHERE product_id = ?';
+  conn = connectDb()
+  conn.query(sql,
+    [
+      product.name,
+      product.price,
+      product.description,
+      product.inventory,
+      product.delivery,
+      product.category,
+      product.discount,
+      product.isPublic,
+      new Date(),
+      product.publishedAt,
+      id
+    ], (err, results, fields) => {
+      if (err) res.json("Query " + err)
+      else {
+        res.status(200);
+        res.json(product)
+      }
+    }
+  )
+  conn.end();
 }

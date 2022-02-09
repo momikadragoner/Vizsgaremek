@@ -134,8 +134,8 @@
                     <button type="submit" class="btn btn-primary p-2 m-2" [disabled]="!productForm.valid">Közzététel</button>
                 </div>
                 <div *ngIf="params.edit == 'true'" class="mb-3">
-                    <a *ngIf="!productPublic" (click)="saveProduct()" class="btn btn-secondary p-2 m-2" [ngClass]="{'disabled':(!productForm.valid)}">Változtatások mentés</a>
-                    <button type="submit" class="btn btn-primary p-2 m-2" [disabled]="!productForm.valid">Változtatások közzététele</button>
+                    <a *ngIf="!productPublic" (click)="saveProductChange()" class="btn btn-secondary p-2 m-2" [ngClass]="{'disabled':(!productForm.valid)}">Változtatások mentés</a>
+                    <a type="submit" (click)="publishProductChange()" class="btn btn-primary p-2 m-2" [ngClass]="{'disabled':(!productForm.valid)}">Változtatások közzététele</a>
                 </div>
             </form>
         </div>

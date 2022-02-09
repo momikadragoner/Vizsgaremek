@@ -63,6 +63,12 @@ export class ProductService {
 
   rootURL = '/api';
 
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type':  'application/json',
+    })
+  };
+
   getProduct(id: any) {
     return this.http.get<Product>(this.rootURL + '/product/' + id,)
       .pipe(
@@ -105,22 +111,24 @@ export class ProductService {
   }
 
   addProduct(product: Product): Observable<Product> {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type':  'application/json',
-      })
-    };
-    return this.http.post<Product>(this.rootURL + '/add-product', product, httpOptions)
+    return this.http.post<Product>(this.rootURL + '/add-product', product, this.httpOptions)
       .pipe(
         catchError((error)=>this.handleError(error))
       );
   }
 
   deleteProduct(id: number): Observable<unknown> {
-    const url = this.rootURL + '/delete-product/' + id; // DELETE api/heroes/42
+    const url = this.rootURL + '/delete-product/' + id;
     return this.http.delete(url)
       .pipe(
         catchError(error=>this.handleError(error))
+      );
+  }
+
+  updateProduct(product: Product, id: number): Observable<Product> {
+    return this.http.put<Product>(this.rootURL + '/update-product/' + id, product, this.httpOptions)
+      .pipe(
+        catchError(error => this.handleError(error))
       );
   }
 

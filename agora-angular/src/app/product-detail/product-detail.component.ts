@@ -86,22 +86,34 @@ export class ProductDetailComponent implements OnInit {
 
   ShowProduct() {
     this.productService.getProduct(this.id)
-      .subscribe((data: Product) => {this.product = { ... data}, this.ShowUser(this.product.sellerId)}, error => this.error = error);
+      .subscribe({
+        next: (data: Product) => { this.product = { ...data }, this.ShowUser(this.product.sellerId) },
+        error: error => this.error = error
+      });
   }
 
-  ShowReview(id:any) {
+  ShowReview(id: any) {
     this.productService.getReview(id)
-    .subscribe((data: Review) => this.review = { ... data}, error => this.error = error);
+      .subscribe({
+        next: (data: Review) => this.review = { ...data },
+        error: error => this.error = error
+      });
   }
 
   ShowProductList() {
     this.productService.getAllProducts()
-      .subscribe((data: [ProductShort]) => this.productList = [...data], error => this.error = error);
+      .subscribe({
+        next: (data: [ProductShort]) => this.productList = [...data],
+        error: error => this.error = error
+      });
   }
 
-  ShowUser(id:any) {
+  ShowUser(id: any) {
     this.userService.getUserShort(id)
-      .subscribe((data: User) => this.seller = { ...data }, error => this.error = error);
+      .subscribe({
+        next: (data: User) => this.seller = { ...data },
+        error: error => this.error = error
+      });
   }
 
   public modalVisible = false;
