@@ -44,8 +44,7 @@ export class ProductFormComponent implements OnInit {
 
   discountAvailable = false;
   toolTipOpen:boolean[] = [];
-  productPublic:boolean = true;
-  productPublishedAt?:Date;
+  editingProduct?:Product;
   params:any;
 
   tagOpen:boolean[] = [];
@@ -78,8 +77,7 @@ export class ProductFormComponent implements OnInit {
           form.delivery = product.delivery;
           form.category = product.category;
           form.description = product.description;
-          this.productPublic = product.isPublic;
-          this.productPublishedAt = product.publishedAt;
+          this.editingProduct = product;
           //form.pictureUrl = product.imgUrl[0];
           this.productForm.setValue(form);
           product.tags.forEach( tag => {
@@ -207,7 +205,7 @@ export class ProductFormComponent implements OnInit {
     }
   }
 
-  loadProduct(isPublic:boolean, publishingNow?:boolean):Product{
+  loadProduct(isPublic:boolean):Product{
     let form = this.productForm.value;
     let newProduct:Product = 
     { 
@@ -225,15 +223,16 @@ export class ProductFormComponent implements OnInit {
       imgUrl: [form.pictureUrl],
       description: form.description,
       isPublic: isPublic,
-      publishedAt: this.productPublishedAt,
+      publishedAt: (this.editingProduct ? this.editingProduct.publishedAt : undefined),
       reviews: []
     }
-    if (publishingNow){
+    if (this.editingProduct?.isPublic !=  newProduct.isPublic){
       newProduct.publishedAt = new Date();
     }
     if (newProduct.imgUrl[0] == '') {
       newProduct.imgUrl[0] = 'assets/default_assets/def-prod.png'
     }
+    console.log(newProduct);
     return newProduct;
   }
 
@@ -247,8 +246,8 @@ export class ProductFormComponent implements OnInit {
       });
   }
 
-  putProduct(isPublic:boolean, publishingNow:boolean){
-    let updatedProduct = this.loadProduct(isPublic, publishingNow);
+  putProduct(isPublic:boolean){
+    let updatedProduct = this.loadProduct(isPublic);
     this.productService
       .updateProduct(updatedProduct, this.params.id)
       .subscribe({
@@ -270,14 +269,13 @@ export class ProductFormComponent implements OnInit {
   
   saveProductChange(){
     if (!this.productForm.valid) return;
-    this.putProduct(false, false);
+    this.putProduct(false);
     this.modalOpen = true;
   }
 
   publishProductChange() {
     if (!this.productForm.valid) return;
-    let publishingNow = (this.productPublic == false)
-    this.putProduct(true, publishingNow);
+    this.putProduct(true);
     this.modalOpen = true;
   }
 

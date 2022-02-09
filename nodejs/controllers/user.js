@@ -174,13 +174,14 @@ exports.deleteProduct = (req, res, next) => {
   conn = connectDb()
   stmts.forEach(stmt => {
     conn.query(stmt, [id], (err, results, fields) => {
-      if (err) console.log("Query " + err)
+      if (err) return console.log("Query " + err)
       else {
-        res.sendStatus(204);
+        //res.status(200);
       }
     }
     )
   });
+  res.sendStatus(200);
   conn.end();
 }
 exports.updateProduct = (req, res, next) => {

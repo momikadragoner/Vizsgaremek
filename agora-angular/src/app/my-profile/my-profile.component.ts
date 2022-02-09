@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { User, seller, UserService } from "../services/user.service";
 import { ProductShort as Product, ProductService } from "../services/product.service";
-import { faEnvelope, faLink,  faLocationArrow, faCalendarAlt, faTimesCircle} from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faLink,  faLocationArrow, faCalendarAlt, faTimesCircle, faLockOpen, faLock, faEye, faEdit, faTrash} from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Auth } from '../services/auth';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-my-profile',
@@ -55,6 +56,11 @@ export class MyProfileComponent implements OnInit {
   faLocationArrow = faLocationArrow;
   faCalendar = faCalendarAlt;
   faTimesCircle = faTimesCircle;
+  faEye = faEye;
+  faLock = faLock;
+  faLockOpen = faLockOpen;
+  faEdit = faEdit;
+  faTrash = faTrash;
 
   //products = myProductList;
   // profileDetail=seller;
@@ -133,5 +139,6 @@ export class MyProfileComponent implements OnInit {
     .subscribe();
     this.products.splice(this.products.indexOf(this.selectedProduct),1);
     this.alertOpen = false;
+    this.moreOptionsOpen = false;
   }
 }

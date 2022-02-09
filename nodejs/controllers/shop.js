@@ -20,7 +20,7 @@ exports.getProductById = (req, res, next) => {
 
     conn.query('SELECT material_name FROM material INNER JOIN product_material ON material.material_id = product_material.material_id WHERE product_material.product_id = ?',
         [id], (err, rows, fields) => {
-            if (err) res.json("Query error: " + err)
+            if (err) console.log("Query " + err)
             else {
                 rows.forEach((rows) => { materials.push(rows.material_name) });
             }
@@ -28,7 +28,7 @@ exports.getProductById = (req, res, next) => {
     );
     conn.query('SELECT tag_name FROM tag INNER JOIN product_tag ON tag.tag_id = product_tag.tag_id WHERE product_tag.product_id = ?',
         [id], (err, rows, fields) => {
-            if (err) res.json("Query error: " + err)
+            if (err) console.log("Query " + err)
             else {
                 rows.forEach((rows) => { tags.push(rows.tag_name) });
             }
@@ -36,7 +36,7 @@ exports.getProductById = (req, res, next) => {
     );
     conn.query('SELECT product_picture.resource_link FROM product_picture WHERE product_picture.product_id = ?',
         [id], (err, rows, fields) => {
-            if (err) res.json("Query error: " + err)
+            if (err) console.log("Query " + err)
             else {
                 rows.forEach((rows) => { imgUrl.push(rows.resource_link) });
             }
@@ -44,7 +44,7 @@ exports.getProductById = (req, res, next) => {
     );
     conn.query('SELECT review.review_id AS reviewId, review.member_id AS userId, review.rating, review.title, review.content, review.published_at AS publishedAt, member.first_name AS userFirstName, member.last_name AS userLastName FROM review INNER JOIN member ON member.member_id = review.member_id WHERE review.product_id = ?;',
         [id], (err, rows, fields) => {
-            if (err) res.json("Query error: " + err)
+            if (err) console.log("Query " + err)
             else {
                 rows.forEach((rows) => { reviews.push(rows) });
             }
@@ -52,7 +52,7 @@ exports.getProductById = (req, res, next) => {
     );
     conn.query('SELECT product.product_id AS productId, product.name, product.price, product.description, product.inventory, product.delivery, product.category, product.rating, product.vendor_id AS sellerId, product.discount, product.is_published AS isPublic, product.created_at AS createdAt, product.last_updated_at AS lastUpdatedAt, product.published_at AS publishedAt, member.first_name AS sellerFirstName, member.last_name AS sellerLastName FROM product INNER JOIN member ON member.member_id = product.vendor_id WHERE product_id = ?',
         [id], (err, rows, fields) => {
-            if (err) res.json("Query error: " + err)
+            if (err) console.log("Query " + err)
             else if (rows[0] == undefined) {
                 res.json('Error: This product does not exist.');
             }
