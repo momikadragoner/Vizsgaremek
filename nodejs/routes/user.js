@@ -13,4 +13,6 @@ router.delete('/delete-product/:id', userController.deleteProduct);
 
 router.put('/update-product/:id', userController.updateProduct);
 
+router.put('/change-visibility/:id', userController.changeProductVisibility);
+
 module.exports = router;

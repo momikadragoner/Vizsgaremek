@@ -141,4 +141,18 @@ export class MyProfileComponent implements OnInit {
     this.alertOpen = false;
     this.moreOptionsOpen = false;
   }
+
+  makePublic($event:any, id:number){
+    $event.preventDefault();
+    this.productService.changeVisibility(true, id).subscribe();
+    this.selectedProduct.isPublic = true;
+    this.moreOptionsOpen = false;
+  }
+
+  makePrivate($event:any, id:number){
+    $event.preventDefault();
+    this.productService.changeVisibility(false, id).subscribe();
+    this.selectedProduct.isPublic = false;
+    this.moreOptionsOpen = false;
+  }
 }

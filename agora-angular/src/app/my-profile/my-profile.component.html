@@ -100,8 +100,8 @@
 <modal-window [(modalVisible)]="moreOptionsOpen" [title]="selectedProduct.name">
     <ul class="list-unstyled mb-0 text-start">
         <li><a [routerLink]="['/product-details/' + selectedProduct.productId]" class="dropdown-item"><fa-icon class="mx-1" [icon]="faEye"></fa-icon>Megtekintés vásárlóként</a></li>
-        <li *ngIf="!selectedProduct.isPublic"><a class="dropdown-item"><fa-icon class="mx-1" [icon]="faLockOpen"></fa-icon>Legyen publikus</a></li>
-        <li *ngIf="selectedProduct.isPublic"><a class="dropdown-item"><fa-icon class="mx-1" [icon]="faLock"></fa-icon>Legyen privát</a></li>
+        <li *ngIf="!selectedProduct.isPublic"><a (click)="makePublic($event, selectedProduct.productId)" class="dropdown-item"><fa-icon class="mx-1" [icon]="faLockOpen"></fa-icon>Legyen publikus</a></li>
+        <li *ngIf="selectedProduct.isPublic"><a (click)="makePrivate($event, selectedProduct.productId)" class="dropdown-item"><fa-icon class="mx-1" [icon]="faLock"></fa-icon>Legyen privát</a></li>
         <li><a [routerLink]="['/add-product']" [queryParams]="{edit: true, id: selectedProduct.productId}" class="dropdown-item"><fa-icon class="mx-1" [icon]="faEdit"></fa-icon>Szerkesztés</a></li>
         <li><a (click)="alertDeleteProduct(selectedProduct.productId)" class="dropdown-item"><fa-icon class="mx-1" [icon]="faTrash"></fa-icon>Törlés</a></li>
     </ul>

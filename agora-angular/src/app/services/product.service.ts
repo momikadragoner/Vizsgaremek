@@ -65,7 +65,7 @@ export class ProductService {
 
   httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type':  'application/json',
+      'Content-Type': 'application/json',
     })
   };
 
@@ -98,7 +98,7 @@ export class ProductService {
     return this.http.get<[ProductShort]>(this.rootURL + '/products-by-seller/' + id, options);
   }
 
-  getMyProducts(order?: string, term?: string){
+  getMyProducts(order?: string, term?: string) {
     let id = this.currentUser.userId;
     //console.log(id);
     let params = new HttpParams();
@@ -113,7 +113,7 @@ export class ProductService {
   addProduct(product: Product): Observable<Product> {
     return this.http.post<Product>(this.rootURL + '/add-product', product, this.httpOptions)
       .pipe(
-        catchError((error)=>this.handleError(error))
+        catchError((error) => this.handleError(error))
       );
   }
 
@@ -121,12 +121,20 @@ export class ProductService {
     const url = this.rootURL + '/delete-product/' + id;
     return this.http.delete(url)
       .pipe(
-        catchError(error=>this.handleError(error))
+        catchError(error => this.handleError(error))
       );
   }
 
   updateProduct(product: Product, id: number): Observable<Product> {
     return this.http.put<Product>(this.rootURL + '/update-product/' + id, product, this.httpOptions)
+      .pipe(
+        catchError(error => this.handleError(error))
+      );
+  }
+
+  changeVisibility(isPublic: boolean, id: number) {
+    let visibility= {"isPublic" : isPublic};
+    return this.http.put<object>(this.rootURL + '/change-visibility/' + id, visibility, this.httpOptions)
       .pipe(
         catchError(error => this.handleError(error))
       );

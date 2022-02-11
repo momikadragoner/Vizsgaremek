@@ -181,7 +181,8 @@ exports.deleteProduct = (req, res, next) => {
     }
     )
   });
-  res.sendStatus(200);
+  res.status(200);
+  res.json();
   conn.end();
 }
 exports.updateProduct = (req, res, next) => {
@@ -212,4 +213,18 @@ exports.updateProduct = (req, res, next) => {
     }
   )
   conn.end();
+}
+exports.changeProductVisibility = (req, res, next) => {
+  if (!Number(req.params.id)) return res.json('Error: This product does not exist.');
+  let id = Number(req.params.id);
+  conn = connectDb();
+  let sql = 'UPDATE `product` SET `is_published`=?,`last_updated_at`=? WHERE product_id = ?'
+  conn.query(sql, [req.body.isPublic, new Date(), id], 
+  (err, results, fields) => {
+    if (err) res.json("Query " + err)
+    else {
+      res.status(200);
+      res.json();
+    }
+  })
 }
