@@ -133,11 +133,40 @@ export class ProductService {
   }
 
   changeVisibility(isPublic: boolean, id: number) {
-    let visibility= {"isPublic" : isPublic};
+    let visibility = { "isPublic": isPublic };
     return this.http.put<object>(this.rootURL + '/change-visibility/' + id, visibility, this.httpOptions)
       .pipe(
         catchError(error => this.handleError(error))
       );
+  }
+
+  getWishList(id: number): Observable<[ProductShort]> {
+    return this.http.get<[ProductShort]>(this.rootURL + "/wish-list/" + id)
+      .pipe(
+        catchError(error => this.handleError(error))
+      );
+  }
+
+  postWishList(productId: number, userId: number) {
+    let wishList = {
+      "productId": productId,
+      "userId": userId
+    }
+    return this.http.post<object>(this.rootURL + '/post-wish-list', wishList)
+      .pipe(
+        catchError(error => this.handleError(error))
+      );
+  }
+
+  postCart(productId: number, userId: number){
+    let cart = {
+      "productId": productId,
+      "userId": userId
+    }
+    return this.http.post<object>(this.rootURL + '/post-cart', cart)
+    .pipe(
+      catchError(error => this.handleError(error))
+    );
   }
 
   private handleError(error: HttpErrorResponse) {
@@ -151,7 +180,7 @@ export class ProductService {
         `Backend returned code ${error.status}, body was: `, error.error);
     }
     // Return an observable with a user-facing error message.
-    return throwError(
+    return throwError( () =>
       'Something bad happened; please try again later.');
   }
 
@@ -162,20 +191,19 @@ export class Product {
    *
    */
   constructor(
-    public productId: number,
-    public name: string,
-    public sellerFirstName: string,
-    public sellerLastName: string,
-    public price: number,
-    //public discountAvailable: boolean,
-    public inventory: number,
-    public delivery: string,
-    public category: string,
-    public tags: string[],
-    public materials: string[],
-    public imgUrl: string[],
-    public description: string,
-    public isPublic: boolean,
+    public productId: number = 0,
+    public name: string = "",
+    public sellerFirstName: string = "",
+    public sellerLastName: string = "",
+    public price: number = -1,
+    public inventory: number = -1,
+    public delivery: string = "",
+    public category: string = "",
+    public tags: string[] = [""],
+    public materials: string[] = [""],
+    public imgUrl: string[] = [""],
+    public description: string = "",
+    public isPublic: boolean = false,
     public reviews: Review[],
     public discount?: number,
     public rating?: number,
@@ -188,12 +216,12 @@ export class ProductShort {
    *
    */
   constructor(
-    public productId: number,
-    public name: string,
-    public sellerFirstName: string,
-    public sellerLastName: string,
-    public price: number,
-    public imgUrl: string,
+    public productId: number = 0,
+    public name: string = "",
+    public sellerFirstName: string = "",
+    public sellerLastName: string = "",
+    public price: number = -1,
+    public imgUrl: string = "",
     public isPublic?: boolean,
     public sellerId?: number,
     public discount?: number

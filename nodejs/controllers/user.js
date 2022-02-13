@@ -6,7 +6,7 @@ const connectDb = db.connectDb;
 
 exports.getMyProducts = (req, res, next) => {
 
-  if (!Number(req.params.id)) return res.json('Error: This URL does not lead to any products.');
+  if (!Number(req.params.id)) return res.json({'Error':'This product does not exist.'});
 
   conn = connectDb()
   let id = Number(req.params.id);
@@ -57,12 +57,29 @@ exports.getMyProducts = (req, res, next) => {
   );
   conn.end();
 };
+function stringifyArray(array) {
+  let strArray = '';
+  for (let index = 0; index < array.length; index++) {
+    const element = array[index];
+    strArray += ( "(" + (index + 1) + ",\'" + element + "\'");
+    if (index == (array.length - 1)) {
+      strArray += ")";
+    }
+    else{
+      strArray += "),";
+    }
+  }
+  return strArray;
+};
 exports.postNewProduct = (req, res, next) => {
   product = req.body;
   let productId;
   var publshedAt = product.isPublic ? new Date() : null;
-  var sql = 'INSERT INTO `product`(`name`, `price`, `description`, `inventory`, `delivery`, `category`, `vendor_id`, `discount`, `is_published`, `created_at`, `published_at`)';
-  sql += 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  let matString = stringifyArray(product.materials);
+  let tagString = stringifyArray(product.tags);
+  let picString = stringifyArray(product.imgUrl);
+
+  var sql = 'CALL insertProduct(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )';
   conn = connectDb()
   conn.query(sql,
     [
@@ -76,14 +93,17 @@ exports.postNewProduct = (req, res, next) => {
       product.discount,
       product.isPublic,
       new Date(),
-      publshedAt
+      publshedAt,
+      tagString,
+      product.tags.length,
+      matString,
+      product.materials.length,
+      picString,
+      product.imgUrl.length,
+      1
     ], (err, results, fields) => {
-      if (err) res.json("Query " + err)
+      if (err) console.log("Query " + err)
       else {
-        productId = results.insertId;
-        insertMaterials(productId, product.materials);
-        insertTags(productId, product.tags);
-        insertPicture(product.imgUrl[0], productId);
         res.status(201);
         res.json(product)
       }
@@ -91,105 +111,28 @@ exports.postNewProduct = (req, res, next) => {
   )
   conn.end();
 };
-async function insertMaterials(productId, materials) {
-  materials.forEach(material => {
-    let sql = 'SELECT material.material_id FROM material WHERE material.material_name = ? LIMIT 1';
-    conn.query(sql, [material], (err, rows, fields) => {
-      if (err) return ("Query " + err)
-      else if (rows[0] == undefined) {
-        let sql = 'INSERT INTO `material`(`material_name`) VALUES (?)'
-        conn.query(sql, [material], (err, results, fields) => {
-          if (err) return "Query " + err;
-          else {
-            insertMaterial(results.insertId, productId);
-          }
-        })
-      }
-      else {
-        insertMaterial(rows[0].material_id, productId);
-      }
-    });
-  });
-}
-async function insertMaterial(materialId, productId) {
-  let sql = 'INSERT INTO `product_material`(`material_id`, `product_id`) VALUES (?, ?)'
-  conn.query(sql, [materialId, productId], (err, rows, fields) => {
-    if (err) return "Query " + err;
-    else {
-      return true;
-    }
-  })
-}
-async function insertTags(productId, tags) {
-  tags.forEach(tag => {
-    let sql = 'SELECT `tag_id` FROM `tag` WHERE tag_name = ? LIMIT 1';
-    conn.query(sql, [tag], (err, result, fields) => {
-      if (err) return "Query " + err;
-      else {
-        if (result[0] != undefined) {
-          insertTag(result[0].tag_id, productId);
-        }
-      }
-    });
-  });
-}
-async function insertTag(tagId, productId) {
-  let sql = 'INSERT INTO `product_tag`(`tag_id`, `product_id`) VALUES (?, ?)';
-  conn.query(sql, [tagId, productId], (err, rows, fields) => {
-    if (err) return "Query " + err;
-    else {
-      return true;
-    }
-  })
-}
-async function insertPicture(imgUrl, productId) {
-  let sql = 'INSERT INTO `product_picture`(`product_id`, `resource_link`, `is_thumbnail`) VALUES (?, ?, TRUE)';
-  conn.query(sql, [productId, imgUrl], (err, rows, fields) => {
-    if (err) return "Query " + err;
-    else {
-      return true;
-    }
-  })
-}
 exports.deleteProduct = (req, res, next) => {
-  if (!Number(req.params.id)) return res.json('Error: This product does not exist.');
+  if (!Number(req.params.id)) return res.json({'Error':'This product does not exist.'});
 
   let id = Number(req.params.id);
-  // check if an order not yet delivered exists 
-  // let sql =  '';
-  // conn.query(sql, [id], (err, results, fields) => {
-  //   if (err) res.json("Query " + err)
-  //   else {
-
-  //   }
-  // }
-  // )
-
-  let stmts = [
-    'DELETE FROM `product_material` WHERE product_id = ?',
-    'DELETE FROM `product_picture` WHERE product_id = ?',
-    'DELETE FROM `product_tag` WHERE product_id = ?',
-    'UPDATE `product` SET `name`="Eltávolított termék",`price`=NULL,`description`=NULL,`inventory`=NULL,`delivery`=NULL,`category`=NULL,`rating`=NULL,`vendor_id`=NULL,`discount`=NULL,`is_published`=FALSE,`is_removed`=TRUE,`created_at`=NULL,`last_updated_at`=NULL,`published_at`=NULL WHERE `product_id` = ?'
-  ];
+  // TO DO: check if an order not yet delivered exists 
+  let sql = 'CALL deleteProduct(?)';
   conn = connectDb()
-  stmts.forEach(stmt => {
-    conn.query(stmt, [id], (err, results, fields) => {
-      if (err) return console.log("Query " + err)
-      else {
-        //res.status(200);
-      }
+  conn.query(sql, [id], (err, results, fields) => {
+    if (err) return console.log("Query " + err)
+    else {
+      res.status(200);
+      res.json();
     }
-    )
-  });
-  res.status(200);
-  res.json();
+  }
+  )
   conn.end();
-}
+};
 exports.updateProduct = (req, res, next) => {
   product = req.body;
-  if (!Number(req.params.id)) return res.json('Error: This product does not exist.');
+  if (!Number(req.params.id)) return res.json({'Error':'This product does not exist.'});
   let id = Number(req.params.id);
-  let sql = 'UPDATE `product` SET `name`=?,`price`=?,`description`=?,`inventory`=?,`delivery`=?,`category`=?,`discount`=?,`is_published`=?,`last_updated_at`=?,`published_at`=? WHERE product_id = ?';
+  let sql = 'CALL updateProduct(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
   conn = connectDb()
   conn.query(sql,
     [
@@ -203,28 +146,75 @@ exports.updateProduct = (req, res, next) => {
       product.isPublic,
       new Date(),
       product.publishedAt,
-      id
+      id,
+      stringifyArray(product.tags),
+      product.tags.length,
+      stringifyArray(product.materials),
+      product.materials.length,
+      stringifyArray(product.imgUrl),
+      product.imgUrl.length,
+      1
     ], (err, results, fields) => {
-      if (err) res.json("Query " + err)
+      if (err) console.log("Query " + err)
       else {
         res.status(200);
-        res.json(product)
+        res.json(product);
       }
     }
   )
   conn.end();
-}
+};
 exports.changeProductVisibility = (req, res, next) => {
-  if (!Number(req.params.id)) return res.json('Error: This product does not exist.');
+  if (!Number(req.params.id)) return res.json({'Error' : 'This product does not exist.'});
   let id = Number(req.params.id);
   conn = connectDb();
-  let sql = 'UPDATE `product` SET `is_published`=?,`last_updated_at`=? WHERE product_id = ?'
+  let sql = 'CALL changeProductVisibility(?, ?, ?)'
   conn.query(sql, [req.body.isPublic, new Date(), id], 
   (err, results, fields) => {
-    if (err) res.json("Query " + err)
+    if (err) console.log("Query " + err)
     else {
       res.status(200);
       res.json();
+    }
+  })
+};
+exports.postWishList = (req, res, next) => {
+  let wishList = req.body;
+  let sql = 'CALL insertWishList(?, ?, ?)';
+  conn = connectDb();
+  conn.query(sql, [wishList.productId, wishList.userId, new Date()], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(201);
+      res.json();
+    }
+  })
+}
+exports.postCart = (req, res, next) => {
+  let cart = req.body;
+  let sql = 'CALL insertCart(?, ?)';
+  conn = connectDb();
+  conn.query(sql, [cart.userId, cart.productId], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(201);
+      res.json();
+    }
+  })
+}
+exports.getCart = (req, res, next) => {
+  if (!Number(req.params.id)) return res.json({'Error' : 'This product does not exist.'});
+  let id = Number(req.params.id);
+  conn = connectDb();
+  let sql = 'CALL selectCart(?)'
+  conn.query(sql, [id], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(200);
+      res.json(results[0]);
     }
   })
 }

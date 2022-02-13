@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap, NavigationStart, NavigationEnd, NavigationError } from '@angular/router';
-import { faHandPaper, faEdit, faBalanceScale, faTree, faEnvelope, faShoppingCart, faHeart, faTruck, faGem, faBoxes, faStar, IconPrefix, IconName, faChevronLeft, faChevronRight, faExclamationCircle, faBoxOpen, faLeaf, faSeedling, faAppleAlt, faCarrot, faCheese, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
+import { faHandPaper, faEdit, faBalanceScale, faTree, faEnvelope, faShoppingCart, faHeart, faTruck, faGem, faBoxes, faStar, IconPrefix, faSpinner, IconName, faChevronLeft, faChevronRight, faExclamationCircle, faBoxOpen, faLeaf, faSeedling, faAppleAlt, faCarrot, faCheese, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 // import { faStar } from '@fortawesome/free-regular-svg-icons'
-import { library } from '@fortawesome/fontawesome-svg-core';
+import { Icon, library } from '@fortawesome/fontawesome-svg-core';
 import { Form } from '@angular/forms';
 //import { productDetailed, productListShort, Product } from "../model/product";
 import { User as u, seller } from "../services/user.service";
@@ -11,6 +11,7 @@ import { HttpClient } from '@angular/common/http';
 import { ProductService, Product, Review, ProductShort, ratingToArray } from '../services/product.service';
 import { UserService, UserShort as User } from '../services/user.service';
 import { asapScheduler } from 'rxjs';
+import { Auth } from '../services/auth';
 
 
 
@@ -22,12 +23,14 @@ import { asapScheduler } from 'rxjs';
 export class ProductDetailComponent implements OnInit {
 
   iconPrefix: IconPrefix = 'fas';
+  toCartIcon: IconName = 'shopping-cart';
+  toCartSpin: boolean = false;
+  toWishListIcon: IconName = 'heart';
+  toWishListSpin: boolean = false;
   faHandPaper = faHandPaper;
   faBalanceScale = faBalanceScale;
   faTree = faTree;
   faEnvelope = faEnvelope;
-  faShoppingCart = faShoppingCart;
-  faHeart = faHeart;
   faTruck = faTruck;
   faGem = faGem;
   faBoxes = faBoxes;
@@ -42,6 +45,10 @@ export class ProductDetailComponent implements OnInit {
   product: Product = { productId: 0, name: '', sellerFirstName: '', sellerLastName: '', price: -1, inventory: -1, delivery: '', category: '', tags: [], materials: [], imgUrl: [], description: '', isPublic: true, rating: -1, reviews: this.reviews };
   productList: ProductShort[] = [{ productId: 0, name: "", sellerFirstName: "", sellerLastName: "", price: -1, imgUrl: "" }];
   seller: User = { userId: 0, firstName: '', lastName: '', about: "", profileImgUrl: "", companyName: undefined, takesCustomOrders: true };
+
+  currentUser = Auth.currentUser;
+  message: string = "";
+  success?: boolean;
   id: any;
   currentRoute: string;
   error: any;
@@ -53,7 +60,7 @@ export class ProductDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    library.addIcons(faHandPaper, faTree, faBalanceScale, faExclamationCircle, faGem, faBoxOpen, faLeaf, faSeedling, faCarrot, faCheese, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt);
+    library.addIcons(faHeart, faSpinner, faShoppingCart, faHandPaper, faTree, faBalanceScale, faExclamationCircle, faGem, faBoxOpen, faLeaf, faSeedling, faCarrot, faCheese, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt);
     this.currentRoute = "";
     this.router.events.subscribe((event: any) => {
       if (event instanceof NavigationStart) {
@@ -163,9 +170,34 @@ export class ProductDetailComponent implements OnInit {
     this.newReviewOpen = true;
   }
 
-  addToCart($event: any) {
+  addToCart($event: any, id: number) {
     $event.preventDefault();
-    this.cartOpen = true;
+    this.toCartIcon = 'spinner';
+    this.toCartSpin = true;
+    this.productService.postCart(id, this.currentUser.userId)
+      .subscribe({
+        next: data => {
+          this.message = "Termék hozzáadva a kosárhoz";
+          this.success = true;
+          this.cartOpen = true;
+          this.toCartIcon = 'shopping-cart';
+          this.toCartSpin = false;
+        },
+        error: error => { this.message = "Kosárhoz adás sikertelen"; this.success = false }
+      });
+  }
+
+  addToWishList($event: any, id: number) {
+    $event.preventDefault();
+    this.toWishListIcon = 'spinner';
+    this.toWishListSpin = true;
+    this.productService.postWishList(id, this.currentUser.userId)
+      .subscribe({
+        next: data => {
+          this.toWishListIcon = 'heart';
+          this.toWishListSpin = false;
+        }
+      });
   }
 
   closeNewReview() {

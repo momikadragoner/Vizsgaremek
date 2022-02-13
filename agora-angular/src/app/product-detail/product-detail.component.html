@@ -37,12 +37,12 @@
                         <p class="m-2" [ngClass]="{'placeholder col-5':product.inventory == -1}">Elérhető: {{product.inventory}}db</p>
                     </div>
                     <div class="col-12 col-lg-6 my-2">
-                        <a (click)="addToCart($event)" href="#" class="btn btn-primary m-2 py-3 w-50 shadow-sm">
-                            <fa-icon [icon]="faShoppingCart"></fa-icon>
+                        <a (click)="addToCart($event, product.productId)" href="#" class="btn btn-primary m-2 py-3 w-50 shadow-sm">
+                            <fa-icon [icon]="[iconPrefix, toCartIcon]" [spin]="toCartSpin"></fa-icon>
                             Kosárba
                         </a>
-                        <a href="#" class="btn btn-secondary m-2 py-3 shadow-sm">
-                            <fa-icon [icon]="faHeart"></fa-icon>
+                        <a href="#" (click)="addToWishList($event, product.productId)" class="btn btn-secondary m-2 py-3 shadow-sm">
+                            <fa-icon [icon]="[iconPrefix, toWishListIcon]" [spin]="toWishListSpin"></fa-icon>
                             Kívánság lista
                         </a>
                     </div>

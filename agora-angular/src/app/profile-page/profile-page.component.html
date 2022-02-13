@@ -87,7 +87,7 @@
     </div>
     <div [@visibilityChange] *ngIf="tabOpen == 2">
         <div class="mx-5">
-            <div *ngFor="let product of products" class="border-bottom">
+            <div *ngFor="let product of wishList" class="border-bottom">
                 <div class="row p-2 pb-0 mt-2">
                     <div class="col-4 col-lg-1 mb-3">
                         <img src="{{product.imgUrl}}" alt="" class="img img-fluid rounded">
@@ -110,6 +110,11 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div *ngIf="wishList[0] == undefined" class="text-center mt-4 pt-4">
+                <h1><fa-icon [icon]="faTimesCircle"></fa-icon></h1>
+                <h2>A kívánság lista üres</h2>
+                <p>nincs itt semmi</p>
             </div>
         </div>
     </div>

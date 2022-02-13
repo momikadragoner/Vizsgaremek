@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User, seller, UserService } from "../services/user.service";
-import { ProductShort as Product, ProductService } from "../services/product.service";
-import { faEnvelope, faLink,  faLocationArrow, faCalendarAlt, faTimesCircle, faLockOpen, faLock, faEye, faEdit, faTrash} from '@fortawesome/free-solid-svg-icons';
+import { ProductShort as Product, ProductService, ProductShort } from "../services/product.service";
+import { faEnvelope, faLink,  faLocationArrow, faCalendarAlt, faTimesCircle, faLockOpen, faLock, faEye, faEdit, faTrash, faHeart} from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
@@ -61,13 +61,15 @@ export class MyProfileComponent implements OnInit {
   faLockOpen = faLockOpen;
   faEdit = faEdit;
   faTrash = faTrash;
+  faHeart = faHeart;
 
   //products = myProductList;
   // profileDetail=seller;
   error: string = "";
   products: Product[] = [{productId: 0, name: "", sellerLastName: "", sellerFirstName: "", price: -1, imgUrl:''}];
-  user: User = { userId: 0, firstName: '', lastName: '', following: -1, followers: -0, email: "", phone: "", about: "", profileImgUrl: "", headerImgUrl: "", registeredAt: new Date(), isVendor: false, isAdmin: false, companyName: undefined, takesCustomOrders: true };
-  
+  user: User = new User();
+  wishList: ProductShort[] = [new ProductShort()];
+
   selectedProduct: Product = {productId: 0, name: "", sellerLastName: "", sellerFirstName: "", price: -1, imgUrl:''};
 
   constructor(
@@ -79,6 +81,7 @@ export class MyProfileComponent implements OnInit {
   { 
     this.ShowUser();
     this.ShowProducts(this.searchForm.value.order, this.searchForm.value.searchTerm);
+    this.ShowWishList();
   }
 
   orderSelect() {
@@ -111,6 +114,14 @@ export class MyProfileComponent implements OnInit {
     this.userService.getUser(this.currentUser.userId)
     .subscribe({
       next: (data: User) => this.user = {... data}, 
+      error: error => this.error = error
+    });
+  }
+
+  ShowWishList() {
+    this.productService.getWishList(this.currentUser.userId)
+    .subscribe({
+      next: (data:[ProductShort]) => this.wishList = [...data],
       error: error => this.error = error
     });
   }
