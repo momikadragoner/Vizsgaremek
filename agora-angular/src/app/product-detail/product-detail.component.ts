@@ -12,6 +12,7 @@ import { ProductService, Product, Review, ProductShort, ratingToArray } from '..
 import { UserService, UserShort as User } from '../services/user.service';
 import { asapScheduler } from 'rxjs';
 import { Auth } from '../services/auth';
+import { WishListService } from '../services/wishlist.service';
 
 
 
@@ -57,8 +58,9 @@ export class ProductDetailComponent implements OnInit {
     library: FaIconLibrary,
     private productService: ProductService,
     private userService: UserService,
+    private wishListService: WishListService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {
     library.addIcons(faHeart, faSpinner, faShoppingCart, faHandPaper, faTree, faBalanceScale, faExclamationCircle, faGem, faBoxOpen, faLeaf, faSeedling, faCarrot, faCheese, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt);
     this.currentRoute = "";
@@ -191,7 +193,7 @@ export class ProductDetailComponent implements OnInit {
     $event.preventDefault();
     this.toWishListIcon = 'spinner';
     this.toWishListSpin = true;
-    this.productService.postWishList(id, this.currentUser.userId)
+    this.wishListService.postWishList(id, this.currentUser.userId)
       .subscribe({
         next: data => {
           this.toWishListIcon = 'heart';

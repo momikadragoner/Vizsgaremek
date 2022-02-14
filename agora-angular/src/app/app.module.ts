@@ -45,6 +45,7 @@ import { RootComponent } from './account-forms/root/root.component';
 import { ApiService } from './account-forms/services/api.service';
 import { AuthService } from './account-forms/services/auth.service';
 import { CartService } from './services/cart.service';
+import { WishListService } from './services/wishlist.service';
 
 
 @NgModule({
@@ -101,7 +102,8 @@ import { CartService } from './services/cart.service';
     UserService,
     ApiService,
     AuthService,
-    CartService
+    CartService,
+    WishListService
   ],
   bootstrap: [AppComponent]
 })

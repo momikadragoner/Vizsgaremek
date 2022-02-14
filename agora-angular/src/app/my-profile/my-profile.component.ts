@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { User, seller, UserService } from "../services/user.service";
 import { ProductShort as Product, ProductService, ProductShort } from "../services/product.service";
-import { faEnvelope, faLink,  faLocationArrow, faCalendarAlt, faTimesCircle, faLockOpen, faLock, faEye, faEdit, faTrash, faHeart} from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faLink,  faLocationArrow, faCalendarAlt, faTimesCircle, faLockOpen, faLock, faEye, faEdit, faTrash, faHeart, faHeartBroken, faShoppingCart} from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Auth } from '../services/auth';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { WishListProduct, WishListService } from '../services/wishlist.service';
 
 @Component({
   selector: 'app-my-profile',
@@ -61,14 +62,15 @@ export class MyProfileComponent implements OnInit {
   faLockOpen = faLockOpen;
   faEdit = faEdit;
   faTrash = faTrash;
-  faHeart = faHeart;
+  faShoppingCart = faShoppingCart;
+  faHeartBroken = faHeartBroken
 
   //products = myProductList;
   // profileDetail=seller;
   error: string = "";
   products: Product[] = [{productId: 0, name: "", sellerLastName: "", sellerFirstName: "", price: -1, imgUrl:''}];
   user: User = new User();
-  wishList: ProductShort[] = [new ProductShort()];
+  wishList: WishListProduct[] = [new WishListProduct()];
 
   selectedProduct: Product = {productId: 0, name: "", sellerLastName: "", sellerFirstName: "", price: -1, imgUrl:''};
 
@@ -76,7 +78,8 @@ export class MyProfileComponent implements OnInit {
     private productService: ProductService, 
     private userService: UserService, 
     private route: ActivatedRoute,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private wishListService: WishListService
   ) 
   { 
     this.ShowUser();
@@ -119,9 +122,9 @@ export class MyProfileComponent implements OnInit {
   }
 
   ShowWishList() {
-    this.productService.getWishList(this.currentUser.userId)
+    this.wishListService.getWishList(this.currentUser.userId)
     .subscribe({
-      next: (data:[ProductShort]) => this.wishList = [...data],
+      next: (data:[WishListProduct]) => this.wishList = [...data],
       error: error => this.error = error
     });
   }
@@ -165,5 +168,14 @@ export class MyProfileComponent implements OnInit {
     this.productService.changeVisibility(false, id).subscribe();
     this.selectedProduct.isPublic = false;
     this.moreOptionsOpen = false;
+  }
+
+  addToCart($event: any, id: number) {
+    $event.preventDefault();
+    this.productService.postCart(id, this.currentUser.userId)
+      .subscribe({
+        next: data => {
+        },
+      });
   }
 }

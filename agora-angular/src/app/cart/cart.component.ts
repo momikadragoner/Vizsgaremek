@@ -3,6 +3,7 @@ import { Product, ProductService } from "../services/product.service";
 import { faShoppingCart, faChevronRight, faTrash, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { Cart, CartProduct, CartService } from '../services/cart.service';
 import { Auth } from '../services/auth';
+import { WishListService } from '../services/wishlist.service';
 
 @Component({
   selector: 'app-cart',
@@ -21,7 +22,8 @@ export class CartComponent implements OnInit {
 
   constructor(
     private cartService: CartService,
-    private productService: ProductService
+    private productService: ProductService,
+    private wishListService: WishListService
   ) {
     cartService.getCart().subscribe({
       next: (data: [CartProduct]) => {
@@ -37,10 +39,27 @@ export class CartComponent implements OnInit {
 
   addToWishList($event: any, id: number) {
     $event.preventDefault();
-    this.productService.postWishList(id, this.currentUser.userId)
+    this.wishListService.postWishList(id, this.currentUser.userId)
       .subscribe({
         next: data => {}
       });
+  }
+
+  deleteFromCart($event: any, id: number){
+    $event.preventDefault();
+    this.cartService.deleteCart(id)
+    .subscribe({
+      next: data => {
+        let deleteProduct: CartProduct = new CartProduct();
+        this.cart.products.forEach(p => {
+          if (p.cartProductId == id) {
+            deleteProduct = p;
+          }
+        })
+        console.log(deleteProduct);
+        this.cart.products.splice(this.cart.products.indexOf(deleteProduct),1);
+      }
+    });
   }
 
   ngOnInit(): void {

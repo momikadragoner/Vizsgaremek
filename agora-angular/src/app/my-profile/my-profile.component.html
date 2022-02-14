@@ -98,9 +98,13 @@
                     <div class="col mt-3 mb-2">
                         <div class="d-flex justify-content-end">
                             <div class="me-3">
-                                <a href="" class="btn btn-primary">
-                                    <fa-icon [icon]="faHeart"></fa-icon>
-                                    Vásárlás
+                                <a href="" class="btn btn-secondary me-2">
+                                    <fa-icon [icon]="faHeartBroken"></fa-icon>
+                                    Törlés
+                                </a>
+                                <a href="" (click)="addToCart($event, product.productId)" class="btn btn-primary">
+                                    <fa-icon [icon]="faShoppingCart"></fa-icon>
+                                    Kosárba
                                 </a>
                             </div>
                         </div>

@@ -140,23 +140,23 @@ export class ProductService {
       );
   }
 
-  getWishList(id: number): Observable<[ProductShort]> {
-    return this.http.get<[ProductShort]>(this.rootURL + "/wish-list/" + id)
-      .pipe(
-        catchError(error => this.handleError(error))
-      );
-  }
+  // getWishList(id: number): Observable<[ProductShort]> {
+  //   return this.http.get<[ProductShort]>(this.rootURL + "/wish-list/" + id)
+  //     .pipe(
+  //       catchError(error => this.handleError(error))
+  //     );
+  // }
 
-  postWishList(productId: number, userId: number) {
-    let wishList = {
-      "productId": productId,
-      "userId": userId
-    }
-    return this.http.post<object>(this.rootURL + '/post-wish-list', wishList)
-      .pipe(
-        catchError(error => this.handleError(error))
-      );
-  }
+  // postWishList(productId: number, userId: number) {
+  //   let wishList = {
+  //     "productId": productId,
+  //     "userId": userId
+  //   }
+  //   return this.http.post<object>(this.rootURL + '/post-wish-list', wishList)
+  //     .pipe(
+  //       catchError(error => this.handleError(error))
+  //     );
+  // }
 
   postCart(productId: number, userId: number){
     let cart = {

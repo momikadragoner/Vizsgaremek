@@ -7,6 +7,7 @@ import { catchError, map, retry } from 'rxjs/operators';
 import { Auth } from './auth';
 
 export interface CartProduct {
+    cartProductId: number,
     productId: number,
     sellerId?: number,
     name: string,
@@ -25,6 +26,7 @@ export class CartProduct {
      *
      */
     constructor(
+        public cartProductId: number = 0,
         public productId: number = 0,
         public name: string = "",
         public sellerFirstName: string = "",
@@ -84,6 +86,13 @@ export class CartService {
             .pipe(
                 catchError(this.handleError)
             );
+    }
+
+    deleteCart(id: number) {
+        return this.http.delete(this.rootURL + '/delete-cart/' + id)
+        .pipe(
+            catchError(this.handleError)
+        );
     }
 
     private handleError(error: HttpErrorResponse) {

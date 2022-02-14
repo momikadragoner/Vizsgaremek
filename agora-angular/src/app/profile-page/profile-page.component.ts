@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
 import { Auth } from '../services/auth';
+import { WishListProduct, WishListService } from '../services/wishlist.service';
 
 @Component({
   selector: 'app-profile-page',
@@ -53,7 +54,7 @@ export class ProfilePageComponent implements OnInit {
   products: Product[] = [{productId: 0, name: "", sellerLastName: "", sellerFirstName: "", price: -1, imgUrl:''}];
   error: string = "";
   user: User = new User();
-  wishList: ProductShort[] = [new ProductShort()];
+  wishList: WishListProduct[] = [new WishListProduct()];
   id:any;
 
   order?:any;
@@ -64,6 +65,7 @@ export class ProfilePageComponent implements OnInit {
   constructor(
     private productService: ProductService, 
     private userService: UserService, 
+    private wishListService: WishListService,
     private route: ActivatedRoute,
     private fb: FormBuilder
   ) 
@@ -89,9 +91,9 @@ export class ProfilePageComponent implements OnInit {
   }
 
   ShowWishList(id:any) {
-    this.productService.getWishList(id)
+    this.wishListService.getWishList(id)
     .subscribe({
-      next: (data:[ProductShort]) => this.wishList = [...data],
+      next: (data:[WishListProduct]) => this.wishList = [...data],
       error: error => this.error = error
     });
   }

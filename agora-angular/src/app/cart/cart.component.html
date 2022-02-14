@@ -26,7 +26,7 @@
                                     <fa-icon [icon]="faHeart"></fa-icon>
                                     Kívánság lista
                                 </a>
-                                <a href="" class="text-decoration-none">
+                                <a href="" (click)="deleteFromCart($event, product.cartProductId)" class="text-decoration-none">
                                     <fa-icon [icon]="faTrash"></fa-icon>
                                     Töröl
                                 </a>
