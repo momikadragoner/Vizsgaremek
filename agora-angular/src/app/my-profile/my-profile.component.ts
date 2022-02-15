@@ -8,6 +8,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { Auth } from '../services/auth';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { WishListProduct, WishListService } from '../services/wishlist.service';
+import { CartService } from '../services/cart.service';
 
 @Component({
   selector: 'app-my-profile',
@@ -76,7 +77,8 @@ export class MyProfileComponent implements OnInit {
 
   constructor(
     private productService: ProductService, 
-    private userService: UserService, 
+    private userService: UserService,
+    private cartService: CartService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private wishListService: WishListService
@@ -172,10 +174,25 @@ export class MyProfileComponent implements OnInit {
 
   addToCart($event: any, id: number) {
     $event.preventDefault();
-    this.productService.postCart(id, this.currentUser.userId)
+    this.cartService.postCart(id, this.currentUser.userId)
       .subscribe({
         next: data => {
         },
       });
+  }
+
+  deleteWishList($event: any, id: number) {
+    $event.preventDefault();
+    this.wishListService.deleteWishList(id).subscribe({
+      next: data => {
+        let deleteProduct: WishListProduct = new WishListProduct();
+        this.wishList.forEach(p => {
+          if (p.wishListId == id) {
+            deleteProduct = p;
+          }
+        })
+        this.wishList.splice(this.wishList.indexOf(deleteProduct),1);
+      }
+    });
   }
 }

@@ -5,12 +5,12 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { Auth } from './auth';
+import { Review } from './review.service';
 
 export interface Product {
   productId: number,
   name: string,
   price: number,
-  //discountAvailable: boolean,
   inventory: number,
   delivery: string,
   category: string,
@@ -42,18 +42,6 @@ export interface ProductShort {
   discount?: number,
 }
 
-export interface Review {
-  reviewId: number,
-  userId: number,
-  userFirstName: string,
-  userLastName: string,
-  title: string,
-  content: string,
-  rating: number,
-  points: number,
-  publishedAt: Date
-}
-
 @Injectable()
 export class ProductService {
 
@@ -74,10 +62,6 @@ export class ProductService {
       .pipe(
         catchError(this.handleError)
       );
-  }
-
-  getReview(id: any) {
-    return this.http.get<Review>(this.rootURL + '/review/' + id);
   }
 
   getAllProducts() {
@@ -138,35 +122,6 @@ export class ProductService {
       .pipe(
         catchError(error => this.handleError(error))
       );
-  }
-
-  // getWishList(id: number): Observable<[ProductShort]> {
-  //   return this.http.get<[ProductShort]>(this.rootURL + "/wish-list/" + id)
-  //     .pipe(
-  //       catchError(error => this.handleError(error))
-  //     );
-  // }
-
-  // postWishList(productId: number, userId: number) {
-  //   let wishList = {
-  //     "productId": productId,
-  //     "userId": userId
-  //   }
-  //   return this.http.post<object>(this.rootURL + '/post-wish-list', wishList)
-  //     .pipe(
-  //       catchError(error => this.handleError(error))
-  //     );
-  // }
-
-  postCart(productId: number, userId: number){
-    let cart = {
-      "productId": productId,
-      "userId": userId
-    }
-    return this.http.post<object>(this.rootURL + '/post-cart', cart)
-    .pipe(
-      catchError(error => this.handleError(error))
-    );
   }
 
   private handleError(error: HttpErrorResponse) {

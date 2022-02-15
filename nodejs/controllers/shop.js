@@ -85,6 +85,7 @@ exports.getReviewById = (req, res, next) => {
       }
     }
   );
+  conn.end();
 };
 exports.getAllProducts = (req, res, next) => {
   conn = connectDb()
@@ -97,6 +98,7 @@ exports.getAllProducts = (req, res, next) => {
       }
     }
   );
+  conn.end();
 };
 exports.getProductsBySeller = (req, res, next) => {
 
@@ -144,6 +146,7 @@ exports.getProductsBySeller = (req, res, next) => {
       }
     }
   );
+  conn.end();
 };
 exports.getUserShort = (req, res, next) => {
 
@@ -161,6 +164,7 @@ exports.getUserShort = (req, res, next) => {
       }
     }
   );
+  conn.end();
 };
 exports.getUser = (req, res, next) => {
 
@@ -194,6 +198,7 @@ exports.getUser = (req, res, next) => {
       }
     }
   );
+  conn.end();
 };
 exports.getWishList = (req, res, next) => {
   if (!Number(req.params.id)) return res.json('Error: This URL does not lead to any products.');
@@ -210,4 +215,5 @@ exports.getWishList = (req, res, next) => {
       }
     }
   );
+  conn.end();
 };

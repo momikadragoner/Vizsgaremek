@@ -88,11 +88,22 @@ export class CartService {
             );
     }
 
+    postCart(productId: number, userId: number = this.currentUser.userId) {
+        let cart = {
+            "productId": productId,
+            "userId": userId
+        }
+        return this.http.post<object>(this.rootURL + '/post-cart', cart)
+            .pipe(
+                catchError(error => this.handleError(error))
+            );
+    }
+
     deleteCart(id: number) {
         return this.http.delete(this.rootURL + '/delete-cart/' + id)
-        .pipe(
-            catchError(this.handleError)
-        );
+            .pipe(
+                catchError(this.handleError)
+            );
     }
 
     private handleError(error: HttpErrorResponse) {

@@ -18,7 +18,7 @@
     </div>
     <div class="btn-group mx-2 px-1 mb-3 bottom">
         <a [routerLink]="['/product-details', product.productId]" class="btn btn-primary w-75">Részletek</a>
-        <a href="#" class="btn btn-secondary w-25">
+        <a href="#" (click)="addToCart($event, product.productId)" class="btn btn-secondary w-25">
             <fa-icon [icon]="faShoppingCart"></fa-icon>
         </a>
     </div>

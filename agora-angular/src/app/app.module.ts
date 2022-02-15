@@ -46,6 +46,7 @@ import { ApiService } from './account-forms/services/api.service';
 import { AuthService } from './account-forms/services/auth.service';
 import { CartService } from './services/cart.service';
 import { WishListService } from './services/wishlist.service';
+import { ReviewService } from './services/review.service';
 
 
 @NgModule({
@@ -103,7 +104,8 @@ import { WishListService } from './services/wishlist.service';
     ApiService,
     AuthService,
     CartService,
-    WishListService
+    WishListService,
+    ReviewService
   ],
   bootstrap: [AppComponent]
 })

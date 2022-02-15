@@ -177,6 +177,7 @@ exports.changeProductVisibility = (req, res, next) => {
       res.json();
     }
   })
+  conn.end();
 };
 exports.postWishList = (req, res, next) => {
   let wishList = req.body;
@@ -191,6 +192,21 @@ exports.postWishList = (req, res, next) => {
     }
   })
 }
+exports.deleteWishList = (req, res, next) => {
+  if (!Number(req.params.id)) return res.json({'Error' : 'This product does not exist.'});
+  let id = Number(req.params.id);
+  conn = connectDb();
+  let sql = 'CALL deleteWishList(?)'
+  conn.query(sql, [id], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(200);
+      res.json();
+    }
+  })
+  conn.end();
+}
 exports.postCart = (req, res, next) => {
   let cart = req.body;
   let sql = 'CALL insertCart(?, ?)';
@@ -203,6 +219,7 @@ exports.postCart = (req, res, next) => {
       res.json();
     }
   })
+  conn.end();
 }
 exports.getCart = (req, res, next) => {
   if (!Number(req.params.id)) return res.json({'Error' : 'This product does not exist.'});
@@ -217,6 +234,7 @@ exports.getCart = (req, res, next) => {
       res.json(results[0]);
     }
   })
+  conn.end();
 }
 exports.deleteCart = (req, res, next) => {
   if (!Number(req.params.id)) return res.json({'Error' : 'This product does not exist.'});
@@ -231,4 +249,5 @@ exports.deleteCart = (req, res, next) => {
       res.json();
     }
   })
+  conn.end();
 }

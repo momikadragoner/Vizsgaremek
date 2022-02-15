@@ -8,13 +8,14 @@ import { Form } from '@angular/forms';
 import { User as u, seller } from "../services/user.service";
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { HttpClient } from '@angular/common/http';
-import { ProductService, Product, Review, ProductShort, ratingToArray } from '../services/product.service';
+import { ProductService, Product, ProductShort, ratingToArray } from '../services/product.service';
 import { UserService, UserShort as User } from '../services/user.service';
 import { asapScheduler } from 'rxjs';
 import { Auth } from '../services/auth';
 import { WishListService } from '../services/wishlist.service';
-
-
+import { CartService } from '../services/cart.service';
+import { animate, style, transition, trigger } from '@angular/animations';
+import { ReviewService, Review } from '../services/review.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -59,6 +60,8 @@ export class ProductDetailComponent implements OnInit {
     private productService: ProductService,
     private userService: UserService,
     private wishListService: WishListService,
+    private cartService: CartService,
+    private reviewService: ReviewService,
     private route: ActivatedRoute,
     private router: Router,
   ) {
@@ -102,7 +105,7 @@ export class ProductDetailComponent implements OnInit {
   }
 
   ShowReview(id: any) {
-    this.productService.getReview(id)
+    this.reviewService.getReview(id)
       .subscribe({
         next: (data: Review) => this.review = { ...data },
         error: error => this.error = error
@@ -176,7 +179,7 @@ export class ProductDetailComponent implements OnInit {
     $event.preventDefault();
     this.toCartIcon = 'spinner';
     this.toCartSpin = true;
-    this.productService.postCart(id, this.currentUser.userId)
+    this.cartService.postCart(id, this.currentUser.userId)
       .subscribe({
         next: data => {
           this.message = "Termék hozzáadva a kosárhoz";

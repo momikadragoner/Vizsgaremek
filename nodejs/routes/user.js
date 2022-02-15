@@ -17,6 +17,8 @@ router.put('/change-visibility/:id', userController.changeProductVisibility);
 
 router.post('/post-wish-list', userController.postWishList);
 
+router.delete('/delete-wish-list/:id', userController.deleteWishList);
+
 router.post('/post-cart', userController.postCart);
 
 router.get('/cart/:id', userController.getCart);

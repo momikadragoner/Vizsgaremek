@@ -67,6 +67,13 @@ export class WishListService {
             );
     }
 
+    deleteWishList(id: number) {
+        return this.http.delete(this.rootURL + '/delete-wish-list/' + id)
+            .pipe(
+                catchError(this.handleError)
+            );
+    }
+
     private handleError(error: HttpErrorResponse) {
         if (error.status === 0) {
           // A client-side or network error occurred. Handle it accordingly.

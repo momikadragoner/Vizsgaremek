@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { Auth } from 'src/app/services/auth';
+import { CartService } from 'src/app/services/cart.service';
 import { ProductShort as Product } from 'src/app/services/product.service';
 
 @Component({
@@ -14,10 +16,22 @@ export class ProductCardComponent implements OnInit {
   @Input() public sideScrollable: boolean = false;
 
   faShoppingCart = faShoppingCart;
+  currentUser: Auth = Auth.currentUser;
   
-  constructor() {   }
+  constructor(
+    private cartService: CartService
+  ) {   }
 
   ngOnInit(): void {
+  }
+
+  addToCart($event: any, id: number) {
+    $event.preventDefault();
+    this.cartService.postCart(id, this.currentUser.userId)
+      .subscribe({
+        next: data => {
+        },
+      });
   }
 
 }

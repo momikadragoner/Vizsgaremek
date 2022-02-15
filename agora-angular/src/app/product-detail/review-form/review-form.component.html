@@ -2,6 +2,9 @@
 <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()">
     <div class="my-2 text-center">
         <fa-icon (click)="solidStars(i)" *ngFor="let number of [1,2,3,4,5]; let i = index" [icon]="[(rating >= i) ? 'fas' : 'far','star']" class="text-large"></fa-icon>
+        <div @visibilityChange *ngIf="reviewForm.valid && rating == -1">
+            <small>(Kattints a csillagokra az értékeléshez.)</small>
+        </div>
     </div>
     <div class="mb-2">
         <input type="text" name="title" id="title" class="form-control" placeholder="Cím" formControlName="title">
@@ -11,6 +14,6 @@
     </div>
     <div class="d-flex justify-content-between">
         <a (click)=back($event) href="#" class="btn btn-secondary">Mégse</a>
-        <button type="submit" class="btn btn-primary" [disabled]="!reviewForm.valid">Vélemény küldése</button>
+        <button type="submit" class="btn btn-primary" [disabled]="(!reviewForm.valid || rating == -1)">Vélemény küldése</button>
     </div>
 </form>
