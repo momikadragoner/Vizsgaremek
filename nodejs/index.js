@@ -88,7 +88,7 @@ app.use(express.json())
 
 const shopRoutes = require('./routes/shop');
 const userRoutes = require('./routes/user');
-const indexRouter = require('./routes/index_2');
+const authRoutes = require('./routes/auth');
 
 app.get('/', (req, res) => {
   res.send('API Works!');
@@ -105,7 +105,7 @@ app.get('/', (req, res) => {
 
 app.use(cors());
 app.use(express.json());
-app.use('/', indexRouter);
+app.use('/user', authRoutes);
 
 
 app.use('/api', shopRoutes);
