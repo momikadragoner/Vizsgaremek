@@ -27,4 +27,6 @@ router.delete('/delete-cart/:id', userController.deleteCart);
 
 router.post('/post-review', userController.postReview);
 
+router.post('/post-follow', userController.postFollow);
+
 module.exports = router;

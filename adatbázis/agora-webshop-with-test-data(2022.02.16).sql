@@ -45,6 +45,11 @@ BEGIN
     UPDATE `product` SET `name`="Eltávolított termék",`price`=NULL,`description`=NULL,`inventory`=NULL,`delivery`=NULL,`category`=NULL,`rating`=NULL,`vendor_id`=NULL,`discount`=NULL,`is_published`=FALSE,`is_removed`=TRUE,`created_at`=NULL,`last_updated_at`=NULL,`published_at`=NULL WHERE `product_id` = prodId;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteReview` (IN `revId` INT)  NO SQL
+BEGIN
+	DELETE FROM `review` WHERE review_id = revId;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteWishList` (IN `wishId` INT)  NO SQL
 BEGIN
 	DELETE FROM `wish_list` WHERE wish_list.wish_list_id = wishId;
@@ -62,6 +67,11 @@ BEGIN
     ELSE
     	INSERT INTO cart_product(cart_id, product_id, amount, cart_product.status) VALUES (@currCartId, prodId, 1, "In Cart");
     END IF;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertFollow` (IN `flwerId` INT, IN `flwingId` INT)  NO SQL
+BEGIN
+	INSERT INTO `follower_relations`(`follower_id`, `following_id`) VALUES (flwerId, flwingId);
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertMaterials` (IN `mats` VARCHAR(255), IN `length` INT, IN `prodId` INT)  NO SQL
@@ -157,12 +167,14 @@ END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `selectUser` (IN `userId` INT)  BEGIN
 	IF (SELECT member.is_vendor AS isVendor FROM member WHERE member.member_id = userId) THEN
-    	SELECT member.member_id AS userId, member.first_name AS firstName, member.last_name AS lastName, member.about, member.profile_picture_link AS profileImgUrl, member.header_picture_link AS headerImgUrl, member.registered_at AS registeredAt, v.company_name AS companyName, v.site_location AS siteLocation, v.website, v.takes_custom_orders AS takesCustomOrders, (SELECT COUNT(follower_relations.following_id = userId) FROM follower_relations) AS followers, (SELECT COUNT(follower_relations.follower_id = userId) FROM follower_relations ) AS following 
+    	SELECT member.member_id AS userId, member.first_name AS firstName, member.last_name AS lastName, member.about, member.profile_picture_link AS profileImgUrl, member.header_picture_link AS headerImgUrl, member.registered_at AS registeredAt, v.company_name AS companyName, v.site_location AS siteLocation, v.website, v.takes_custom_orders AS takesCustomOrders, 
+        (SELECT COUNT(follower_relations.following_id) FROM follower_relations WHERE follower_relations.following_id  = userId) AS followers, 
+        (SELECT COUNT(follower_relations.follower_id) FROM follower_relations WHERE follower_relations.follower_id = userId) AS following 
         FROM member 
         INNER JOIN vendor_detail AS v ON v.member_id = member.member_id 
         WHERE member.member_id = userId;
 	ELSE
-    	SELECT member.member_id AS userId, member.first_name AS firstName, member.last_name AS lastName, member.about, member.profile_picture_link AS profileImgUrl, member.header_picture_link AS headerImgUrl, member.registered_at AS registeredAt, (SELECT COUNT(follower_relations.following_id = userId) FROM follower_relations) AS followers, (SELECT COUNT(follower_relations.follower_id = userId) FROM follower_relations ) AS following 
+    	SELECT member.member_id AS userId, member.first_name AS firstName, member.last_name AS lastName, member.about, member.profile_picture_link AS profileImgUrl, member.header_picture_link AS headerImgUrl, member.registered_at AS registeredAt, (SELECT COUNT(follower_relations.following_id) FROM follower_relations WHERE follower_relations.following_id = userId) AS followers, (SELECT COUNT(follower_relations.follower_id) FROM follower_relations WHERE follower_relations.follower_id = userId) AS following 
         FROM member 
         WHERE member.member_id = userId;
     END IF;

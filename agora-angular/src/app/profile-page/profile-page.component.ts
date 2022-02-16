@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductShort as Product, ProductService, ProductShort} from '../services/product.service';
+import { ProductShort as Product, ProductService, ProductShort } from '../services/product.service';
 import { User, seller, UserService } from "../services/user.service";
-import { faEnvelope, faLink, faLocationArrow, faCalendarAlt, faTrash, faHeart, faTimesCircle} from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faLink, faLocationArrow, faCalendarAlt, faTrash, faHeart, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
 import { Auth } from '../services/auth';
 import { WishListProduct, WishListService } from '../services/wishlist.service';
+import { FollowService } from '../services/follow.service';
 
 @Component({
   selector: 'app-profile-page',
@@ -15,26 +16,26 @@ import { WishListProduct, WishListService } from '../services/wishlist.service';
   animations: [
     trigger('tabChange', [
       transition(':increment', [
-        style({ transform: 'translateX(-100%)'}),
+        style({ transform: 'translateX(-100%)' }),
         animate('0.3s',
-          style({ transform: 'translateX(0)'}))
+          style({ transform: 'translateX(0)' }))
       ]),
       transition(':decrement', [
-        style({ transform: 'translateX(100%)'}),
+        style({ transform: 'translateX(100%)' }),
         animate('0.3s',
-          style({ transform: 'translateX(0)'}))
+          style({ transform: 'translateX(0)' }))
       ]),
     ]),
-    trigger('visibilityChange',[
+    trigger('visibilityChange', [
       transition(':leave', [
-        style({ opacity: 1}),
+        style({ opacity: 1 }),
         animate('0.2s',
-          style({ opacity: 0,}))
+          style({ opacity: 0, }))
       ]),
       transition(':enter', [
-        style({ opacity: 0}),
+        style({ opacity: 0 }),
         animate('0.2s',
-          style({ opacity: 1,}))
+          style({ opacity: 1, }))
       ])
     ])
   ]
@@ -51,25 +52,25 @@ export class ProfilePageComponent implements OnInit {
 
   tabOpen = 1;
 
-  products: Product[] = [{productId: 0, name: "", sellerLastName: "", sellerFirstName: "", price: -1, imgUrl:''}];
+  products: Product[] = [{ productId: 0, name: "", sellerLastName: "", sellerFirstName: "", price: -1, imgUrl: '' }];
   error: string = "";
   user: User = new User();
   wishList: WishListProduct[] = [new WishListProduct()];
-  id:any;
+  id: any;
 
-  order?:any;
+  order?: any;
   searchTerm?: string;
 
-  orderOptions:string[] = ["Összes","Legújabb", "Legrégebbi", "Ár szerint csökkenő", "Ár szerint növekvő", "Készleten"];
+  orderOptions: string[] = ["Összes", "Legújabb", "Legrégebbi", "Ár szerint csökkenő", "Ár szerint növekvő", "Készleten"];
 
   constructor(
-    private productService: ProductService, 
-    private userService: UserService, 
+    private productService: ProductService,
+    private userService: UserService,
     private wishListService: WishListService,
+    private followService: FollowService,
     private route: ActivatedRoute,
     private fb: FormBuilder
-  ) 
-  { 
+  ) {
     this.id = this.route.snapshot.paramMap.get('id');
     this.ShowUser(this.id);
     this.ShowProducts(this.id)
@@ -77,25 +78,31 @@ export class ProfilePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
   }
 
-  ShowUser(id:any) {
+  ShowUser(id: any) {
     this.userService.getUser(id)
-    .subscribe((data: User) => {this.user = {... data}}, error => this.error = error);
+      .subscribe({
+        next: (data: User) => { this.user = { ...data } },
+        error: error => this.error = error
+      });
   }
 
-  ShowProducts(id:any, orderby?:string, term?:string) {
+  ShowProducts(id: any, orderby?: string, term?: string) {
     this.productService.getProductsBySeller(id, orderby, term)
-    .subscribe((data: [Product]) => this.products = [...data], error => this.error = error);
+      .subscribe({
+        next: (data: [Product]) => this.products = [...data],
+        error: error => this.error = error
+      });
   }
 
-  ShowWishList(id:any) {
+  ShowWishList(id: any) {
     this.wishListService.getWishList(id)
-    .subscribe({
-      next: (data:[WishListProduct]) => this.wishList = [...data],
-      error: error => this.error = error
-    });
+      .subscribe({
+        next: (data: [WishListProduct]) => this.wishList = [...data],
+        error: error => this.error = error
+      });
   }
 
   orderSelect() {
@@ -112,5 +119,20 @@ export class ProfilePageComponent implements OnInit {
     order: [this.order],
     searchTerm: [this.searchTerm]
   });
+
+  follow($event: any, id: number) {
+    $event.preventDefault();
+    if (this.user.iFollow) {
+      
+    }
+    else{
+      this.followService.postFollow(id).subscribe({
+        next: data => {
+          this.user.followers++;
+          this.user.iFollow = true;
+        }
+      });
+    }
+  }
 
 }

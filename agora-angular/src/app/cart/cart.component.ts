@@ -16,6 +16,7 @@ export class CartComponent implements OnInit {
   faChevronRight = faChevronRight;
   faTrash = faTrash;
   faHeart = faHeart;
+  faShoppingCart = faShoppingCart;
 
   cart: Cart = new Cart();
   currentUser: Auth = Auth.currentUser;

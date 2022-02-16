@@ -19,6 +19,7 @@ export interface User{
     siteLocation?: string,
     website?: string,
     takesCustomOrders?: boolean,
+    iFollow?: boolean
 }
 
 export interface UserShort{
@@ -70,6 +71,7 @@ export class User{
         public siteLocation?: string,
         public website?: string,
         public takesCustomOrders?: boolean,
+        public iFollow?: boolean
         ) 
     {
     }

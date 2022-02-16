@@ -12,8 +12,8 @@
                 <div class="col-5 col-md-7">
                     <div class="d-grid gap-1 d-flex justify-content-end mb-2">
                         <div class="btn-group">
-                            <a href="#" class="btn btn-primary my-2 px-2">Követés</a>
-                            <a href="/messages" class="btn btn-secondary my-2 pe-3">
+                            <a href="#" (click)="follow($event, user.userId)" class="btn btn-primary my-2 px-2" [ngClass]="{'btn-primary':(!user.iFollow),'btn-secondary':(user.iFollow)}" [innerHTML]="user.iFollow ? 'Követve' : 'Követés'">Követés</a>
+                            <a href="/messages" class="btn my-2 pe-3" [ngClass]="{'btn-primary':(user.iFollow),'btn-secondary':(!user.iFollow)}">
                                 <fa-icon [icon]="faEnvelope"></fa-icon>
                             </a>
                         </div>
