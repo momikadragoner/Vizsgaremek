@@ -42,8 +42,8 @@ export class ProductDetailComponent implements OnInit {
   faEdit = faEdit;
   faFolderOpen = faFolderOpen;
 
-  review: Review = { reviewId: 0, userId: 0, userLastName: "", userFirstName: "", title: "", content: "", rating: 0, points: 0, publishedAt: new Date() };
-  reviews: Review[] = [this.review];
+  review: Review = new Review();
+  reviews: Review[] = [new Review()];
   product: Product = { productId: 0, name: '', sellerFirstName: '', sellerLastName: '', price: -1, inventory: -1, delivery: '', category: '', tags: [], materials: [], imgUrl: [], description: '', isPublic: true, rating: -1, reviews: this.reviews };
   productList: ProductShort[] = [{ productId: 0, name: "", sellerFirstName: "", sellerLastName: "", price: -1, imgUrl: "" }];
   seller: User = { userId: 0, firstName: '', lastName: '', about: "", profileImgUrl: "", companyName: undefined, takesCustomOrders: true };
@@ -137,7 +137,7 @@ export class ProductDetailComponent implements OnInit {
 
   openModal(id: number[], $event: any) {
     $event.preventDefault();
-    this.review = { reviewId: 0, userId: 0, userLastName: "", userFirstName: "", title: "", content: "", rating: -1, points: -1, publishedAt: new Date() };
+    this.review = new Review();
     this.modalVisible = true;
     //console.log(id);
     this.ShowReview(id[0]);
@@ -207,6 +207,10 @@ export class ProductDetailComponent implements OnInit {
 
   closeNewReview() {
     this.newReviewOpen = false;
+  }
+
+  addReview(newReview:Review){
+    this.product.reviews.splice(0,0,newReview);
   }
 
   ratingToArray = ratingToArray;

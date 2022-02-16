@@ -229,7 +229,7 @@
 </modal-window>
 <!-- Vélemény írása -->
 <modal-window [(modalVisible)]="newReviewOpen">
-    <review-form (modalState)="closeNewReview()"></review-form>
+    <review-form (modalState)="closeNewReview()" [productId]="product.productId" (reviewSent)="addReview($event)"></review-form>
 </modal-window>
 <!-- Kosárba -->
 <modal-window [(modalVisible)]="cartOpen">

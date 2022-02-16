@@ -251,3 +251,26 @@ exports.deleteCart = (req, res, next) => {
   })
   conn.end();
 }
+exports.postReview = (req, res, next) => {
+  let review = req.body;
+  let sql = 'CALL insertReview(?, ?, ?, ?, ?, ?)';
+
+  conn = connectDb();
+  conn.query(sql, 
+    [
+      review.userId,
+      review.productId,
+      review.title,
+      review.content,
+      new Date(),
+      review.rating
+    ], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(201);
+      res.json();
+    }
+  })
+  conn.end();
+}

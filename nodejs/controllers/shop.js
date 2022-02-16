@@ -170,31 +170,15 @@ exports.getUser = (req, res, next) => {
 
   if (!Number(req.params.id)) return res.json({'Error': 'This URL does not lead to any products.'});
   let id = Number(req.params.id);
+  let sql = 'CALL selectUser(?)';
 
   conn = connectDb();
-
-  conn.query('SELECT member.is_vendor AS isVendor FROM member WHERE member.Member_id = ?',
+  conn.query(sql,
     [id], (err, rows, fields) => {
       if (err) console.log("Query " + err)
       else {
-        var sql;
-        if (!rows[0]) return res.json([]);
-        var vendor = (rows[0]).isVendor != undefined ? (rows[0]).isVendor : res.json([]);
-        if (vendor) {
-          sql = 'SELECT member.member_id AS userId, member.first_name AS firstName, member.last_name AS lastName, member.about, member.profile_picture_link AS profileImgUrl, member.header_picture_link AS headerImgUrl, member.registered_at AS registeredAt, v.company_name AS companyName, v.site_location AS siteLocation, v.website, v.takes_custom_orders AS takesCustomOrders, (SELECT COUNT(follower_relations.following_id = ?) FROM follower_relations) AS followers, (SELECT COUNT(follower_relations.follower_id = ?) FROM follower_relations ) AS following FROM member INNER JOIN vendor_detail AS v ON v.member_id = member.member_id WHERE member.member_id = ?'
-        }
-        else {
-          sql = 'SELECT member.member_id AS userId, member.first_name AS firstName, member.last_name AS lastName, member.about, member.profile_picture_link AS profileImgUrl, member.header_picture_link AS headerImgUrl, member.registered_at AS registeredAt, (SELECT COUNT(follower_relations.following_id = ?) FROM follower_relations) AS followers, (SELECT COUNT(follower_relations.follower_id = ?) FROM follower_relations ) AS following FROM member WHERE member.member_id = ?'
-        }
-        conn.query(sql,
-          [id, id, id], (err, rows, fields) => {
-            if (err) console.log("Query " + err)
-            else {
-              res.status(200);
-              res.json(rows[0]);
-            }
-          }
-        );
+        res.status(200);
+        res.json(rows[0][0]);
       }
     }
   );

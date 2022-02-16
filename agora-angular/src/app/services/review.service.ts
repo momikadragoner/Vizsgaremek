@@ -7,6 +7,7 @@ import { Auth } from './auth';
 export interface Review {
     reviewId: number,
     userId: number,
+    productId:number,
     userFirstName: string,
     userLastName: string,
     title: string,
@@ -23,6 +24,7 @@ export class Review {
     constructor(
         public reviewId: number = 0,
         public userId: number = 0,
+        public productId: number = 0,
         public userFirstName: string = "",
         public userLastName: string = "",
         public title: string = "",
