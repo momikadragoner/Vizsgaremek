@@ -29,7 +29,7 @@
                             Kedvezmény elérhető
                         </label>
                     </div>
-                    <input type="number" class="form-control" formControlName="discount" id="discount" [attr.disabled]="discountAvailable ? null : true" 
+                    <input type="number" class="form-control" formControlName="discount" id="discount" [attr.disabled]="discountAvailable ? null : true"
                         (keyup)="inputChange()" (change)="inputChange()" step="1" max="99" min="0">
                 </div>
                 <div class="mb-3">
@@ -38,7 +38,7 @@
                             <div *ngIf="toolTipOpen[3]" class="menu-bg" (click)="toolTipOpen[3] = false"></div>
                             <span [@visibilityChange] *ngIf="toolTipOpen[3]" class="shadow rounded p-2 px-3 info" (mouseleave)="toolTipOpen[3] = false">
                             <small>
-                                Adja meg, hogy a termék előre elkészített vagy csak megrendelésre elérhető. 
+                                Adja meg, hogy a termék előre elkészített vagy csak megrendelésre elérhető.
                                 A 'Raktáron' beviteli mező az 'előre elkészített termék' opció kiválasztása esetén lesz aktív.
                                 <a [routerLink]="['']">További információ.</a>
                             </small>
@@ -70,7 +70,7 @@
                             <div *ngIf="toolTipOpen[1]" class="menu-bg" (click)="toolTipOpen[1] = false"></div>
                             <span [@visibilityChange] *ngIf="toolTipOpen[1]" class="shadow rounded p-2 px-3 info" (mouseleave)="toolTipOpen[1] = false">
                             <small>
-                                A cimkék a termékek keresésében és szűrésében segítenek, ezért ajánlott megadni őket. 
+                                A cimkék a termékek keresésében és szűrésében segítenek, ezért ajánlott megadni őket.
                                 Kattintos a 'Címke hozzáadása' gombra, majd kezdjen el gépelni és válasszon a megjelenő opciók közül.
                                 <a [routerLink]="['']">További információ.</a>
                             </small>
@@ -79,7 +79,7 @@
                         <div *ngIf="productForm.value.tags">
                             <div *ngFor="let tag of tags.controls; let i=index">
                                 <div class="d-flex justify-content-between">
-                                    <input id="tag-{{ i }}" type="text" class="form-control mb-2" [formControlName]="i" (focus)="onTagFocusChange(i); searchTag(i)" 
+                                    <input id="tag-{{ i }}" type="text" class="form-control mb-2" [formControlName]="i" (focus)="onTagFocusChange(i); searchTag(i)"
                                         autocomplete="off" value="{{productForm.value.tags[i]}}" (keyup)="searchTag(i)" (keyup.enter)="autoFillTag(i,0)">
                                     <a class="text-decoration-none text-center m-2" (click)="removeTag(i, $event)">
                                         <fa-icon [icon]="faTrash"></fa-icon>
@@ -149,7 +149,7 @@
                 <div class="shadow rounded px-4 pt-3 pb-2 m-2 card-preview">
                     <div *ngFor="let tag of productForm.value.tags" class="row mx-auto">
                         <div class="col-2 text-center">
-                            <fa-icon [icon]="[iconPrefix, (tag|icon:'tag')]"></fa-icon> 
+                            <fa-icon [icon]="[iconPrefix, (tag|icon:'tag')]"></fa-icon>
                         </div>
                         <div class="ps-0 col-10">
                             <p>{{tag}}</p>
@@ -189,7 +189,10 @@
 <modal-window [(modalVisible)]="modalOpen" [allowClose]="false" [title]="'Üzenet'">
     <div>
         <div class="text-center p-3 border-top mt-2">
-            <p class="large">{{message}}</p>
+            <p class="large">
+              <fa-icon *ngIf="success == undefined" [icon]="faSpinner" [spin]="true"></fa-icon>
+              {{message}}
+            </p>
             <!-- <p class="mb-0 pb-0">Ezt a műveletet nem lehet visszavonni.</p> -->
         </div>
         <div class="d-flex justify-content-end border-top pt-2">

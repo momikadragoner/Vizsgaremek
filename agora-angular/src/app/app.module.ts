@@ -48,6 +48,7 @@ import { CartService } from './services/cart.service';
 import { WishListService } from './services/wishlist.service';
 import { ReviewService } from './services/review.service';
 import { FollowService } from './services/follow.service';
+import { OrderComponent } from './order/order.component';
 
 
 @NgModule({
@@ -83,7 +84,8 @@ import { FollowService } from './services/follow.service';
     ReviewFormComponent,
     CartComponent,
     AddToCartComponent,
-    RootComponent
+    RootComponent,
+    OrderComponent
   ],
   imports: [
     BrowserModule,
