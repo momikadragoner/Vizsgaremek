@@ -49,6 +49,7 @@ import { WishListService } from './services/wishlist.service';
 import { ReviewService } from './services/review.service';
 import { FollowService } from './services/follow.service';
 import { OrderComponent } from './order/order.component';
+import { AddressService } from './services/address.service';
 
 
 @NgModule({
@@ -109,7 +110,8 @@ import { OrderComponent } from './order/order.component';
     CartService,
     WishListService,
     ReviewService,
-    FollowService
+    FollowService,
+    AddressService
   ],
   bootstrap: [AppComponent]
 })

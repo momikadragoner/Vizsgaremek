@@ -7,9 +7,15 @@
         <input type="text" class="form-control" formControlName="name" id="name">
       </div> -->
       <h3 class="border-bottom pb-1">Vásárló adatai</h3>
-      <div class="mb-3 col-12 col-md-7 col-lg-5">
-        <label for="name" class="form-label mb-1">Név</label>
-        <input type="text" class="form-control" formControlName="name" id="name">
+      <div class="row">
+        <div class="mb-3 col-12 col-md-6 col-lg-3">
+          <label for="lastName" class="form-label mb-1">Vezetéknév</label>
+          <input type="text" class="form-control" formControlName="lastName" id="lastName">
+        </div>
+        <div class="mb-3 col-12 col-md-6 col-lg-3">
+          <label for="firstName" class="form-label mb-1">Keresztnév</label>
+          <input type="text" class="form-control" formControlName="firstName" id="firstName">
+        </div>
       </div>
       <div class="mb-3 col-12 col-md-7 col-lg-5">
         <label for="phone" class="form-label mb-1">Értesítési telefonszám</label>
@@ -20,9 +26,14 @@
         <input type="email" class="form-control" formControlName="email" id="email">
       </div>
       <h3 class="border-bottom pb-1">Szállítási cím</h3>
+      <!-- <div class="mb-3">
+        <label for="addressName" class="form-label mb-1">Megnevezés</label>
+        <input type="text" class="form-control" formControlName="addressName" id="addressName">
+      </div> -->
       <div class="col-12 col-md-5 col-lg-3 mb-3">
         <label for="country" class="form-label mb-1">Ország</label>
-        <select class="form-select custom-select" aria-label="Default select example" formControlName="country" id="country" name="country">
+        <select class="form-select custom-select" aria-label="Default select example" formControlName="country"
+          id="country" name="country">
           <!-- <option *ngFor="let option of categories" [value]="option">{{option}}</option> -->
           <option value="hu">Magyarország</option>
         </select>
@@ -37,7 +48,8 @@
         <div class="col-12 col-md-5 col-lg-5 col-xl-4">
           <div class="mb-3">
             <label for="postalCode" class="form-label mb-1">Megye/régió</label>
-            <select class="form-select custom-select" aria-label="Default select example" formControlName="country" id="country" name="country">
+            <select class="form-select custom-select" aria-label="Default select example" formControlName="country"
+              id="country" name="country">
               <!-- <option *ngFor="let option of categories" [value]="option">{{option}}</option> -->
               <option value="hu">Győr-Moson-Sopron Megye</option>
             </select>
