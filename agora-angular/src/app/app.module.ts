@@ -50,6 +50,7 @@ import { ReviewService } from './services/review.service';
 import { FollowService } from './services/follow.service';
 import { OrderComponent } from './order/order.component';
 import { AddressService } from './services/address.service';
+import { CheckoutComponent } from './checkout/checkout.component';
 
 
 @NgModule({
@@ -86,7 +87,8 @@ import { AddressService } from './services/address.service';
     CartComponent,
     AddToCartComponent,
     RootComponent,
-    OrderComponent
+    OrderComponent,
+    CheckoutComponent
   ],
   imports: [
     BrowserModule,

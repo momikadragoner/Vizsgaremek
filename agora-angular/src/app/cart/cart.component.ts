@@ -31,11 +31,11 @@ export class CartComponent implements OnInit {
         this.cart.products = [...data];
         this.cart.sumPrice = 0;
         this.cart.products.forEach( product => {
-          this.cart.sumPrice += product.price;
+          this.cart.sumPrice += (product.price * product.amount);
         });
       }
     });
-    console.log(this.cart.products);
+    //console.log(this.cart.products);
   }
 
   addToWishList($event: any, id: number) {

@@ -332,3 +332,45 @@ exports.getUserLog = (req, res, next) => {
   );
   conn.end();
 };
+exports.getCityByPostalCode = (req, res, next) => {
+  if (!Number(req.params.id)) return res.json({'Error' : 'ID must be a number'});
+  let id = Number(req.params.id);
+  conn = connectDb();
+  let sql = 'CALL selectCity(?)'
+  conn.query(sql, [id], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(200);
+      res.json(results[0][0]);
+    }
+  })
+  conn.end();
+}
+exports.postAddress = (req, res, next) => {
+  let sql = 'CALL insertAddress(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  let address = req.body;
+  conn = connectDb();
+  conn.query(sql, 
+    [
+      address.userId,
+      address.addressname,
+      address.phone,
+      address.userFirstName,
+      address.userLastName,
+      address.email,
+      address.country,
+      address.region,
+      address.city,
+      address.streetAddress,
+      address.postalCode
+    ], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(201);
+      res.json();
+    }
+  })
+  conn.end();
+}

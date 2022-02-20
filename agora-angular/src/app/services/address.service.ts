@@ -42,6 +42,15 @@ export class Address {
     }
 }
 
+export class City {
+    constructor(
+        public city: string ='',
+        public region: string =''
+    ) {
+        
+    }
+}
+
 @Injectable()
 export class AddressService {
 
@@ -64,7 +73,7 @@ export class AddressService {
             );
     }
 
-    postAddress(address:Address) {
+    postAddress(address: Address) {
         return this.http.post<object>(this.rootURL + '/post-address', address)
             .pipe(
                 catchError(error => this.handleError(error))
@@ -73,6 +82,13 @@ export class AddressService {
 
     deleteAddress(id: number) {
         return this.http.delete(this.rootURL + '/delete-address/' + id)
+            .pipe(
+                catchError(this.handleError)
+            );
+    }
+
+    getCityByPostalCode(postalCode: number) {
+        return this.http.get<City>(this.rootURL + '/city-by-code/' + postalCode)
             .pipe(
                 catchError(this.handleError)
             );

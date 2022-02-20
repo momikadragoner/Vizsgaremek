@@ -35,4 +35,8 @@ router.get('/user-short-log/:user/:log', userController.getUserShortLog);
 
 router.get('/user-log/:user/:log', userController.getUserLog);
 
+router.get('/city-by-code/:id', userController.getCityByPostalCode);
+
+router.post('/post-address', userController.postAddress);
+
 module.exports = router;

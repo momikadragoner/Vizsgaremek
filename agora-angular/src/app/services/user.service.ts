@@ -94,7 +94,7 @@ export class UserService {
       );
   }
 
-  getUser(id: number) {
+  getUser(id: number = Auth.currentUser.userId) {
     let url = this.isLoggedIn ? this.rootURL + '/user-log/' + id + "/" + this.currentUser.userId : this.rootURL + '/user/' + id;
     return this.http.get<User>(url)
       .pipe(
