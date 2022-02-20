@@ -270,3 +270,65 @@ exports.postFollow = (req, res, next) => {
   })
   conn.end();
 }
+exports.deleteFollow = (req, res, next) => {
+  if (!Number(req.params.follower)) return res.json({'Error' : 'ID must be a number'});
+  let follower = Number(req.params.follower);
+  if (!Number(req.params.following)) return res.json({'Error' : 'ID must be a number'});
+  let following = Number(req.params.following);
+
+  let sql = 'CALL deleteFollow(?, ?)'
+
+  conn = connectDb()
+  conn.query(sql,
+    [following, follower], (err, rows, fields) => {
+      if (err) res.json("Query error: " + err)
+      else {
+        res.status(200);
+        res.json();
+      }
+    }
+  );
+  conn.end();
+}
+exports.getUserShortLog = (req, res, next) => {
+  if (!Number(req.params.user)) return res.json({'Error' : 'ID must be a number'});
+  let user = Number(req.params.user);
+  if (!Number(req.params.log)) return res.json({'Error' : 'ID must be a number'});
+  let log = Number(req.params.log);
+
+  let sql = 'CALL selectUserShort(?, ?)'
+  
+  conn = connectDb()
+  conn.query(sql,
+    [user, log], (err, rows, fields) => {
+      if (err) res.json("Query error: " + err)
+      else {
+        res.status(200);
+        res.json(rows[0][0]);
+      }
+    }
+  );
+  conn.end();
+}
+
+exports.getUserLog = (req, res, next) => {
+
+  if (!Number(req.params.user)) return res.json({'Error' : 'ID must be a number'});
+  let user = Number(req.params.user);
+  if (!Number(req.params.log)) return res.json({'Error' : 'ID must be a number'});
+  let log = Number(req.params.log);
+
+  let sql = 'CALL selectUser(?, ?)';
+
+  conn = connectDb();
+  conn.query(sql,
+    [user, log], (err, rows, fields) => {
+      if (err) console.log("Query " + err)
+      else {
+        res.status(200);
+        res.json(rows[0][0]);
+      }
+    }
+  );
+  conn.end();
+};

@@ -122,10 +122,18 @@ export class ProfilePageComponent implements OnInit {
 
   follow($event: any, id: number) {
     $event.preventDefault();
-    if (this.user.iFollow) {
-      
+    if (this.user.iFollow == undefined) {
+      return console.log("Nem vagy bejelentkezve");
     }
-    else{
+    if (this.user.iFollow) {
+      this.followService.deleteFollow(id).subscribe({
+        next: data => {
+          this.user.followers--;
+          this.user.iFollow = false;
+        }
+      })
+    }
+    else if(this.user.iFollow == false){
       this.followService.postFollow(id).subscribe({
         next: data => {
           this.user.followers++;

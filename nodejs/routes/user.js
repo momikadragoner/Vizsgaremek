@@ -29,4 +29,10 @@ router.post('/post-review', userController.postReview);
 
 router.post('/post-follow', userController.postFollow);
 
+router.delete('/delete-follow/:following/:follower', userController.deleteFollow);
+
+router.get('/user-short-log/:user/:log', userController.getUserShortLog);
+
+router.get('/user-log/:user/:log', userController.getUserLog);
+
 module.exports = router;

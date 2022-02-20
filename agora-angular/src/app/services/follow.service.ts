@@ -23,12 +23,12 @@ export class FollowService {
             );
     }
 
-    // deleteFollow(followingId:number) {
-    //     return this.http.delete(this.rootURL + '/delete-follow/')
-    //         .pipe(
-    //             catchError(this.handleError)
-    //         );
-    // }
+    deleteFollow(followingId:number) {
+        return this.http.delete(this.rootURL + '/delete-follow/' + this.currentUser.userId + '/' + followingId )
+            .pipe(
+                catchError(this.handleError)
+            );
+    }
 
     private handleError(error: HttpErrorResponse) {
         if (error.status === 0) {

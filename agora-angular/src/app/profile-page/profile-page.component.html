@@ -94,7 +94,7 @@
                     </div>
                     <div class="col-8 col-lg-5">
                         <h5 class="fw-bold">{{product.name}}</h5>
-                        <a href="" class="text-decoration-none">{{product.sellerLastName}} {{product.sellerFirstName}}</a>
+                        <a [routerLink]="['/profile/'+product.sellerId]" class="text-decoration-none">{{product.sellerLastName}} {{product.sellerFirstName}}</a>
                     </div>
                     <div class="col-6 col-lg-2 mt-3">
                         <h4 class="fw-bold">{{product.price|price}}</h4>

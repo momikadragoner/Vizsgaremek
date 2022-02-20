@@ -5,7 +5,7 @@ const shopController = require('../controllers/shop');
 
 const router = express.Router();
 
-router.get('/product/:id', shopController.getProductById);
+router.get('/product/:id', shopController.getProduct);
 
 router.get('/review/:id', shopController.getReviewById);
 

@@ -127,8 +127,8 @@
                                     <h5><a [routerLink]="['/profile', product.sellerId]" class="text-decoration-none fw-bold">{{product.sellerLastName}} {{product.sellerFirstName}}</a>
                                     </h5>
                                     <div class="btn-group">
-                                        <a href="#" class="btn btn-primary my-2 px-3">Követés</a>
-                                        <a href="#" class="btn btn-secondary my-2 pe-3">
+                                        <a href="#" (click)="follow($event, seller.userId)" class="btn btn-primary my-2 px-2" [ngClass]="{'btn-primary':(!seller.iFollow),'btn-secondary':(seller.iFollow)}" [innerHTML]="seller.iFollow ? 'Követve' : 'Követés'">Követés</a>
+                                        <a href="/messages" class="btn my-2 pe-3" [ngClass]="{'btn-primary':(seller.iFollow),'btn-secondary':(!seller.iFollow)}">
                                             <fa-icon [icon]="faEnvelope"></fa-icon>
                                         </a>
                                     </div>
