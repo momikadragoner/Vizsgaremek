@@ -15,7 +15,10 @@ export class OrderComponent implements OnInit {
 
   currentUser: Auth = Auth.currentUser;
   userInfo: User = new User();
-  modalOpen:boolean = false;
+  addresses?: Address[];
+  emptyAddress: Address = new Address();
+  selectedProfil?: Address;
+  modalOpen: boolean = false;
 
   faChevronLeft = faChevronLeft;
   faChevronRight = faChevronRight;
@@ -37,6 +40,13 @@ export class OrderComponent implements OnInit {
           update.email = this.userInfo.email;
           update.phone = this.userInfo.phone ? this.userInfo.phone : '';
           this.addressForm.setValue(update);
+        }
+      }
+    });
+    addressService.getAddress().subscribe({
+      next: data => {
+        if (data[0]) {
+          this.addresses = [...data];
         }
       }
     });
@@ -68,7 +78,7 @@ export class OrderComponent implements OnInit {
       userLastName: form.lastName,
       phone: form.phone,
       email: form.email,
-      addressname: '',
+      addressName: '',
       country: form.country,
       postalCode: form.postalCode,
       region: form.region,
@@ -88,12 +98,28 @@ export class OrderComponent implements OnInit {
           if (data) {
             let update = this.addressForm.value;
             update.region = data.region;
-            //update.region = this.regions[0];
             update.city = data.city;
             this.addressForm.setValue(update);
           }
         }
       })
+  }
+
+  selectProfil() {
+    if (!this.addresses) return;
+    let profil: Address = this.selectedProfil ? this.selectedProfil : new Address();
+    let form = this.addressForm.value;
+    form.firstName = profil.userFirstName;
+    form.lastName = profil.userLastName;
+    form.email = profil.email;
+    form.phone = profil.phone ? profil.phone : '';
+    form.addressName = profil.addressName;
+    form.country = profil.country;
+    form.postalCode = profil.postalCode;
+    form.region = profil.region;
+    form.city = profil.city;
+    form.streetAddress = profil.streetAddress;
+    this.addressForm.setValue(form);
   }
 
   regions = [

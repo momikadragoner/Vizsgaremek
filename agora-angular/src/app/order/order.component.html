@@ -1,6 +1,17 @@
 <div class="container shadow rounded p-3 col-md-11 col-lg-9">
   <h2 class="text-center">Szállítási adatok</h2>
   <div class="p-3 ps-3">
+    <span *ngIf="addresses != undefined">
+      <h3 class="border-bottom pb-1">Korábbi cím használata</h3>
+      <div class="mb-3 col-12 col-md-6 col-lg-3">
+        <label for="profil" class="form-label mb-1">Mentett szállítási adatok</label>
+        <select class="form-select custom-select" id="profil" name="profil" (change)="selectProfil()" [(ngModel)]="selectedProfil">
+          <option></option>
+          <option [ngValue]="emptyAddress">Üres profil</option>
+          <option *ngFor="let address of addresses" [ngValue]="address">{{address.addressName}}</option>
+        </select>
+      </div>
+    </span>
     <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
       <h3 class="border-bottom pb-1">Vásárló adatai</h3>
       <div class="row">
@@ -31,7 +42,7 @@
         <select class="form-select custom-select" aria-label="Default select example" formControlName="country"
           id="country" name="country">
           <!-- <option *ngFor="let option of categories" [value]="option">{{option}}</option> -->
-          <option value="hu">Magyarország</option>
+          <option value="Magyarország">Magyarország</option>
         </select>
       </div>
       <div class="row">
