@@ -5,6 +5,7 @@ import { User, UserService } from '../services/user.service';
 import { Auth } from '../services/auth';
 import { faChevronLeft, faChevronRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@angular/router';
+import { pairwise, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-order',
@@ -53,6 +54,22 @@ export class OrderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // this.addressForm.valueChanges
+    //   // .subscribe(()=>{
+    //   //   if (!this.addresses) return;
+    //   //   if (this.selectedProfil != undefined) {
+    //   //     this.selectedProfil = new Address();
+    //   //     console.log(this.selectedProfil);
+    //   //   }
+    //   // });
+    //   .pipe(startWith(null), pairwise())
+    //   .subscribe(([prev, next]: [any, any]) => {
+    //     if (!this.addresses) return;
+    //     if (!this.selectedProfil) return;
+    //     if (next == this.addresses[0]) return;
+    //     console.log('PREV', prev);
+    //     console.log('NEXT', next);
+    //   });
   }
 
   addressForm = this.fb.group({
@@ -85,6 +102,16 @@ export class OrderComponent implements OnInit {
       city: form.city,
       streetAddress: form.streetAddress
     };
+    // let selectAdd:Address = this.selectedProfil ? this.selectedProfil : new Address();
+    // selectAdd.addressId = 0;
+    // selectAdd.addressName = '';
+    // if (selectAdd.isEqual(shippingAddress)) {
+    //   console.log('Egyezés');
+    // }
+    // console.log(shippingAddress);
+    // console.log(selectAdd);
+
+    // return;
     this.addressService.postAddress(shippingAddress).subscribe({
       next: data => { this.router.navigate(['/checkout']) }
     });

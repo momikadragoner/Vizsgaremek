@@ -5,6 +5,7 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { Auth } from './auth';
+import { faHourglassEnd } from '@fortawesome/free-solid-svg-icons';
 
 export interface Address {
     addressId: number,
@@ -40,6 +41,27 @@ export class Address {
         public streetAddress: string = ''
     ) {
     }
+
+    // isEqual( compare:Address ):boolean{
+    //   if(
+    //     compare.addressId == this.userId &&
+    //     compare.userId == this.userId &&
+    //     compare.userFirstName == this.userFirstName &&
+    //     compare.userLastName == this.userLastName &&
+    //     compare.phone == this.phone &&
+    //     compare.email == this.email &&
+    //     compare.addressName == this.addressName &&
+    //     compare.country == this.country &&
+    //     compare.postalCode == this.postalCode &&
+    //     compare.region == this.region &&
+    //     compare.city == this.city &&
+    //     compare.streetAddress == this.streetAddress
+    //   )
+    //   {
+    //     return true;
+    //   }
+    //   return false;
+    // }
 }
 
 export class City {
@@ -47,7 +69,7 @@ export class City {
         public city: string ='',
         public region: string =''
     ) {
-        
+
     }
 }
 
