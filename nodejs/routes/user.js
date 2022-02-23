@@ -21,7 +21,7 @@ router.delete('/delete-wish-list/:id', userController.deleteWishList);
 
 router.post('/post-cart', userController.postCart);
 
-router.get('/cart/:id', userController.getCart);
+router.get('/cart-products/:id', userController.getCartProducts);
 
 router.delete('/delete-cart/:id', userController.deleteCart);
 
@@ -40,5 +40,7 @@ router.get('/city-by-code/:id', userController.getCityByPostalCode);
 router.get('/address/:id', userController.getAddress);
 
 router.post('/post-address', userController.postAddress);
+
+router.post('/post-address-to-cart', userController.postAddressToCart);
 
 module.exports = router;

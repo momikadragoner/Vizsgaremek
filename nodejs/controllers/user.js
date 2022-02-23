@@ -192,11 +192,11 @@ exports.postCart = (req, res, next) => {
   })
   conn.end();
 }
-exports.getCart = (req, res, next) => {
+exports.getCartProducts = (req, res, next) => {
   if (!Number(req.params.id)) return res.json({'Error' : 'This product does not exist.'});
   let id = Number(req.params.id);
   conn = connectDb();
-  let sql = 'CALL selectCart(?)'
+  let sql = 'CALL selectCartProducts(?)'
   conn.query(sql, [id], 
   (err, results, fields) => {
     if (err) console.log("Query " + err)
@@ -368,6 +368,34 @@ exports.postAddress = (req, res, next) => {
   conn = connectDb();
   conn.query(sql, 
     [
+      address.userId,
+      address.addressName,
+      address.phone,
+      address.userFirstName,
+      address.userLastName,
+      address.email,
+      address.country,
+      address.region,
+      address.city,
+      address.streetAddress,
+      address.postalCode
+    ], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(201);
+      res.json();
+    }
+  })
+  conn.end();
+}
+exports.postAddressToCart = (req, res, next) => {
+  let sql = 'CALL insertAddressToCart(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  let address = req.body;
+  conn = connectDb();
+  conn.query(sql, 
+    [
+      address.addressId,
       address.userId,
       address.addressName,
       address.phone,

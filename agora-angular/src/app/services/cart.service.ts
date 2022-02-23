@@ -81,11 +81,18 @@ export class CartService {
         })
     };
 
-    getCart() {
-        return this.http.get<[CartProduct]>(this.rootURL + '/cart/' + this.currentUser.userId,)
+    getCartProducts() {
+        return this.http.get<[CartProduct]>(this.rootURL + '/cart-products/' + this.currentUser.userId,)
             .pipe(
                 catchError(this.handleError)
             );
+    }
+
+    getCart() {
+        return this.http.get<Cart>(this.rootURL + '/cart/' + this.currentUser.userId,)
+        .pipe(
+            catchError(this.handleError)
+        );
     }
 
     postCart(productId: number, userId: number = this.currentUser.userId) {

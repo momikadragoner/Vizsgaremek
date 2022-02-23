@@ -25,6 +25,16 @@
             {{cart.sumPrice|price}}
         </div>
         <h3 class="border-bottom pb-1">Szállítási adatok</h3>
+        <div class="m-2 my-3 p-2 px-3 fw-bold border address">
+            <span>{{address.userLastName}} {{address.userFirstName}}</span>
+            <br>
+            <div class="large m-0 p-0">
+                <span>{{address.city}}</span>
+                <br>
+                <span>{{address.streetAddress}}</span>
+            </div>
+            <span>{{address.postalCode}} </span>
+        </div>
         <a [routerLink]="['/order']" class="btn btn-secondary">
             <fa-icon [icon]="faChevronLeft"></fa-icon>
             Vissza

@@ -41,27 +41,6 @@ export class Address {
         public streetAddress: string = ''
     ) {
     }
-
-    // isEqual( compare:Address ):boolean{
-    //   if(
-    //     compare.addressId == this.userId &&
-    //     compare.userId == this.userId &&
-    //     compare.userFirstName == this.userFirstName &&
-    //     compare.userLastName == this.userLastName &&
-    //     compare.phone == this.phone &&
-    //     compare.email == this.email &&
-    //     compare.addressName == this.addressName &&
-    //     compare.country == this.country &&
-    //     compare.postalCode == this.postalCode &&
-    //     compare.region == this.region &&
-    //     compare.city == this.city &&
-    //     compare.streetAddress == this.streetAddress
-    //   )
-    //   {
-    //     return true;
-    //   }
-    //   return false;
-    // }
 }
 
 export class City {
@@ -97,6 +76,13 @@ export class AddressService {
 
     postAddress(address: Address) {
         return this.http.post<object>(this.rootURL + '/post-address', address)
+            .pipe(
+                catchError(error => this.handleError(error))
+            );
+    }
+
+    postAddressToCart(address: Address) {
+        return this.http.post<object>(this.rootURL + '/post-address-to-cart', address)
             .pipe(
                 catchError(error => this.handleError(error))
             );

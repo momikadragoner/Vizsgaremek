@@ -26,7 +26,7 @@ export class CartComponent implements OnInit {
     private productService: ProductService,
     private wishListService: WishListService
   ) {
-    cartService.getCart().subscribe({
+    cartService.getCartProducts().subscribe({
       next: (data: [CartProduct]) => {
         this.cart.products = [...data];
         this.cart.sumPrice = 0;
@@ -35,7 +35,6 @@ export class CartComponent implements OnInit {
         });
       }
     });
-    //console.log(this.cart.products);
   }
 
   addToWishList($event: any, id: number) {

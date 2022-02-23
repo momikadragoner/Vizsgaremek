@@ -102,17 +102,22 @@ export class OrderComponent implements OnInit {
       city: form.city,
       streetAddress: form.streetAddress
     };
-    // let selectAdd:Address = this.selectedProfil ? this.selectedProfil : new Address();
-    // selectAdd.addressId = 0;
-    // selectAdd.addressName = '';
-    // if (selectAdd.isEqual(shippingAddress)) {
-    //   console.log('Egyezés');
-    // }
-    // console.log(shippingAddress);
-    // console.log(selectAdd);
-
-    // return;
-    this.addressService.postAddress(shippingAddress).subscribe({
+    let selectAdd: Address = this.selectedProfil ? this.selectedProfil : new Address();
+    if (
+      shippingAddress.userId == selectAdd.userId &&
+      shippingAddress.userFirstName == selectAdd.userFirstName &&
+      shippingAddress.userLastName == selectAdd.userLastName &&
+      shippingAddress.phone == selectAdd.phone &&
+      shippingAddress.email == selectAdd.email &&
+      shippingAddress.country == selectAdd.country &&
+      shippingAddress.postalCode == selectAdd.postalCode &&
+      shippingAddress.region == selectAdd.region &&
+      shippingAddress.city == selectAdd.city &&
+      shippingAddress.streetAddress == selectAdd.streetAddress
+    ) {
+      shippingAddress = selectAdd;
+    }
+    this.addressService.postAddressToCart(shippingAddress).subscribe({
       next: data => { this.router.navigate(['/checkout']) }
     });
   }
