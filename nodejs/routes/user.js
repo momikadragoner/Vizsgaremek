@@ -43,4 +43,6 @@ router.post('/post-address', userController.postAddress);
 
 router.post('/post-address-to-cart', userController.postAddressToCart);
 
+router.get('/cart/:id', userController.getCart);
+
 module.exports = router;

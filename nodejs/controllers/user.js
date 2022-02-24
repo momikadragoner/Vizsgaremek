@@ -207,6 +207,23 @@ exports.getCartProducts = (req, res, next) => {
   })
   conn.end();
 }
+exports.getCart = (req, res, next) => {
+  if (!Number(req.params.id)) return res.json({'Error' : 'This product does not exist.'});
+  let id = Number(req.params.id);
+  conn = connectDb();
+  let sql = 'CALL selectCart(?)';
+  conn.query(sql, [id], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      results[0][0].products = results[1];
+      var cart = results[0];
+      res.status(200);
+      res.json(cart[0]);
+    }
+  })
+  conn.end();
+}
 exports.postReview = (req, res, next) => {
   let review = req.body;
   let sql = 'CALL insertReview(?, ?, ?, ?, ?, ?)';

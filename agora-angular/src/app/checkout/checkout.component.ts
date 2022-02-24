@@ -21,20 +21,23 @@ export class CheckoutComponent implements OnInit {
     private cartService: CartService,
     private addressService: AddressService,
   ) {
-    cartService.getCartProducts().subscribe({
-      next: (data: [CartProduct]) => {
-        this.cart.products = [...data];
-        this.cart.sumPrice = 0;
-        this.cart.products.forEach(product => {
-          this.cart.sumPrice += (product.price * product.amount);
-        });
+    cartService.getCart().subscribe({
+      next: (data: Cart) => {
+        this.cart = {...data};
+        addressService.getAddress().subscribe({
+          next: data => {
+            let shippingAddress:Address = new Address();
+            data.forEach( address => {
+              if (address.addressId = this.cart.shippingId) {
+                shippingAddress = address;
+              }
+            })
+            if (shippingAddress == new Address()) return;
+            this.address = { ...shippingAddress };
+          }
+        })
       }
     });
-    addressService.getAddress().subscribe({
-      next: data => {
-        this.address = { ...data[this.cart.shippingId] };
-      }
-    })
   }
 
   ngOnInit(): void {
