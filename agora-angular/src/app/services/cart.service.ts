@@ -106,6 +106,13 @@ export class CartService {
             );
     }
 
+    putCart(cart:Cart){
+        return this.http.put<object>(this.rootURL + '/put-cart', cart)
+            .pipe(
+                catchError(error => this.handleError(error))
+            );
+    }
+
     deleteCart(id: number) {
         return this.http.delete(this.rootURL + '/delete-cart/' + id)
             .pipe(

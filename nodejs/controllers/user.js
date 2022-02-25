@@ -434,3 +434,21 @@ exports.postAddressToCart = (req, res, next) => {
   })
   conn.end();
 }
+exports.updateCart = (req, res, next) => {
+  let sql = 'CALL updateCart(?, ?)';
+  let cart = req.body;
+  conn = connectDb();
+  conn.query(sql, 
+    [
+      cart.cartId,
+      cart.status
+    ], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(201);
+      res.json();
+    }
+  })
+  conn.end();
+}

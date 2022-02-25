@@ -39,7 +39,7 @@
             <fa-icon [icon]="faChevronLeft"></fa-icon>
             Vissza
         </a>
-        <a [routerLink]="['/']" class="btn btn-primary m-2">
+        <a (click)="confirm($event)" class="btn btn-primary m-2">
             Megerősítés
             <fa-icon [icon]="faChevronRight"></fa-icon>
         </a>

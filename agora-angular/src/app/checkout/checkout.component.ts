@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { faChevronLeft, faChevronRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Address, AddressService } from '../services/address.service';
 import { Cart, CartProduct, CartService } from '../services/cart.service';
@@ -20,6 +21,7 @@ export class CheckoutComponent implements OnInit {
   constructor(
     private cartService: CartService,
     private addressService: AddressService,
+    private router: Router,
   ) {
     cartService.getCart().subscribe({
       next: (data: Cart) => {
@@ -28,7 +30,7 @@ export class CheckoutComponent implements OnInit {
           next: data => {
             let shippingAddress:Address = new Address();
             data.forEach( address => {
-              if (address.addressId = this.cart.shippingId) {
+              if (address.addressId == this.cart.shippingId) {
                 shippingAddress = address;
               }
             })
@@ -38,6 +40,19 @@ export class CheckoutComponent implements OnInit {
         })
       }
     });
+  }
+
+  confirm($event:any){
+    $event.preventDefault();
+    this.cart.status = 'Ordered';
+    if (this.cart != new Cart() && this.address != new Address()) {
+      this.cartService.putCart(this.cart)
+      .subscribe({
+        next: data => {
+          this.router.navigate(['/']);
+        }
+      });
+    }
   }
 
   ngOnInit(): void {
