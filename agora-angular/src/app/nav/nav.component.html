@@ -18,6 +18,12 @@
             </ul>
 
             <div *ngIf="loggedIn" class="col-md-3 text-end loggedin-nav">
+                <a [routerLink]="['/notifications']" class="btn p-1 m-1 btn-cart">
+                    <fa-layers [fixedWidth]="true">
+                        <fa-icon [icon]="faBell"></fa-icon>
+                        <fa-layers-counter content=" "></fa-layers-counter>
+                    </fa-layers>
+                </a>
                 <a [routerLink]="['/cart']" class="btn p-1 m-1 btn-cart">
                     <fa-layers [fixedWidth]="true">
                         <fa-icon [icon]="faShoppingCart"></fa-icon>
@@ -39,6 +45,7 @@
                             </li>
                             <li><a class="dropdown-item" (click)="toggleCart($event)" [routerLink]="['/my-profile']">Profil</a></li>
                             <li><a class="dropdown-item" (click)="toggleCart($event)" href="#">Kívánság lista</a></li>
+                            <li><a class="dropdown-item" (click)="toggleCart($event)" href="#">Bejövő rendelések</a></li>
                             <li><a class="dropdown-item" (click)="toggleCart($event)" href="#">Beállítások</a></li>
                             <li>
                                 <hr class="dropdown-divider m-0">

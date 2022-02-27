@@ -12,7 +12,7 @@
                 <div class="col-5 col-md-7">
                     <div class="d-grid gap-1 d-flex justify-content-end mb-2">
                         <div class="btn-group">
-                            <a [routerLink]="['/edit-profile']" class="btn btn-primary my-2 px-2">Szerkesztés</a>
+                            <a (click)="$event.preventDefault(); editProfileOpen = true" class="btn btn-primary my-2 px-2">Szerkesztés</a>
                         </div>
                     </div>
                 </div>
@@ -154,4 +154,7 @@
             <a href="" (click)="deleteProduct($event)" class="btn btn-danger mx-1">Törlés</a>
         </div>
     </div>
+</modal-window>
+<modal-window [(modalVisible)]="editProfileOpen" [title]="'Profil szerkesztése'">
+    <edit-profile (modalState)="editProfileOpen = false" [user]="user"></edit-profile>
 </modal-window>

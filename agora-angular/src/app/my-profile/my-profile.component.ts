@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { User, seller, UserService } from "../services/user.service";
 import { ProductShort as Product, ProductService, ProductShort } from "../services/product.service";
-import { faEnvelope, faLink,  faLocationArrow, faCalendarAlt, faTimesCircle, faLockOpen, faLock, faEye, faEdit, faTrash, faHeart, faHeartBroken, faShoppingCart} from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faLink, faLocationArrow, faCalendarAlt, faTimesCircle, faLockOpen, faLock, faEye, faEdit, faTrash, faHeart, faHeartBroken, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
@@ -17,41 +17,43 @@ import { CartService } from '../services/cart.service';
   animations: [
     trigger('tabChange', [
       transition(':increment', [
-        style({ transform: 'translateX(-100%)'}),
+        style({ transform: 'translateX(-100%)' }),
         animate('0.3s',
-          style({ transform: 'translateX(0)'}))
+          style({ transform: 'translateX(0)' }))
       ]),
       transition(':decrement', [
-        style({ transform: 'translateX(100%)'}),
+        style({ transform: 'translateX(100%)' }),
         animate('0.3s',
-          style({ transform: 'translateX(0)'}))
+          style({ transform: 'translateX(0)' }))
       ]),
     ]),
-    trigger('visibilityChange',[
+    trigger('visibilityChange', [
       transition(':leave', [
-        style({ opacity: 1}),
+        style({ opacity: 1 }),
         animate('0.2s',
-          style({ opacity: 0,}))
+          style({ opacity: 0, }))
       ]),
       transition(':enter', [
-        style({ opacity: 0}),
+        style({ opacity: 0 }),
         animate('0.2s',
-          style({ opacity: 1,}))
+          style({ opacity: 1, }))
       ])
     ])
   ]
 })
 export class MyProfileComponent implements OnInit {
 
-  order?:any;
+
+  order?: any;
   searchTerm?: string;
   currentUser = Auth.currentUser;
 
-  orderOptions:string[] = ["Összes","Legújabb", "Legrégebbi", "Ár szerint csökkenő", "Ár szerint növekvő", "Készleten", "Közzétett", "Nincs közzétéve"];
+  orderOptions: string[] = ["Összes", "Legújabb", "Legrégebbi", "Ár szerint csökkenő", "Ár szerint növekvő", "Készleten", "Közzétett", "Nincs közzétéve"];
 
   tabOpen = 1;
   alertOpen = false;
   moreOptionsOpen = false;
+  editProfileOpen = false;
 
   faEnvelope = faEnvelope;
   faLink = faLink;
@@ -69,21 +71,20 @@ export class MyProfileComponent implements OnInit {
   //products = myProductList;
   // profileDetail=seller;
   error: string = "";
-  products: Product[] = [{productId: 0, name: "", sellerLastName: "", sellerFirstName: "", price: -1, imgUrl:''}];
+  products: Product[] = [{ productId: 0, name: "", sellerLastName: "", sellerFirstName: "", price: -1, imgUrl: '' }];
   user: User = new User();
   wishList: WishListProduct[] = [new WishListProduct()];
 
-  selectedProduct: Product = {productId: 0, name: "", sellerLastName: "", sellerFirstName: "", price: -1, imgUrl:''};
+  selectedProduct: Product = { productId: 0, name: "", sellerLastName: "", sellerFirstName: "", price: -1, imgUrl: '' };
 
   constructor(
-    private productService: ProductService, 
+    private productService: ProductService,
     private userService: UserService,
     private cartService: CartService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private wishListService: WishListService
-  ) 
-  { 
+  ) {
     this.ShowUser();
     this.ShowProducts(this.searchForm.value.order, this.searchForm.value.searchTerm);
     this.ShowWishList();
@@ -104,12 +105,12 @@ export class MyProfileComponent implements OnInit {
     searchTerm: [this.searchTerm]
   });
 
-  ShowProducts(orderby?:string, term?:string) {
+  ShowProducts(orderby?: string, term?: string) {
     this.productService.getMyProducts(orderby, term)
-    .subscribe({
-      next: (data: [Product]) => this.products = [...data], 
-      error: error => this.error = error
-    });
+      .subscribe({
+        next: (data: [Product]) => this.products = [...data],
+        error: error => this.error = error
+      });
   }
 
   ngOnInit(): void {
@@ -117,55 +118,55 @@ export class MyProfileComponent implements OnInit {
 
   ShowUser() {
     this.userService.getUser(this.currentUser.userId)
-    .subscribe({
-      next: (data: User) => this.user = {... data}, 
-      error: error => this.error = error
-    });
+      .subscribe({
+        next: (data: User) => this.user = { ...data },
+        error: error => this.error = error
+      });
   }
 
   ShowWishList() {
     this.wishListService.getWishList(this.currentUser.userId)
-    .subscribe({
-      next: (data:[WishListProduct]) => this.wishList = [...data],
-      error: error => this.error = error
-    });
+      .subscribe({
+        next: (data: [WishListProduct]) => this.wishList = [...data],
+        error: error => this.error = error
+      });
   }
 
-  alertDeleteProduct(deleteId:number){
+  alertDeleteProduct(deleteId: number) {
     this.alertOpen = true;
     this.products.forEach(product => {
-      if(product.productId == deleteId){
+      if (product.productId == deleteId) {
         this.selectedProduct = product;
       }
     })
   }
 
-  showMoreOptions(id:any){
+  showMoreOptions(id: any) {
     this.moreOptionsOpen = !this.moreOptionsOpen;
     this.products.forEach(product => {
-      if(product.productId == id){
+      if (product.productId == id) {
         this.selectedProduct = product;
       }
     })
   }
 
-  deleteProduct($event:any){
+  deleteProduct($event: any) {
     $event.preventDefault();
     this.productService.deleteProduct(this.selectedProduct.productId)
-    .subscribe();
-    this.products.splice(this.products.indexOf(this.selectedProduct),1);
+      .subscribe();
+    this.products.splice(this.products.indexOf(this.selectedProduct), 1);
     this.alertOpen = false;
     this.moreOptionsOpen = false;
   }
 
-  makePublic($event:any, id:number){
+  makePublic($event: any, id: number) {
     $event.preventDefault();
     this.productService.changeVisibility(true, id).subscribe();
     this.selectedProduct.isPublic = true;
     this.moreOptionsOpen = false;
   }
 
-  makePrivate($event:any, id:number){
+  makePrivate($event: any, id: number) {
     $event.preventDefault();
     this.productService.changeVisibility(false, id).subscribe();
     this.selectedProduct.isPublic = false;
@@ -191,7 +192,7 @@ export class MyProfileComponent implements OnInit {
             deleteProduct = p;
           }
         })
-        this.wishList.splice(this.wishList.indexOf(deleteProduct),1);
+        this.wishList.splice(this.wishList.indexOf(deleteProduct), 1);
       }
     });
   }

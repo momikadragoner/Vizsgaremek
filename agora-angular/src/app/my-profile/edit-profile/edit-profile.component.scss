@@ -10,9 +10,8 @@
     z-index: 3;
 }
 .header{
-    background-image: url('../../../assets/salad.jpg');
-    height: 20rem;
     position: absolute;
+    height: 10rem;
     background-position: center;
     z-index: -2;
 }
@@ -24,8 +23,10 @@
 }
 .profile-btn{
     position: absolute;
-    top: 23%;
-    left: 34%;
-    border-radius: 25px;
-    
+    border-radius: 50%;
+    width: auto;
+    text-align: center;
+    vertical-align: middle;
+    height: 2.5rem;
+    z-index: 5;
 }   

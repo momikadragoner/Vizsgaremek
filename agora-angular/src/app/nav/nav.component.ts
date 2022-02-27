@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, animate, transition, query, stagger } from '@angular/animations';
-import { faCarrot, faAppleAlt, faBreadSlice, faCheese } from '@fortawesome/free-solid-svg-icons';
+import { faCarrot, faAppleAlt, faBreadSlice, faCheese, faBell } from '@fortawesome/free-solid-svg-icons';
 import { faPalette, faGem, faTshirt, faGlassMartiniAlt, faShoppingCart, faBoxes } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../account-forms/services/auth.service';
 import { Router } from '@angular/router';
@@ -40,6 +40,7 @@ export class NavComponent implements OnInit {
   faGlassMartiniAlt = faGlassMartiniAlt;
   faShoppingCart = faShoppingCart;
   faBoxes = faBoxes;
+  faBell = faBell;
 
   public openView = "";
   menuOpen = false;

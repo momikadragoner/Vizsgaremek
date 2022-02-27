@@ -27,7 +27,6 @@ const routes: Routes = [
   {path: 'messages', component: MessagesPageComponent},
   {path: 'add-product', component: ProductFormComponent},
   {path: 'my-profile', component: MyProfileComponent},
-  {path: 'edit-profile', component: EditProfileComponent},
   {path: 'search', component: SearchComponent},
   {path: 'cart', component: CartComponent},
   {path: 'order', component: OrderComponent},

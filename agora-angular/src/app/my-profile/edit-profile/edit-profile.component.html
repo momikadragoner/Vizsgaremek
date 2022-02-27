@@ -1,57 +1,51 @@
-<div class="p-0 container-fluid header"></div>
-<div class="container mt-5">
-    <div class="d-grid justify-content-md-center">
-        <div class="round profile-picture ms-4 bg-white shadow">
-            
-            <img class="p-2 round profile-picture" src="{{profileDetail.profileImgUrl}}" alt="">
-            <a href="" class="btn bg-white my-2 profile-btn">
-                <fa-icon [icon]="faCamera"></fa-icon>
-            </a>
+<div class="mx-2 mt-2">
+    <form action="">
+        <div class="row mb-3">
+            <div class="col">
+                <div class="header" style="background-image: url('{{user.headerImgUrl}}');"></div>
+                <img class="p-2 round profile-picture shadow" src="{{user.profileImgUrl}}" alt="">
+                <a href="" class="btn bg-white my-2 profile-btn shadow">
+                    <fa-icon [icon]="faCamera"></fa-icon>
+                </a>
+            </div>
+            <!-- <div class="col">
+                <img src="" alt="" src="{{user.headerImgUrl}}" class="header">
+            </div> -->
         </div>
-        
-        <div class="shadow rounded px-4 pt-5 pb-2 about">
-            
-            <div class="row">
-                <div class="col-7 col-md-5">
-                    <label for="name">Név </label>
-                    <input type="text" value="{{profileDetail.lastName}} {{profileDetail.firstName}}" class="m-2 form-control" id="name" name="name">
-                </div>
-                <div class="col-5 col-md-7">
-                    <div class="d-grid gap-1 d-flex justify-content-end mb-2">
-                       <form action="" method="get">
-                        <div class="btn-group">
-                            <a href="/my-profile" class="btn btn-primary my-2 px-2">Mentés</a>
-                            
-                        </div>
-                       </form>
-                    </div>
-                </div>
+        <div class="row">
+            <div class="mb-3 col-12 col-md-6">
+                <label for="lastName">Veztetéknév</label>
+                <input type="text" value="{{user.lastName}}" class="form-control"
+                    id="lastName" name="lastName">
             </div>
-            <div class="row justify-content-start">
-                <div class="m-2 mt-0 pt-0 col-auto">
-                    
-                    <label for="email">Weboldal </label>
-                    <input type="email" value="{{profileDetail.website}}" class="text-decoration-none form-control" id="email" name="email">
-                </div>
-                <div class="m-2 mt-0 pt-0 col-auto">
-                    
-                    <label for="location">Lakhely </label>
-                    <input type="text" value="{{profileDetail.siteLocation}}" class="form-control" id="location" name="location">
-                </div>
-                
-            </div>
-            
-            <div class="row">
-                <label for="about">Rólam </label>
-                <textarea type="text" class="mt-3 form-control m-1" id="about" name="about">{{profileDetail.about}}</textarea>
-            </div>
-            <div>
-                <input type="checkbox" id="order" name="order" checked>
-                <label for="order" class="m-1">Egyedi rendeléseket vállalok</label>
-
+            <div class="mb-3 col-12 col-md-6">
+                <label for="firstName">Keresztnév</label>
+                <input type="text" value="{{user.firstName}}" class="form-control"
+                    id="firstName" name="firstName">
             </div>
         </div>
-    </div>
-    
+        <div class="row">
+            <div class="mb-3 col-12 col-md-6">
+                <label for="email">Weboldal </label>
+                <input type="email" value="{{user.website}}" class="form-control" id="email" name="email">
+            </div>
+            <div class="mb-3 col-12 col-md-6">
+                <label for="location">Lakhely </label>
+                <input type="text" value="{{user.siteLocation}}" class="form-control" id="location"
+                    name="location">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="about">Rólam </label>
+            <textarea type="text" class="form-control" id="about" name="about">{{user.about}}</textarea>
+        </div>
+        <div class="mb-3">
+            <input type="checkbox" id="order" name="order" class="form-check-input" checked>
+            <label for="order" class="form-check-label ms-2">Egyedi rendeléseket vállalok</label>
+        </div>
+        <div class="d-flex justify-content-between">
+            <a href="/" (click)=back($event) class="btn btn-secondary my-2 px-2">Mégse</a>
+            <a href="/" class="btn btn-primary my-2 px-2">Mentés</a>
+        </div>
+    </form>
 </div>
-<page-footer></page-footer>
