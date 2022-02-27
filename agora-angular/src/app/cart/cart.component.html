@@ -34,6 +34,11 @@
                         </div>
                     </div>
                 </div>
+                <div *ngIf="cart.products[0] == undefined" class="text-center mt-4 pt-4">
+                    <h1><fa-icon [icon]="faShoppingCart"></fa-icon></h1>
+                    <h2>A kosarad üres</h2>
+                    <p>csak arra vár, hogy vásárolni kezdj</p>
+                </div>
             </div>
         </div>
         <div class="shadow rounded p-4 m-2 col-12 col-lg-3">
@@ -52,9 +57,9 @@
                 <h4 class="fw-bold">{{cart.sumPrice|price}}</h4>
             </div>
             <div class="input-group d-flex justify-content-center">
-                <a href="" class="btn btn-lg btn-primary">Folytatás
+                <a [routerLink]="['/order']" class="btn btn-lg btn-primary">Folytatás
                 </a>
-                <a href="" class="btn btn-secondary btn-lg">
+                <a [routerLink]="['/order']" class="btn btn-secondary btn-lg">
                     <fa-icon [icon]="faChevronRight"></fa-icon>
                 </a>
             </div>
@@ -62,4 +67,4 @@
     </div>
 </div>
 
-<page-footer></page-footer>
+<!-- <page-footer></page-footer> -->

@@ -16,6 +16,7 @@ export class CartComponent implements OnInit {
   faChevronRight = faChevronRight;
   faTrash = faTrash;
   faHeart = faHeart;
+  faShoppingCart = faShoppingCart;
 
   cart: Cart = new Cart();
   currentUser: Auth = Auth.currentUser;
@@ -25,16 +26,15 @@ export class CartComponent implements OnInit {
     private productService: ProductService,
     private wishListService: WishListService
   ) {
-    cartService.getCart().subscribe({
+    cartService.getCartProducts().subscribe({
       next: (data: [CartProduct]) => {
         this.cart.products = [...data];
         this.cart.sumPrice = 0;
         this.cart.products.forEach( product => {
-          this.cart.sumPrice += product.price;
+          this.cart.sumPrice += (product.price * product.amount);
         });
       }
     });
-    console.log(this.cart.products);
   }
 
   addToWishList($event: any, id: number) {

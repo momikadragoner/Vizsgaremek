@@ -1,0 +1,55 @@
+<div class="container shadow rounded p-3 col-md-11 col-lg-9">
+    <h2 class="text-center">Vásárlás megerősítése</h2>
+    <div class="p-3 ps-3">
+        <h3 class="border-bottom pb-1">Rendelés</h3>
+        <div class="mx-2">
+            <table class="table table-borderless">
+                <thead class="border-bottom border-dark">
+                    <tr>
+                        <th scope="col">Termék</th>
+                        <th scope="col" class="text-center">Mennyiség</th>
+                        <th scope="col" class="text-end me-3">Egységár</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let product of cart.products">
+                        <td>{{product.name}}</td>
+                        <td class="text-center">{{product.amount}} db</td>
+                        <td class="text-end">{{product.price|price}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-end border-top border-dark mx-2 me-3 pt-3 pb-4">
+            <span class="text-end fw-bold text-start me-5">Összesen:</span>
+            {{cart.sumPrice|price}}
+        </div>
+        <h3 class="border-bottom pb-1">Szállítási adatok</h3>
+        <div class="m-2 my-3 p-2 px-3 fw-bold border address">
+            <span>{{address.userLastName}} {{address.userFirstName}}</span>
+            <br>
+            <div class="large m-0 p-0">
+                <span>{{address.city}}</span>
+                <br>
+                <span>{{address.streetAddress}}</span>
+            </div>
+            <span>{{address.postalCode}} </span>
+        </div>
+        <a [routerLink]="['/order']" class="btn btn-secondary">
+            <fa-icon [icon]="faChevronLeft"></fa-icon>
+            Vissza
+        </a>
+        <a (click)="confirm($event)" class="btn btn-primary m-2">
+            Megerősítés
+            <fa-icon [icon]="faChevronRight"></fa-icon>
+        </a>
+    </div>
+</div>
+<!-- <modal-window [(modalVisible)]="modalOpen" [allowClose]="false" [title]="'Feldolgozás'">
+    <div class="text-center p-3 border-top mt-2">
+      <p class="large">
+        <fa-icon [icon]="faSpinner" [spin]="true"></fa-icon>
+        Betöltés...
+      </p>
+    </div>
+  </modal-window> -->

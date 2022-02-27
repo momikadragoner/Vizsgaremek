@@ -13,6 +13,8 @@ import { EditProfileComponent } from './my-profile/edit-profile/edit-profile.com
 import { SearchComponent } from './search/search.component';
 import { CartComponent } from './cart/cart.component';
 import { AuthGuardService } from './account-forms/services/auth-guard.service';
+import { OrderComponent } from './order/order.component';
+import { CheckoutComponent } from './checkout/checkout.component';
 
 
 const routes: Routes = [
@@ -28,6 +30,8 @@ const routes: Routes = [
   {path: 'edit-profile', component: EditProfileComponent},
   {path: 'search', component: SearchComponent},
   {path: 'cart', component: CartComponent},
+  {path: 'order', component: OrderComponent},
+  {path: 'checkout', component: CheckoutComponent},
   {path: '**', component: FrontPageComponent}
 ];
 

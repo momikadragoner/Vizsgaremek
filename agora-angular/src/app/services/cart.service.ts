@@ -81,11 +81,18 @@ export class CartService {
         })
     };
 
-    getCart() {
-        return this.http.get<[CartProduct]>(this.rootURL + '/cart/' + this.currentUser.userId,)
+    getCartProducts() {
+        return this.http.get<[CartProduct]>(this.rootURL + '/cart-products/' + this.currentUser.userId,)
             .pipe(
                 catchError(this.handleError)
             );
+    }
+
+    getCart() {
+        return this.http.get<Cart>(this.rootURL + '/cart/' + this.currentUser.userId,)
+        .pipe(
+            catchError(this.handleError)
+        );
     }
 
     postCart(productId: number, userId: number = this.currentUser.userId) {
@@ -94,6 +101,13 @@ export class CartService {
             "userId": userId
         }
         return this.http.post<object>(this.rootURL + '/post-cart', cart)
+            .pipe(
+                catchError(error => this.handleError(error))
+            );
+    }
+
+    putCart(cart:Cart){
+        return this.http.put<object>(this.rootURL + '/put-cart', cart)
             .pipe(
                 catchError(error => this.handleError(error))
             );

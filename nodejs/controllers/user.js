@@ -112,21 +112,7 @@ exports.postNewProduct = (req, res, next) => {
   conn.end();
 };
 exports.deleteProduct = (req, res, next) => {
-  if (!Number(req.params.id)) return res.json({'Error':'This product does not exist.'});
-
-  let id = Number(req.params.id);
-  // TO DO: check if an order not yet delivered exists 
-  let sql = 'CALL deleteProduct(?)';
-  conn = connectDb()
-  conn.query(sql, [id], (err, results, fields) => {
-    if (err) return console.log("Query " + err)
-    else {
-      res.status(200);
-      res.json();
-    }
-  }
-  )
-  conn.end();
+  deleteFromDatabase('CALL deleteProduct(?)',req, res);
 };
 exports.updateProduct = (req, res, next) => {
   product = req.body;
@@ -192,21 +178,6 @@ exports.postWishList = (req, res, next) => {
     }
   })
 }
-exports.deleteWishList = (req, res, next) => {
-  if (!Number(req.params.id)) return res.json({'Error' : 'This product does not exist.'});
-  let id = Number(req.params.id);
-  conn = connectDb();
-  let sql = 'CALL deleteWishList(?)'
-  conn.query(sql, [id], 
-  (err, results, fields) => {
-    if (err) console.log("Query " + err)
-    else {
-      res.status(200);
-      res.json();
-    }
-  })
-  conn.end();
-}
 exports.postCart = (req, res, next) => {
   let cart = req.body;
   let sql = 'CALL insertCart(?, ?)';
@@ -221,11 +192,11 @@ exports.postCart = (req, res, next) => {
   })
   conn.end();
 }
-exports.getCart = (req, res, next) => {
+exports.getCartProducts = (req, res, next) => {
   if (!Number(req.params.id)) return res.json({'Error' : 'This product does not exist.'});
   let id = Number(req.params.id);
   conn = connectDb();
-  let sql = 'CALL selectCart(?)'
+  let sql = 'CALL selectCartProducts(?)'
   conn.query(sql, [id], 
   (err, results, fields) => {
     if (err) console.log("Query " + err)
@@ -236,16 +207,246 @@ exports.getCart = (req, res, next) => {
   })
   conn.end();
 }
-exports.deleteCart = (req, res, next) => {
+exports.getCart = (req, res, next) => {
   if (!Number(req.params.id)) return res.json({'Error' : 'This product does not exist.'});
   let id = Number(req.params.id);
   conn = connectDb();
-  let sql = 'CALL deleteCart(?)'
+  let sql = 'CALL selectCart(?)';
+  conn.query(sql, [id], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      results[0][0].products = results[1];
+      var cart = results[0];
+      res.status(200);
+      res.json(cart[0]);
+    }
+  })
+  conn.end();
+}
+exports.postReview = (req, res, next) => {
+  let review = req.body;
+  let sql = 'CALL insertReview(?, ?, ?, ?, ?, ?)';
+
+  conn = connectDb();
+  conn.query(sql, 
+    [
+      review.userId,
+      review.productId,
+      review.title,
+      review.content,
+      new Date(),
+      review.rating
+    ], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(201);
+      res.json();
+    }
+  })
+  conn.end();
+}
+exports.deleteReview = (req, res, next) => {
+  deleteFromDatabase('CALL deleteReview(?)', req, res);
+}
+exports.deleteCart = (req, res, next) => {
+  deleteFromDatabase('CALL deleteCart(?)', req, res);
+}
+exports.deleteWishList = (req, res, next) => {
+  deleteFromDatabase('CALL deleteWishList(?)', req, res)
+}
+function deleteFromDatabase(sql, req, res) {
+  if (!Number(req.params.id)) return res.json({'Error' : 'ID must be a number'});
+  let id = Number(req.params.id);
+  conn = connectDb();
+  conn.query(sql, [id], 
+  (err) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(200);
+      res.json();
+    }
+  })
+  conn.end();
+}
+exports.postFollow = (req, res, next) => {
+  let sql = 'CALL insertFollow(?, ?)';
+  conn = connectDb();
+  conn.query(sql, 
+    [
+      req.body.follower,
+      req.body.following
+    ], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(201);
+      res.json();
+    }
+  })
+  conn.end();
+}
+exports.deleteFollow = (req, res, next) => {
+  if (!Number(req.params.follower)) return res.json({'Error' : 'ID must be a number'});
+  let follower = Number(req.params.follower);
+  if (!Number(req.params.following)) return res.json({'Error' : 'ID must be a number'});
+  let following = Number(req.params.following);
+
+  let sql = 'CALL deleteFollow(?, ?)'
+
+  conn = connectDb()
+  conn.query(sql,
+    [following, follower], (err, rows, fields) => {
+      if (err) res.json("Query error: " + err)
+      else {
+        res.status(200);
+        res.json();
+      }
+    }
+  );
+  conn.end();
+}
+exports.getUserShortLog = (req, res, next) => {
+  if (!Number(req.params.user)) return res.json({'Error' : 'ID must be a number'});
+  let user = Number(req.params.user);
+  if (!Number(req.params.log)) return res.json({'Error' : 'ID must be a number'});
+  let log = Number(req.params.log);
+
+  let sql = 'CALL selectUserShort(?, ?)'
+  
+  conn = connectDb()
+  conn.query(sql,
+    [user, log], (err, rows, fields) => {
+      if (err) res.json("Query error: " + err)
+      else {
+        res.status(200);
+        res.json(rows[0][0]);
+      }
+    }
+  );
+  conn.end();
+}
+
+exports.getUserLog = (req, res, next) => {
+
+  if (!Number(req.params.user)) return res.json({'Error' : 'ID must be a number'});
+  let user = Number(req.params.user);
+  if (!Number(req.params.log)) return res.json({'Error' : 'ID must be a number'});
+  let log = Number(req.params.log);
+
+  let sql = 'CALL selectUser(?, ?)';
+
+  conn = connectDb();
+  conn.query(sql,
+    [user, log], (err, rows, fields) => {
+      if (err) console.log("Query " + err)
+      else {
+        res.status(200);
+        res.json(rows[0][0]);
+      }
+    }
+  );
+  conn.end();
+};
+exports.getCityByPostalCode = (req, res, next) => {
+  if (!Number(req.params.id)) return res.json({'Error' : 'ID must be a number'});
+  let id = Number(req.params.id);
+  conn = connectDb();
+  let sql = 'CALL selectCity(?)'
   conn.query(sql, [id], 
   (err, results, fields) => {
     if (err) console.log("Query " + err)
     else {
       res.status(200);
+      res.json(results[0][0]);
+    }
+  })
+  conn.end();
+}
+exports.getAddress = (req, res, next) => {
+  if (!Number(req.params.id)) return res.json({'Error' : 'ID must be a number'});
+  let id = Number(req.params.id);
+  conn = connectDb();
+  let sql = 'CALL selectAddress(?)'
+  conn.query(sql, [id], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(200);
+      res.json(results[0]);
+    }
+  })
+  conn.end();
+}
+exports.postAddress = (req, res, next) => {
+  let sql = 'CALL insertAddress(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  let address = req.body;
+  conn = connectDb();
+  conn.query(sql, 
+    [
+      address.userId,
+      address.addressName,
+      address.phone,
+      address.userFirstName,
+      address.userLastName,
+      address.email,
+      address.country,
+      address.region,
+      address.city,
+      address.streetAddress,
+      address.postalCode
+    ], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(201);
+      res.json();
+    }
+  })
+  conn.end();
+}
+exports.postAddressToCart = (req, res, next) => {
+  let sql = 'CALL insertAddressToCart(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  let address = req.body;
+  conn = connectDb();
+  conn.query(sql, 
+    [
+      address.addressId,
+      address.userId,
+      address.addressName,
+      address.phone,
+      address.userFirstName,
+      address.userLastName,
+      address.email,
+      address.country,
+      address.region,
+      address.city,
+      address.streetAddress,
+      address.postalCode
+    ], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(201);
+      res.json();
+    }
+  })
+  conn.end();
+}
+exports.updateCart = (req, res, next) => {
+  let sql = 'CALL updateCart(?, ?)';
+  let cart = req.body;
+  conn = connectDb();
+  conn.query(sql, 
+    [
+      cart.cartId,
+      cart.status
+    ], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(201);
       res.json();
     }
   })

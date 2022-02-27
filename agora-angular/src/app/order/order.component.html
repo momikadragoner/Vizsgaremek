@@ -1,0 +1,94 @@
+<div class="container shadow rounded p-3 col-md-11 col-lg-9">
+  <h2 class="text-center">Szállítási adatok</h2>
+  <div class="p-3 ps-3">
+    <span *ngIf="addresses != undefined">
+      <h3 class="border-bottom pb-1">Korábbi cím használata</h3>
+      <div class="mb-3 col-12 col-md-6 col-lg-3">
+        <label for="profil" class="form-label mb-1">Mentett szállítási adatok</label>
+        <select class="form-select custom-select" id="profil" name="profil" (change)="selectProfil()" [(ngModel)]="selectedProfil">
+          <option></option>
+          <option [ngValue]="emptyAddress">Üres profil</option>
+          <option *ngFor="let address of addresses" [ngValue]="address">{{address.addressName}}</option>
+        </select>
+      </div>
+    </span>
+    <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+      <h3 class="border-bottom pb-1">Vásárló adatai</h3>
+      <div class="row">
+        <div class="mb-3 col-12 col-md-6 col-lg-3">
+          <label for="lastName" class="form-label mb-1">Vezetéknév</label>
+          <input type="text" class="form-control" formControlName="lastName" id="lastName">
+        </div>
+        <div class="mb-3 col-12 col-md-6 col-lg-3">
+          <label for="firstName" class="form-label mb-1">Keresztnév</label>
+          <input type="text" class="form-control" formControlName="firstName" id="firstName">
+        </div>
+      </div>
+      <div class="mb-3 col-12 col-md-7 col-lg-5">
+        <label for="phone" class="form-label mb-1">Értesítési telefonszám</label>
+        <input type="tel" class="form-control" formControlName="phone" id="phone">
+      </div>
+      <div class="mb-3 col-12 col-md-7 col-lg-5">
+        <label for="name" class="form-label mb-1">Értesítési e-mail cím</label>
+        <input type="email" class="form-control" formControlName="email" id="email">
+      </div>
+      <h3 class="border-bottom pb-1">Szállítási cím</h3>
+      <!-- <div class="mb-3">
+        <label for="addressName" class="form-label mb-1">Megnevezés</label>
+        <input type="text" class="form-control" formControlName="addressName" id="addressName">
+      </div> -->
+      <div class="col-12 col-md-5 col-lg-3 mb-3">
+        <label for="country" class="form-label mb-1">Ország</label>
+        <select class="form-select custom-select" aria-label="Default select example" formControlName="country"
+          id="country" name="country">
+          <!-- <option *ngFor="let option of categories" [value]="option">{{option}}</option> -->
+          <option value="Magyarország">Magyarország</option>
+        </select>
+      </div>
+      <div class="row">
+        <div class="col-12 col-md-2 col-lg-3">
+          <div class="mb-3">
+            <label for="postalCode" class="form-label mb-1">Irányítószám</label>
+            <input type="number" class="form-control" formControlName="postalCode" id="postalCode" step="1" (input)="autoFillAddress()" >
+          </div>
+        </div>
+        <div class="col-12 col-md-5 col-lg-5 col-xl-4">
+          <div class="mb-3">
+            <label for="postalCode" class="form-label mb-1">Megye/régió</label>
+            <select class="form-select custom-select" aria-label="Default select example" formControlName="region"
+              id="country" name="country">
+              <option *ngFor="let region of regions" [ngValue]="region">{{region}}</option>
+              <!-- <option value="hu">Győr-Moson-Sopron Megye</option> -->
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-md-5 col-lg-3 mb-3">
+          <label for="city" class="form-label mb-1">Város/település</label>
+          <input type="text" class="form-control" formControlName="city" id="city">
+        </div>
+        <div class="col-12 col-md-7 col-lg-5 mb-3">
+          <label for="streetAddress" class="form-label mb-1">Utca, házszám</label>
+          <input type="text" class="form-control" formControlName="streetAddress" id="streetAddress">
+        </div>
+      </div>
+      <a [routerLink]="['/cart']" class="btn btn-secondary">
+        <fa-icon [icon]="faChevronLeft"></fa-icon>
+        Vissza
+      </a>
+      <button type="submit" class="btn btn-primary m-2" [disabled]="!addressForm.valid">
+        Tovább
+        <fa-icon [icon]="faChevronRight"></fa-icon>
+      </button>
+    </form>
+  </div>
+</div>
+<modal-window [(modalVisible)]="modalOpen" [allowClose]="false" [title]="'Feldolgozás'">
+  <div class="text-center p-3 border-top mt-2">
+    <p class="large">
+      <fa-icon [icon]="faSpinner" [spin]="true"></fa-icon>
+      Betöltés...
+    </p>
+  </div>
+</modal-window>

@@ -47,6 +47,10 @@ import { AuthService } from './account-forms/services/auth.service';
 import { CartService } from './services/cart.service';
 import { WishListService } from './services/wishlist.service';
 import { ReviewService } from './services/review.service';
+import { FollowService } from './services/follow.service';
+import { OrderComponent } from './order/order.component';
+import { AddressService } from './services/address.service';
+import { CheckoutComponent } from './checkout/checkout.component';
 
 
 @NgModule({
@@ -82,7 +86,9 @@ import { ReviewService } from './services/review.service';
     ReviewFormComponent,
     CartComponent,
     AddToCartComponent,
-    RootComponent
+    RootComponent,
+    OrderComponent,
+    CheckoutComponent
   ],
   imports: [
     BrowserModule,
@@ -105,7 +111,9 @@ import { ReviewService } from './services/review.service';
     AuthService,
     CartService,
     WishListService,
-    ReviewService
+    ReviewService,
+    FollowService,
+    AddressService
   ],
   bootstrap: [AppComponent]
 })

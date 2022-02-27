@@ -16,6 +16,7 @@ import { WishListService } from '../services/wishlist.service';
 import { CartService } from '../services/cart.service';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { ReviewService, Review } from '../services/review.service';
+import { FollowService } from '../services/follow.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -42,8 +43,8 @@ export class ProductDetailComponent implements OnInit {
   faEdit = faEdit;
   faFolderOpen = faFolderOpen;
 
-  review: Review = { reviewId: 0, userId: 0, userLastName: "", userFirstName: "", title: "", content: "", rating: 0, points: 0, publishedAt: new Date() };
-  reviews: Review[] = [this.review];
+  review: Review = new Review();
+  reviews: Review[] = [new Review()];
   product: Product = { productId: 0, name: '', sellerFirstName: '', sellerLastName: '', price: -1, inventory: -1, delivery: '', category: '', tags: [], materials: [], imgUrl: [], description: '', isPublic: true, rating: -1, reviews: this.reviews };
   productList: ProductShort[] = [{ productId: 0, name: "", sellerFirstName: "", sellerLastName: "", price: -1, imgUrl: "" }];
   seller: User = { userId: 0, firstName: '', lastName: '', about: "", profileImgUrl: "", companyName: undefined, takesCustomOrders: true };
@@ -62,6 +63,7 @@ export class ProductDetailComponent implements OnInit {
     private wishListService: WishListService,
     private cartService: CartService,
     private reviewService: ReviewService,
+    private followService: FollowService,
     private route: ActivatedRoute,
     private router: Router,
   ) {
@@ -137,7 +139,7 @@ export class ProductDetailComponent implements OnInit {
 
   openModal(id: number[], $event: any) {
     $event.preventDefault();
-    this.review = { reviewId: 0, userId: 0, userLastName: "", userFirstName: "", title: "", content: "", rating: -1, points: -1, publishedAt: new Date() };
+    this.review = new Review();
     this.modalVisible = true;
     //console.log(id);
     this.ShowReview(id[0]);
@@ -207,6 +209,31 @@ export class ProductDetailComponent implements OnInit {
 
   closeNewReview() {
     this.newReviewOpen = false;
+  }
+
+  addReview(newReview:Review){
+    this.product.reviews.splice(0,0,newReview);
+  }
+
+  follow($event: any, id: number) {
+    $event.preventDefault();
+    if (this.seller.iFollow == undefined) {
+      return console.log("Nem vagy bejelentkezve");
+    }
+    if (this.seller.iFollow) {
+      this.followService.deleteFollow(id).subscribe({
+        next: data => {
+          this.seller.iFollow = false;
+        }
+      })
+    }
+    else if(this.seller.iFollow == false){
+      this.followService.postFollow(id).subscribe({
+        next: data => {
+          this.seller.iFollow = true;
+        }
+      });
+    }
   }
 
   ratingToArray = ratingToArray;
