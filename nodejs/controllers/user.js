@@ -435,7 +435,7 @@ exports.postAddressToCart = (req, res, next) => {
   conn.end();
 }
 exports.updateCart = (req, res, next) => {
-  let sql = 'CALL updateCart(?, ?)';
+  let sql = 'CALL updateOrderCart(?, ?)';
   let cart = req.body;
   conn = connectDb();
   conn.query(sql, 
@@ -448,6 +448,34 @@ exports.updateCart = (req, res, next) => {
     else {
       res.status(201);
       res.json();
+    }
+  })
+  conn.end();
+}
+exports.getOrder = (req, res, next) => {
+  if (!Number(req.params.id)) return res.json({'Error' : 'ID must be a number'});
+  let id = Number(req.params.id);
+  conn = connectDb();
+  let sql = 'CALL selectOrder(?)'
+  conn.query(sql, [id], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      let orders = results[0];
+      let products = results[1];
+      orders.forEach( order => {
+        for (let index = 0; index < products.length; index++) {
+          const product = products[index];
+          if (order.cartId == product.cartId) {
+            if (order.products == undefined) {
+              order.products = [];
+            }
+            order.products.push(product);
+          }
+        }
+      })
+      res.status(200);
+      res.json(orders);
     }
   })
   conn.end();

@@ -45,6 +45,8 @@ router.post('/post-address-to-cart', userController.postAddressToCart);
 
 router.get('/cart/:id', userController.getCart);
 
-router.put('/put-cart', userController.updateCart)
+router.put('/put-cart', userController.updateCart);
+
+router.get('/order/:id', userController.getOrder);
 
 module.exports = router;

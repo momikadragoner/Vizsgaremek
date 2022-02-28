@@ -95,6 +95,13 @@ export class CartService {
         );
     }
 
+    getOrders() {
+        return this.http.get<[Cart]>(this.rootURL + '/order/' + this.currentUser.userId,)
+        .pipe(
+            catchError(this.handleError)
+        );
+    }
+
     postCart(productId: number, userId: number = this.currentUser.userId) {
         let cart = {
             "productId": productId,

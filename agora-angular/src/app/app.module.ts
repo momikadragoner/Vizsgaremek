@@ -51,6 +51,7 @@ import { FollowService } from './services/follow.service';
 import { OrderComponent } from './order/order.component';
 import { AddressService } from './services/address.service';
 import { CheckoutComponent } from './checkout/checkout.component';
+import { OrderManagementComponent } from './order-management/order-management.component';
 
 
 @NgModule({
@@ -88,7 +89,8 @@ import { CheckoutComponent } from './checkout/checkout.component';
     AddToCartComponent,
     RootComponent,
     OrderComponent,
-    CheckoutComponent
+    CheckoutComponent,
+    OrderManagementComponent
   ],
   imports: [
     BrowserModule,
