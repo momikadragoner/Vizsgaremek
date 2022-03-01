@@ -20,20 +20,20 @@ import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
        ]),
        transition(':leave', [
        animate('.5s')
-     ]),  
+     ]),
     ]),
  ]
 })
 export class CollapsePanelComponent implements OnInit {
 
-  @Input() public title = "";
+  @Input() title = "";
+  @Input() panelOpen:boolean = false;
 
   constructor() { }
 
   faPlus = faPlus;
   faMinus = faMinus;
-  
-  panelOpen:boolean = false;
+
 
   togglePanel(){
     this.panelOpen = !this.panelOpen;

@@ -5,6 +5,7 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { Auth } from './auth';
+import { Address } from './address.service';
 
 export interface CartProduct {
     cartProductId: number,
@@ -48,7 +49,8 @@ export interface Cart {
     sumPrice: number,
     userId: number,
     shippingId: number,
-    status: string
+    status: string,
+    address: Address
 }
 
 export class Cart {
@@ -61,7 +63,8 @@ export class Cart {
         public sumPrice: number = -1,
         public userId: number = 0,
         public shippingId: number = 0,
-        public status: string = ""
+        public status: string = "",
+        public address: Address = new Address()
     ) {
     }
 }

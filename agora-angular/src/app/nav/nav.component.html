@@ -1,13 +1,13 @@
 <div>
     <header
         class="container d-flex flex-wrap align-items-center justify-content-center justify-content-md-between pt-3 mb-3">
-       
+
         <a [routerLink]="['/']" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
             <img src="assets/logo.svg" class="me-2 logo-img" height="32" alt="">
             <h3 class="mt-2 pt-1 logo-text">AGORA</h3>
         </a>
-        
-        
+
+
             <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="#" (click)="toggleCategory($event)" [class.selected]="openView == 'category'"
                         class="nav-link-selectable nav-link px-2 link-dark">Kategóriák</a></li>
@@ -44,8 +44,8 @@
                                 <hr class="dropdown-divider m-0">
                             </li>
                             <li><a class="dropdown-item" (click)="toggleCart($event)" [routerLink]="['/my-profile']">Profil</a></li>
-                            <li><a class="dropdown-item" (click)="toggleCart($event)" href="#">Kívánság lista</a></li>
-                            <li><a class="dropdown-item" (click)="toggleCart($event)" href="#">Bejövő rendelések</a></li>
+                            <li><a class="dropdown-item" (click)="toggleCart($event)" [routerLink]="['/my-profile']">Kívánság lista</a></li>
+                            <li><a class="dropdown-item" (click)="toggleCart($event)" [routerLink]="['/order-management']">Bejövő rendelések</a></li>
                             <li><a class="dropdown-item" (click)="toggleCart($event)" href="#">Beállítások</a></li>
                             <li>
                                 <hr class="dropdown-divider m-0">
@@ -54,8 +54,8 @@
                         </ul>
                     </div>
                 </div>
-            
-        
+
+
         </div>
         <div *ngIf="loggedIn == false" class="col-md-3 text-end">
             <a [routerLink]="['/signup-vendor']" class="btn p-1 m-1 btn-sell">Eladok</a>

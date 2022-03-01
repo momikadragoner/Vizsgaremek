@@ -463,6 +463,7 @@ exports.getOrder = (req, res, next) => {
     else {
       let orders = results[0];
       let products = results[1];
+      let addresses = results[2];
       orders.forEach( order => {
         for (let index = 0; index < products.length; index++) {
           const product = products[index];
@@ -471,6 +472,12 @@ exports.getOrder = (req, res, next) => {
               order.products = [];
             }
             order.products.push(product);
+          }
+        }
+        for (let index = 0; index < addresses.length; index++) {
+          const address = addresses[index];
+          if (address.addressId == order.shippingId) {
+            order.address = address;
           }
         }
       })
