@@ -54,9 +54,9 @@
     </div>
     <div class="d-grid justify-content-md-center border-bottom mt-3 mb-2">
         <ul class="nav col-12 col-md-auto justify-content-center">
-            <li><a href="" (click)="tabOpen = 1; $event.preventDefault();" [ngClass]="{'fw-bold':(tabOpen == 1)}"
+            <li><a href="" (click)="selectTab($event, 1)" [ngClass]="{'fw-bold':(tabOpen == 1)}"
                     class="nav-link-selectable nav-link px-2 link-dark">Termékek</a><div [@tabChange]="tabOpen" [ngClass]="{'border-bottom border-dark':(tabOpen == 1)}"></div></li>
-            <li><a href="" (click)="tabOpen = 2; $event.preventDefault();" [ngClass]="{'fw-bold':(tabOpen == 2)}"
+            <li><a href="" (click)="selectTab($event, 2)" [ngClass]="{'fw-bold':(tabOpen == 2)}"
                     class="nav-link-selectable nav-link px-2 link-dark">Kívánság lista</a><div [@tabChange]="tabOpen" [ngClass]="{'border-bottom border-dark':(tabOpen == 2)}"></div></li>
         </ul>
     </div>

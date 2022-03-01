@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { User, seller, UserService } from "../services/user.service";
 import { ProductShort as Product, ProductService, ProductShort } from "../services/product.service";
 import { faEnvelope, faLink, faLocationArrow, faCalendarAlt, faTimesCircle, faLockOpen, faLock, faEye, faEdit, faTrash, faHeart, faHeartBroken, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Auth } from '../services/auth';
@@ -54,6 +54,7 @@ export class MyProfileComponent implements OnInit {
   alertOpen = false;
   moreOptionsOpen = false;
   editProfileOpen = false;
+  params:any;
 
   faEnvelope = faEnvelope;
   faLink = faLink;
@@ -82,21 +83,32 @@ export class MyProfileComponent implements OnInit {
     private userService: UserService,
     private cartService: CartService,
     private route: ActivatedRoute,
+    private router: Router,
     private fb: FormBuilder,
     private wishListService: WishListService
   ) {
+    route.queryParams.subscribe(param => this.params = { ...param['keys'], ...param });
+    if (this.params.tab) {
+      this.tabOpen = Number(this.params.tab);
+    }
     this.ShowUser();
     this.ShowProducts(this.searchForm.value.order, this.searchForm.value.searchTerm);
     this.ShowWishList();
   }
 
+  selectTab($event:any, id:number){
+    $event.preventDefault();
+    this.tabOpen = id;
+    this.router.navigate(['/my-profile'], { queryParams: { tab: id }})
+  }
+
   orderSelect() {
-    console.log(this.searchForm.value.order);
+    //console.log(this.searchForm.value.order);
     this.ShowProducts(this.searchForm.value.order, this.searchForm.value.searchTerm);
   }
 
   searchChange() {
-    console.log(this.searchForm.value.searchTerm)
+    //console.log(this.searchForm.value.searchTerm)
     this.ShowProducts(this.searchForm.value.order, this.searchForm.value.searchTerm);
   }
 

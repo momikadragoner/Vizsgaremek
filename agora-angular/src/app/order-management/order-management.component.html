@@ -2,12 +2,17 @@
   <h2 class="text-center">Bejövő rendelések</h2>
   <div *ngIf="orders[0] != undefined">
     <div *ngFor="let order of orders" class="shadow rounded p-3 m-2">
-      <h3 class="fw-bold">Rendelés #{{ order.cartId }} ({{ order.address.userLastName }} {{ order.address.userFirstName }})</h3>
+      <div class="d-flex justify-content-between mx-2">
+        <h3 class="fw-bold mb-0">Rendelés #{{ order.cartId }} ({{ order.address.userLastName }} {{ order.address.userFirstName }})</h3>
+        <h4 class="mb-0">
+          <fa-icon [icon]="faEdit"></fa-icon>
+        </h4>
+      </div>
       <hr>
       <div class="row">
         <div class="col-12 col-md-5 p-2 m-2 mb-0">
           <h4 class="fw-bold">Rendelés kezelése</h4>
-          <div>
+          <div class="mb-3">
             <label class="form-label mb-1" for="status">Feldolgozási állapot</label>
             <select class="form-select" id="status">
               <option value="">Rendelés fogadva</option>
@@ -15,7 +20,11 @@
               <option value="">Szállítás folyamatban</option>
             </select>
           </div>
-          <div class="m-2">
+          <div class="mb-3">
+            <label class="form-label mb-1">Értéke összesen</label>
+            <h5 class="m-2 mt-0 fw-bold"> {{order.sumPrice|price}}</h5>
+          </div>
+          <div>
             <a href="" class="text-decoration-none">
               <fa-icon [icon]="faTrash"></fa-icon> Rendelés visszautasítása
             </a>
@@ -35,7 +44,6 @@
           </div>
         </div>
       </div>
-
       <collapse-panel [panelOpen]="true" [title]="'Termékek'" class="mx-2">
         <div *ngFor="let product of order.products" class="border-bottom">
           <div class="row p-2 pb-0 mt-2">
@@ -53,7 +61,7 @@
             <div class="col-6 col-lg-2 mt-3">
               <h4 class="fw-bold">{{product.price|price}}</h4>
             </div>
-            <div class="col-6 col-lg-2 mt-3">
+            <div class="col-6 col-lg-3 mt-3 mb-2">
               <select class="form-select">
                 <option value="">Rendelés fogadva</option>
                 <option value="">Összekészítés alatt</option>
@@ -62,31 +70,22 @@
               </select>
             </div>
           </div>
-          <!-- <div class="row mb-3 mt-0 pt-0">
-                        <div class="d-flex justify-content-end">
-                            <div class="me-3">
-                                <a href="" class="text-decoration-none me-3">
-                                    <fa-icon [icon]="faHeart"></fa-icon>
-                                    Kívánság lista
-                                </a>
-                                <a href="" class="text-decoration-none">
-                                    <fa-icon [icon]="faTrash"></fa-icon>
-                                    Töröl
-                                </a>
-                            </div>
-                        </div>
-                    </div> -->
         </div>
       </collapse-panel>
-      <!-- </collapse-panel> -->
+      <div class="d-flex justify-content-end">
+        <a href="" class="btn btn-primary">
+          <fa-icon [icon]="faSave"></fa-icon>
+          Mentés
+        </a>
+      </div>
     </div>
   </div>
   <div *ngIf="orders[0] == undefined" class="text-center mt-4 pt-4">
     <h1>
-      <fa-icon [icon]="faShoppingCart"></fa-icon>
+      <fa-icon [icon]="faTruck"></fa-icon>
     </h1>
-    <h2>A kosarad üres</h2>
-    <p>csak arra vár, hogy vásárolni kezdj</p>
+    <h2>Egyetlen függőben lévő rendelésed sincs</h2>
+    <p>az új renedlések itt jelenennek majd meg</p>
   </div>
 </div>
 <page-footer></page-footer>

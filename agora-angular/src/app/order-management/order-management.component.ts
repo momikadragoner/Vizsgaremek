@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { faHeart, faShoppingCart, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faHeart, faSave, faShoppingCart, faTrash, faTruck } from '@fortawesome/free-solid-svg-icons';
 import { Cart, CartService } from '../services/cart.service';
 
 @Component({
@@ -11,9 +11,10 @@ export class OrderManagementComponent implements OnInit {
 
   orders:Cart[] = [];
 
-  faShoppingCart = faShoppingCart;
-  faHeart = faHeart;
   faTrash = faTrash;
+  faEdit = faEdit;
+  faSave = faSave;
+  faTruck = faTruck;
 
   constructor(
     private cartService: CartService

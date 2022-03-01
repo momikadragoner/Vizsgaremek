@@ -43,8 +43,8 @@
                             <li>
                                 <hr class="dropdown-divider m-0">
                             </li>
-                            <li><a class="dropdown-item" (click)="toggleCart($event)" [routerLink]="['/my-profile']">Profil</a></li>
-                            <li><a class="dropdown-item" (click)="toggleCart($event)" [routerLink]="['/my-profile']">Kívánság lista</a></li>
+                            <li><a class="dropdown-item" (click)="toggleCart($event)" [routerLink]="['/my-profile']" [queryParams]="{tab: 1}">Profil</a></li>
+                            <li><a class="dropdown-item" (click)="toggleCart($event)" [routerLink]="['/my-profile']" [queryParams]="{tab: 2}">Kívánság lista</a></li>
                             <li><a class="dropdown-item" (click)="toggleCart($event)" [routerLink]="['/order-management']">Bejövő rendelések</a></li>
                             <li><a class="dropdown-item" (click)="toggleCart($event)" href="#">Beállítások</a></li>
                             <li>
