@@ -46,7 +46,7 @@ export class CheckoutComponent implements OnInit {
     $event.preventDefault();
     this.cart.status = 'Ordered';
     if (this.cart != new Cart() && this.address != new Address()) {
-      this.cartService.putCart(this.cart)
+      this.cartService.sendCart(this.cart)
       .subscribe({
         next: data => {
           this.router.navigate(['/']);
