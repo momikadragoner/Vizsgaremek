@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 27, 2022 at 09:22 PM
+-- Generation Time: Mar 02, 2022 at 10:15 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.3
 
@@ -210,6 +210,28 @@ INNER JOIN region ON region.region_id = city.region_id
 WHERE city.postal_code = postalCode;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `selectOrder` (IN `userId` INT)  BEGIN
+	SELECT DISTINCT cart.cart_id AS cartId, cart.member_id AS userId, cart.shipping_address_id AS shippingId, cart.sum_price AS sumPrice, cart.status
+    FROM `cart` 
+    INNER JOIN cart_product ON cart_product.cart_id = cart.cart_id
+    INNER JOIN product ON product.product_id = cart_product.product_id
+    WHERE product.vendor_id = userId AND cart.status != 'Not Sent';
+	SELECT product.product_id AS productId, product.name, product.price, product.vendor_id AS sellerId, product.discount, product.is_published AS isPublic, member.first_name AS sellerFirstName, member.last_name AS sellerLastName, ( SELECT product_picture.resource_link FROM product_picture WHERE product_picture.is_thumbnail = TRUE AND product.product_id = product_picture.product_id LIMIT 1 ) AS imgUrl, cart_product.amount, cart_product.status, cart_product.cart_product_id AS cartProductId, cart.cart_id AS cartId
+    FROM cart_product
+INNER JOIN product ON cart_product.product_id = product.product_id
+INNER JOIN cart ON cart.cart_id = cart_product.cart_id
+INNER JOIN member ON cart.member_id = member.member_id
+WHERE product.vendor_id = userId AND cart_product.status != 'In Cart'
+ORDER BY cart.cart_id;
+SELECT shipping_address.shipping_address_id AS addressId, shipping_address.member_id as userId, member.first_name AS userFirstName, member.last_name AS userLastName, shipping_address.phone, shipping_address.email, shipping_address.name AS addressName, shipping_address.country, shipping_address.postal_code AS postalCode, shipping_address.region, shipping_address.city, shipping_address.street_adress AS streetAddress 
+FROM `shipping_address` 
+INNER JOIN member ON shipping_address.member_id = member.member_id
+INNER JOIN cart ON cart.shipping_address_id = shipping_address.shipping_address_id
+INNER JOIN cart_product ON cart_product.cart_id = cart.cart_id
+INNER JOIN product ON product.product_id = cart_product.product_id
+WHERE product.vendor_id = userId;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `selectProduct` (IN `prodId` INT)  NO SQL
 BEGIN
 	SELECT material_name FROM material INNER JOIN product_material ON material.material_id = product_material.material_id WHERE product_material.product_id = prodId;
@@ -268,14 +290,29 @@ INNER JOIN member ON member.member_id = product.vendor_id
 WHERE wish_list.member_id = userId AND product.is_published = TRUE
 ORDER BY wish_list.added_at DESC$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCart` (IN `cartId` INT, IN `st` VARCHAR(50))  BEGIN
-	UPDATE `cart` SET `status`=st WHERE cart.cart_id = cartId;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCartProducts` (IN `sts` VARCHAR(255), IN `length` INT)  NO SQL
+BEGIN
+	DECLARE x INT DEFAULT 1;
+	CREATE TEMPORARY TABLE statuses(i INT, name VARCHAR(50), cpId INT);
+    SET @sql = CONCAT('INSERT INTO statuses(i, name, cpId) VALUES ', sts);
+  	PREPARE stmt FROM @sql;
+  	EXECUTE stmt;
+  	DEALLOCATE PREPARE stmt;
+    WHILE (x < (length + 1)) DO
+        UPDATE cart_product SET cart_product.status = ( SELECT statuses.name FROM statuses WHERE statuses.i = x) WHERE cart_product.cart_product_id =  (SELECT statuses.cpId FROM statuses WHERE statuses.i = x);
+        SET x = x + 1;
+    END WHILE;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateMaterials` (IN `mats` VARCHAR(255), IN `length` INT, IN `prodId` INT)  NO SQL
 BEGIN
 	DELETE FROM product_material WHERE product_id = prodId;
     CALL insertMaterials(mats, length, prodId);
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOrderCart` (IN `cartId` INT, IN `st` VARCHAR(50))  BEGIN
+	UPDATE `cart` SET `status`=st WHERE cart.cart_id = cartId;
+    UPDATE cart_product SET cart_product.status = st WHERE cart_product.cart_id = cartId;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePictures` (IN `pics` VARCHAR(255), IN `length` INT, IN `prodId` INT, IN `thId` INT)  NO SQL
@@ -320,7 +357,11 @@ CREATE TABLE `cart` (
 
 INSERT INTO `cart` (`cart_id`, `member_id`, `shipping_address_id`, `sum_price`, `status`) VALUES
 (1, 21, 6, 32810, 'Ordered'),
-(2, 21, 8, 3610, 'Ordered');
+(2, 21, 8, 3610, 'Packaging'),
+(3, 21, 9, 17250, 'Ordered'),
+(4, 21, 6, 5110, 'Ordered'),
+(5, 22, 10, 7220, 'Ordered'),
+(6, 21, NULL, 6830, 'Not Sent');
 
 -- --------------------------------------------------------
 
@@ -343,7 +384,14 @@ CREATE TABLE `cart_product` (
 INSERT INTO `cart_product` (`cart_product_id`, `cart_id`, `product_id`, `amount`, `status`) VALUES
 (14, 1, 3, 2, 'In Cart'),
 (16, 1, 6, 1, 'In Cart'),
-(19, 2, 5, 1, 'In Cart');
+(19, 2, 5, 1, 'In Cart'),
+(20, 3, 10, 1, 'Ordered'),
+(21, 3, 7, 1, 'Ordered'),
+(22, 3, 5, 1, 'Packaging'),
+(23, 4, 14, 1, 'Delivery in progress'),
+(24, 4, 5, 1, 'Delivery in progress'),
+(25, 5, 5, 2, 'Ordered'),
+(26, 6, 6, 1, 'In Cart');
 
 -- --------------------------------------------------------
 
@@ -4415,7 +4463,9 @@ CREATE TABLE `shipping_address` (
 INSERT INTO `shipping_address` (`shipping_address_id`, `member_id`, `name`, `phone`, `first_name`, `last_name`, `email`, `country`, `region`, `city`, `street_adress`, `postal_code`) VALUES
 (6, 21, '1. szállítási cím', '+36 10 767 3558', 'Éva', 'Nagy', 'evanagy784@mail.com', 'Magyarország', 'Budapest (főváros)', 'Budapest', 'Út utca 74.', '1028'),
 (7, 21, '2. szállítási cím', '+36 10 767 3558', 'Éva', 'Nagy', 'evanagy784@mail.com', 'Magyarország', 'Győr-Moson-Sopron', 'Győr', 'Út utca 74.', '9023'),
-(8, 21, '3. szállítási cím', '+36 10 767 3558', 'Éva', 'Nagy', 'evanagy784@mail.com', 'Magyarország', 'Győr-Moson-Sopron', 'Nagybajcs', 'Kossuth L. utca 22.', '9063');
+(8, 21, '3. szállítási cím', '+36 10 767 3558', 'Éva', 'Nagy', 'evanagy784@mail.com', 'Magyarország', 'Győr-Moson-Sopron', 'Nagybajcs', 'Kossuth L. utca 22.', '9063'),
+(9, 21, '4. szállítási cím', '+36 10 767 3558', 'Éva', 'Nagy', 'evanagy784@mail.com', 'Magyarország', 'Győr-Moson-Sopron', 'Győr', 'Szent István út 21.', '9021'),
+(10, 22, '1. szállítási cím', '+36 10 926 7715', 'Rozália', 'Jakab', 'rozaliajakab753@mail.com', 'Magyarország', 'Budapest (főváros)', 'Budapest', 'Bécsi utca 83.', '1025');
 
 -- --------------------------------------------------------
 
@@ -4644,13 +4694,13 @@ ALTER TABLE `wish_list`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `cart_product`
 --
 ALTER TABLE `cart_product`
-  MODIFY `cart_product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `cart_product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `city`
@@ -4728,7 +4778,7 @@ ALTER TABLE `review_vote`
 -- AUTO_INCREMENT for table `shipping_address`
 --
 ALTER TABLE `shipping_address`
-  MODIFY `shipping_address_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `shipping_address_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `tag`

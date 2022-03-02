@@ -47,7 +47,7 @@ export class CartComponent implements OnInit {
 
   deleteFromCart($event: any, id: number){
     $event.preventDefault();
-    this.cartService.deleteCart(id)
+    this.cartService.deleteCartProduct(id)
     .subscribe({
       next: data => {
         let deleteProduct: CartProduct = new CartProduct();

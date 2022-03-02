@@ -123,14 +123,14 @@ export class CartService {
             );
     }
 
-    updateCart(cart:Cart){
-        return this.http.put<object>(this.rootURL + '/update-cart', cart)
+    updateCartProducts(cartProducts:CartProduct[]){
+        return this.http.put<object>(this.rootURL + '/update-cart-products', cartProducts)
         .pipe(
             catchError(error => this.handleError(error))
         );
     }
 
-    deleteCart(id: number) {
+    deleteCartProduct(id:number) {
         return this.http.delete(this.rootURL + '/delete-cart/' + id)
             .pipe(
                 catchError(this.handleError)

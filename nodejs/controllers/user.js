@@ -487,3 +487,32 @@ exports.getOrder = (req, res, next) => {
   })
   conn.end();
 }
+exports.updateCartProduct = (req, res, next) => {
+  let sql = 'CALL updateCartProducts(?, ?)';
+  let sts = '';
+  let array = req.body;
+  for (let index = 0; index < array.length; index++) {
+    const element = array[index];
+    sts += ( "(" + (index + 1) + ",\'" + element.status + "\'," + element.cartProductId );
+    if (index == (array.length - 1)) {
+      sts += ")";
+    }
+    else{
+      sts += "),";
+    }
+  }
+  conn = connectDb();
+  conn.query(sql, 
+    [
+      sts,
+      req.body.length
+    ], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(201);
+      res.json();
+    }
+  })
+  conn.end();
+}

@@ -11,10 +11,9 @@ import { Cart, CartProduct, CartService } from '../services/cart.service';
 export class OrderManagementComponent implements OnInit {
 
   orders:Cart[] = [];
-
-  orderStatus: string[] = [];
-  orderProductStatus:string[][] = [[]];
   fieldSetDisabled: Boolean[] = [];
+  deleteModalOpen:boolean = false;
+  selectedOrderId:number = 0;
 
   faTrash = faTrash;
   faEdit = faEdit;
@@ -28,19 +27,14 @@ export class OrderManagementComponent implements OnInit {
     cartService.getOrders().subscribe({
       next: data => {
         this.orders = [...data];
-        for (let i = 0; i < data.length; i++) {
-          const d = data[i];
-          this.orderStatus[i] = d.status;
+        for (let i = 0; i < this.orders.length; i++) {
+          let order = this.orders[i];
           this.fieldSetDisabled[i] = true;
-          if (d.products){
-            for (let j = 0; j < d.products.length; j++) {
-              const product:CartProduct = d.products[j];
-              //console.log(this.orderProductStatus[i][j]);
-              //this.orderProductStatus[i][j] = product.status;
-            }
+          if (this.orders[i].products && order.products.every( x => x.status == order.products[0].status))
+          {
+            order.status = order.products[0].status;
           }
         }
-        //console.log(this.orderProductStatus);
       }
     })
   }
@@ -49,18 +43,52 @@ export class OrderManagementComponent implements OnInit {
     this.fieldSetDisabled[id] =  !this.fieldSetDisabled[id];
   }
 
+  orderStatusChange(id:number){
+    if(!this.orders[id].products) return;
+    let order = this.orders[id];
+    if (order.status == "Unavailable") {
+      this.selectedOrderId = id;
+      this.deleteModalOpen = true;
+      return;
+    }
+    order.products.forEach(product => {
+      product.status = order.status;
+    })
+  }
+
+  productStatusChange(orderId:number, productId:number){
+    if(!this.orders[orderId].products) return;
+    let order = this.orders[orderId];
+    let product = order.products[productId];
+    if (order.products.every( x => x.status == "Unavailable"))
+    {
+      this.selectedOrderId = orderId;
+      this.deleteModalOpen = true;
+      return;
+    }
+    if (order.products.every( x => x.status == product.status))
+    {
+      order.status = product.status;
+    }
+  }
+
+  rejectOrder($event:any, id:number){
+    //this.cartService.deleteCart(this.orders[id].cartId).subscribe();
+  }
+
+  back($event:any){
+    $event.preventDefault(); 
+    this.orders[this.selectedOrderId].status = "Ordered";
+    this.orders[this.selectedOrderId].products.forEach(product => {
+      product.status = "Ordered";
+    });
+    this.deleteModalOpen = false;
+  }
+
   save($event:any, id:number){
     $event.preventDefault();
     let order = this.orders[id];
-    order.status = this.orderStatus[id];
-    
-    console.log(order);
-
-    // this.cartService.updateCart(order).subscribe({
-    //   next: data => {
-    //     this.enableEdit(id);
-    //   }
-    // });
+    this.cartService.updateCartProducts(order.products).subscribe();
   }
 
   statuses = [
