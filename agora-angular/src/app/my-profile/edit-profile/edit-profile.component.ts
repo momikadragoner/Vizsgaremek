@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { faEnvelope, faLink, faLocationArrow, faCalendarAlt, faCamera } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faLink, faLocationArrow, faCalendarAlt, faCamera, faSave, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { from } from 'rxjs';
 import { User, seller, UserService } from "../../services/user.service";
 
 @Component({
@@ -15,10 +16,13 @@ export class EditProfileComponent implements OnChanges {
   faLocationArrow = faLocationArrow;
   faCalendar = faCalendarAlt;
   faCamera = faCamera;
+  faSave = faSave;
+  faSpinner = faSpinner;
 
   @Input() user: User = new User();
   @Output() modalState = new EventEmitter<boolean>();
   @Output() userChange = new EventEmitter<User>();
+  isLoading:boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -42,9 +46,21 @@ export class EditProfileComponent implements OnChanges {
 
   save($event: any) {
     $event.preventDefault();
-    this.userService.updateUser(this.user).subscribe({
+    if (!this.userForm.valid) return;
+    this.isLoading = true;
+    let updatedUser: User = this.user;
+    let form = this.userForm.value;
+    updatedUser.firstName = form.firstName;
+    updatedUser.lastName = form.lastName;
+    updatedUser.companyName = form.companyName == '' ? null : form.companyName;
+    updatedUser.siteLocation = form.siteLocation == '' ? null : form.siteLocation;
+    updatedUser.website = form.website == '' ? null : form.website;
+    updatedUser.about = form.about == '' ? null : form.about;
+    updatedUser.takesCustomOrders = form.takesCustomOrders;
+    this.userService.updateUser(updatedUser).subscribe({
       next: () => {
-        this.userChange.emit(this.user);
+        this.isLoading = false;
+        this.userChange.emit(updatedUser);
         this.modalState.emit(false);
       }
     })

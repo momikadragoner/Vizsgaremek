@@ -51,4 +51,6 @@ router.get('/order/:id', userController.getOrder);
 
 router.put('/update-cart-products', userController.updateCartProduct);
 
+router.put('/update-user', userController.updateUser);
+
 module.exports = router;

@@ -516,3 +516,31 @@ exports.updateCartProduct = (req, res, next) => {
   })
   conn.end();
 }
+exports.updateUser = (req, res, next) => {
+  let sql = 'CALL updateUser(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  let user = req.body;
+  conn = connectDb();
+  conn.query(sql, 
+    [
+      user.userId,
+      user.firstName,
+      user.lastName,
+      user.phone,
+      user.about,
+      user.profileImgUrl,
+      user.headerImgUrl,
+      user.isVendor,
+      user.companyName,
+      user.siteLocation,
+      user.website,
+      user.takesCustomOrders
+    ], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(201);
+      res.json();
+    }
+  })
+  conn.end();
+}

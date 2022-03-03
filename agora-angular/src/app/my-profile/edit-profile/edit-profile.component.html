@@ -56,7 +56,11 @@
         </div>
         <div class="d-flex justify-content-between">
             <a href="/" (click)=back($event) class="btn btn-secondary my-2 px-2">Mégse</a>
-            <a href="/" (click)="save($event)" class="btn btn-primary my-2 px-2">Mentés</a>
+            <a href="/" (click)="save($event)" class="btn btn-primary my-2 px-2">
+                <fa-icon *ngIf="!isLoading" [icon]="faSave"></fa-icon>
+                <fa-icon *ngIf="isLoading" [icon]="faSpinner" [spin]="isLoading"></fa-icon>
+                Mentés
+            </a>
         </div>
     </form>
 </div>
