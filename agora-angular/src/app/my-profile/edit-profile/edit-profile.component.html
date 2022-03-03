@@ -1,5 +1,5 @@
 <div class="mx-2 mt-2">
-    <form action="">
+    <form [formGroup]="userForm">
         <div class="row mb-3">
             <div class="col">
                 <div class="header" style="background-image: url('{{user.headerImgUrl}}');"></div>
@@ -15,37 +15,48 @@
         <div class="row">
             <div class="mb-3 col-12 col-md-6">
                 <label for="lastName">Veztetéknév</label>
-                <input type="text" value="{{user.lastName}}" class="form-control"
-                    id="lastName" name="lastName">
+                <input type="text" class="form-control" id="lastName" name="lastName"
+                    formControlName="lastName">
             </div>
             <div class="mb-3 col-12 col-md-6">
                 <label for="firstName">Keresztnév</label>
-                <input type="text" value="{{user.firstName}}" class="form-control"
-                    id="firstName" name="firstName">
-            </div>
-        </div>
-        <div class="row">
-            <div class="mb-3 col-12 col-md-6">
-                <label for="email">Weboldal </label>
-                <input type="email" value="{{user.website}}" class="form-control" id="email" name="email">
-            </div>
-            <div class="mb-3 col-12 col-md-6">
-                <label for="location">Lakhely </label>
-                <input type="text" value="{{user.siteLocation}}" class="form-control" id="location"
-                    name="location">
+                <input type="text" class="form-control" id="firstName" name="firstName"
+                    formControlName="firstName">
             </div>
         </div>
         <div class="mb-3">
             <label for="about">Rólam </label>
-            <textarea type="text" class="form-control" id="about" name="about">{{user.about}}</textarea>
+            <textarea type="text" class="form-control" id="about" name="about"
+                formControlName="about"></textarea>
         </div>
-        <div class="mb-3">
-            <input type="checkbox" id="order" name="order" class="form-check-input" checked>
-            <label for="order" class="form-check-label ms-2">Egyedi rendeléseket vállalok</label>
+        <div *ngIf="user.isVendor">
+            <div class="row">
+                <div class="mb-3 col-12">
+                    <label for="companyName">Cégnév</label>
+                    <input type="text" class="form-control" id="companyName" name="companyName"
+                        formControlName="companyName">
+                </div>
+            </div>
+            <div class="row">
+                <div class="mb-3 col-12 col-md-6">
+                    <label for="website">Weboldal </label>
+                    <input type="text" class="form-control" id="website" name="website"
+                        formControlName="website">
+                </div>
+                <div class="mb-3 col-12 col-md-6">
+                    <label for="location">Telephely </label>
+                    <input type="text" class="form-control" id="location" name="location"
+                        formControlName="siteLocation">
+                </div>
+            </div>
+            <div class="mb-3">
+                <input type="checkbox" id="order" name="order" class="form-check-input" formControlName="takesCustomOrders">
+                <label for="order" class="form-check-label ms-2">Egyedi rendeléseket vállalok</label>
+            </div>
         </div>
         <div class="d-flex justify-content-between">
             <a href="/" (click)=back($event) class="btn btn-secondary my-2 px-2">Mégse</a>
-            <a href="/" class="btn btn-primary my-2 px-2">Mentés</a>
+            <a href="/" (click)="save($event)" class="btn btn-primary my-2 px-2">Mentés</a>
         </div>
     </form>
 </div>

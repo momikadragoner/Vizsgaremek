@@ -102,6 +102,13 @@ export class UserService {
       );
   }
 
+  updateUser(user:User) {
+    return this.http.put<object>(this.rootURL + '/update-user', user)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     if (error.status === 0) {
       // A client-side or network error occurred. Handle it accordingly.

@@ -156,5 +156,5 @@
     </div>
 </modal-window>
 <modal-window [(modalVisible)]="editProfileOpen" [title]="'Profil szerkesztése'">
-    <edit-profile (modalState)="editProfileOpen = false" [user]="user"></edit-profile>
+    <edit-profile (modalState)="editProfileOpen = false" [(user)]="user"></edit-profile>
 </modal-window>
