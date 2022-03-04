@@ -20,6 +20,7 @@ export class EditProfileComponent implements OnChanges {
   faSpinner = faSpinner;
 
   @Input() user: User = new User();
+  @Input() isBackVisible: boolean = true;
   @Output() modalState = new EventEmitter<boolean>();
   @Output() userChange = new EventEmitter<User>();
   isLoading:boolean = false;

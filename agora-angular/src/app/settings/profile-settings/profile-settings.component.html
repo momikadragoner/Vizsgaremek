@@ -1,0 +1,59 @@
+<div class="container shadow rounded p-3 col-md-11 col-lg-9">
+  <h2 class="text-center">Profil beállítások</h2>
+  <div class="p-3">
+    <h3 class="border-bottom pb-1">Publikus információk szerkesztése</h3>
+    <edit-profile [(user)]="user" [isBackVisible]="false"></edit-profile>
+  </div>
+  <div class="p-3">
+    <h3 class="border-bottom pb-1">Elérhetőségek</h3>
+    <form [formGroup]="contactForm">
+      <div class="row">
+        <div class="mb-3 col-12 col-md-6">
+          <label for="phone">Telefonszám</label>
+          <input type="tel" class="form-control" id="phone" name="phone" formControlName="phone">
+        </div>
+      </div>
+      <div class="row">
+        <div class="mb-3 col-12 col-md-6">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" id="email" name="email" formControlName="email">
+        </div>
+      </div>
+      <a href="/" class="btn btn-primary my-2 px-2">
+        <fa-icon [icon]="faSave"></fa-icon>
+        <fa-icon [icon]="faSpinner"></fa-icon>
+        Mentés
+      </a>
+    </form>
+  </div>
+  <div class="p-3">
+    <h3 class="border-bottom pb-1">Jelszó megváltoztatása</h3>
+    <form [formGroup]="passwordForm">
+      <div class="row">
+        <div class="mb-3 col-12 col-md-6">
+          <label for="passwordEmail">Email</label>
+          <input type="email" class="form-control" id="passwordEmail" name="passwordEmail"
+            formControlName="passwordEmail">
+        </div>
+      </div>
+      <div class="row">
+        <div class="mb-3 col-12 col-md-6">
+          <label for="password">Jelszó</label>
+          <input type="password" class="form-control" id="password" name="password" formControlName="password">
+        </div>
+      </div>
+      <div class="row">
+        <div class="mb-3 col-12 col-md-6">
+          <label for="newPassword">Új jelszó</label>
+          <input type="password" class="form-control" id="newPassword" name="newPassword" formControlName="newPassword">
+        </div>
+      </div>
+      <a href="/" class="btn btn-primary my-2 px-2">
+        <fa-icon [icon]="faSave"></fa-icon>
+        <fa-icon [icon]="faSpinner"></fa-icon>
+        Mentés
+      </a>
+    </form>
+  </div>
+</div>
+<page-footer></page-footer>

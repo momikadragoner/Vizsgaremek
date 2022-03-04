@@ -52,6 +52,8 @@ import { OrderComponent } from './order/order.component';
 import { AddressService } from './services/address.service';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { OrderManagementComponent } from './order-management/order-management.component';
+import { SettingsComponent } from './settings/settings.component';
+import { ProfileSettingsComponent } from './settings/profile-settings/profile-settings.component';
 
 
 @NgModule({
@@ -90,7 +92,9 @@ import { OrderManagementComponent } from './order-management/order-management.co
     RootComponent,
     OrderComponent,
     CheckoutComponent,
-    OrderManagementComponent
+    OrderManagementComponent,
+    SettingsComponent,
+    ProfileSettingsComponent
   ],
   imports: [
     BrowserModule,

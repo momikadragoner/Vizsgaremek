@@ -16,6 +16,8 @@ import { AuthGuardService } from './account-forms/services/auth-guard.service';
 import { OrderComponent } from './order/order.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { OrderManagementComponent } from './order-management/order-management.component';
+import { SettingsComponent } from './settings/settings.component';
+import { ProfileSettingsComponent } from './settings/profile-settings/profile-settings.component';
 
 
 const routes: Routes = [
@@ -33,6 +35,8 @@ const routes: Routes = [
   {path: 'order', component: OrderComponent},
   {path: 'checkout', component: CheckoutComponent},
   {path: 'order-management', component: OrderManagementComponent},
+  {path: 'settings', component: SettingsComponent},
+  {path: 'settings/profile-settings', component: ProfileSettingsComponent},
   {path: '**', component: FrontPageComponent}
 ];
 
