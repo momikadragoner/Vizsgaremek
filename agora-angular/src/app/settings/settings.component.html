@@ -1,3 +1,6 @@
+<!-- <div class="d-flex justify-content-center ">
+  <h1 class="m-1 mt-4 fw-bold">Beállítások</h1>
+</div> -->
 <div class="d-flex justify-content-center">
   <div class="row m-5">
     <div [routerLink]="['profile-settings']" class="col-6 col-md-4 text-center mb-3 py-4 menu">
@@ -6,25 +9,25 @@
       </h1>
       <h5 class="fw-bold">Profil beállítások</h5>
     </div>
-    <div class="col-6 col-md-4 text-center mb-3 py-4 menu">
+    <div [routerLink]="['address']" class="col-6 col-md-4 text-center mb-3 py-4 menu">
       <h1>
         <fa-icon [icon]="faMapMarker"></fa-icon>
       </h1>
       <h5 class="fw-bold">Szállítási címek</h5>
     </div>
-    <div class="col-6 col-md-4 text-center mb-3 py-4 menu">
+    <div [routerLink]="['profile-settings']" class="col-6 col-md-4 text-center mb-3 py-4 menu">
       <h1>
         <fa-icon [icon]="faBell"></fa-icon>
       </h1>
       <h5 class="fw-bold">Értesítések</h5>
     </div>
-    <div class="col-6 col-md-4 text-center mb-3 py-4 menu">
+    <div [routerLink]="['profile-settings']" class="col-6 col-md-4 text-center mb-3 py-4 menu">
       <h1>
         <fa-icon [icon]="faHeart"></fa-icon>
       </h1>
       <h5 class="fw-bold">Kívánság lista</h5>
     </div>
-    <div class="col-6 col-md-4 text-center mb-3 py-4 menu">
+    <div [routerLink]="['profile-settings']" class="col-6 col-md-4 text-center mb-3 py-4 menu">
       <h1>
         <fa-icon [icon]="faEnvelope"></fa-icon>
       </h1>

@@ -6,14 +6,16 @@ import { User, UserService } from 'src/app/services/user.service';
 @Component({
   selector: 'app-profile-settings',
   templateUrl: './profile-settings.component.html',
-  styleUrls: ['./profile-settings.component.scss']
+  styleUrls: ['./profile-settings.component.scss'],
 })
 export class ProfileSettingsComponent implements OnInit {
-
   faSpinner = faSpinner;
   faSave = faSave;
 
-  user:User = new User();
+  contactLoading = false;
+  passwordLoading = false;
+
+  user: User = new User();
 
   contactForm = this.fb.group({
     phone: [this.user.phone],
@@ -26,23 +28,35 @@ export class ProfileSettingsComponent implements OnInit {
     newPassword: ['', Validators.required],
   });
 
-  constructor(
-    private userService: UserService,
-    private fb: FormBuilder,
-  )
-  {
+  constructor(private userService: UserService, private fb: FormBuilder) {
     userService.getUser().subscribe({
-      next: data => {
-        this.user = {...data};
+      next: (data) => {
+        this.user = { ...data };
         let form = this.contactForm.value;
         form.phone = this.user.phone;
         form.email = this.user.email;
         this.contactForm.setValue(form);
-      }
-    })
+      },
+    });
   }
 
-  ngOnInit(): void {
+  saveContact($event: any) {
+    $event.preventDeafult();
+    this.contactLoading = true;
+    let updatedUser: User = this.user;
+    let form = this.contactForm.value;
+    updatedUser.email = form.email;
+    updatedUser.phone = form.phone;
+    this.userService.updateUser(updatedUser).subscribe({
+      next: () => {
+        this.contactLoading = false;
+      },
+    });
   }
 
+  savePassword($event: any) {
+    $event.preventDeafult();
+  }
+
+  ngOnInit(): void {}
 }

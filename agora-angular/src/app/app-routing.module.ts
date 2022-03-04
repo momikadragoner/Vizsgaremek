@@ -18,30 +18,31 @@ import { CheckoutComponent } from './checkout/checkout.component';
 import { OrderManagementComponent } from './order-management/order-management.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ProfileSettingsComponent } from './settings/profile-settings/profile-settings.component';
-
+import { AddressComponent } from './settings/address/address.component';
 
 const routes: Routes = [
-  {path: '', component: FrontPageComponent, canActivate: [AuthGuardService]},
-  {path: 'login', component: LoginComponent},
-  {path: 'product-details/:id', component: ProductDetailComponent},
-  {path: 'profile/:id', component: ProfilePageComponent},
-  {path: 'signup', component: SignupCustomerComponent},
-  {path: 'signup-vendor', component: SignupVendorComponent},
-  {path: 'messages', component: MessagesPageComponent},
-  {path: 'add-product', component: ProductFormComponent},
-  {path: 'my-profile', component: MyProfileComponent},
-  {path: 'search', component: SearchComponent},
-  {path: 'cart', component: CartComponent},
-  {path: 'order', component: OrderComponent},
-  {path: 'checkout', component: CheckoutComponent},
-  {path: 'order-management', component: OrderManagementComponent},
-  {path: 'settings', component: SettingsComponent},
-  {path: 'settings/profile-settings', component: ProfileSettingsComponent},
-  {path: '**', component: FrontPageComponent}
+  { path: '', component: FrontPageComponent, canActivate: [AuthGuardService] },
+  { path: 'login', component: LoginComponent },
+  { path: 'product-details/:id', component: ProductDetailComponent },
+  { path: 'profile/:id', component: ProfilePageComponent },
+  { path: 'signup', component: SignupCustomerComponent },
+  { path: 'signup-vendor', component: SignupVendorComponent },
+  { path: 'messages', component: MessagesPageComponent },
+  { path: 'add-product', component: ProductFormComponent },
+  { path: 'my-profile', component: MyProfileComponent },
+  { path: 'search', component: SearchComponent },
+  { path: 'cart', component: CartComponent },
+  { path: 'order', component: OrderComponent },
+  { path: 'checkout', component: CheckoutComponent },
+  { path: 'order-management', component: OrderManagementComponent },
+  { path: 'settings', component: SettingsComponent },
+  { path: 'settings/profile-settings', component: ProfileSettingsComponent },
+  { path: 'settings/address', component: AddressComponent },
+  { path: '**', component: FrontPageComponent },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {scrollPositionRestoration: 'top'})],
-  exports: [RouterModule]
+  imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'top' })],
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
