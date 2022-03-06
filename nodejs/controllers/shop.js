@@ -7,8 +7,8 @@ const connectDb = db.connectDb;
 app.use(bodyParser.json());
 
 exports.getProduct = (req, res, next) => {
-  
-  if (!Number(req.params.id)) return res.json({'Error': 'This URL does not lead to any products.'});
+
+  if (!Number(req.params.id)) return res.json({ 'Error': 'This URL does not lead to any products.' });
   let id = Number(req.params.id);
 
   let materials = [];
@@ -125,7 +125,7 @@ exports.getUserShort = (req, res, next) => {
   let id = Number(req.params.id);
 
   let sql = 'CALL selectUserShort(?, ?)'
-  
+
   conn = connectDb()
   conn.query(sql,
     [id, 0], (err, rows, fields) => {
@@ -139,7 +139,7 @@ exports.getUserShort = (req, res, next) => {
 };
 exports.getUser = (req, res, next) => {
 
-  if (!Number(req.params.id)) return res.json({'Error': 'This URL does not lead to any products.'});
+  if (!Number(req.params.id)) return res.json({ 'Error': 'This URL does not lead to any products.' });
   let id = Number(req.params.id);
   let sql = 'CALL selectUser(?, ?)';
 
@@ -156,7 +156,7 @@ exports.getUser = (req, res, next) => {
   conn.end();
 };
 exports.getWishList = (req, res, next) => {
-  if (!Number(req.params.id)) return res.json({'Error': 'This URL does not lead to any products.'});
+  if (!Number(req.params.id)) return res.json({ 'Error': 'This URL does not lead to any products.' });
   let id = Number(req.params.id);
 
   let sql = 'CALL selectWishList(?)';
@@ -167,6 +167,109 @@ exports.getWishList = (req, res, next) => {
       else {
         res.status(200);
         res.json(rows[0]);
+      }
+    }
+  );
+  conn.end();
+};
+
+exports.searchProducts = (req, res, next) => {
+
+  const categories = [
+    "Zöldség",
+    "Gyümölcs",
+    "Pékáru",
+    "Tejtermék",
+    "Ital",
+    "Ékszer",
+    "Művészet",
+    "Divat"
+  ]
+
+  const tags = [
+    "Környezetbarát",
+    "Kézzel készült",
+    "Etikusan beszerzett alapanyagok",
+    "Vegán",
+    "Vegetáriánus",
+    "Organikus",
+    "Bio",
+    "Helyben termesztett",
+  ]
+
+  let sql = `
+    SELECT DISTINCT product.product_id AS productId, product.name, product.price, product.vendor_id AS sellerId, product.discount, member.first_name AS sellerFirstName, member.last_name AS sellerLastName, ( SELECT product_picture.resource_link FROM product_picture WHERE product_picture.is_thumbnail = TRUE AND product.product_id = product_picture.product_id LIMIT 1 ) AS imgUrl 
+    FROM product 
+    INNER JOIN member ON member.member_id = product.vendor_id
+    INNER JOIN product_tag ON product.product_id = product_tag.product_id
+    INNER JOIN tag ON tag.tag_id = product_tag.tag_id
+    WHERE `;
+
+  let selectedCategories = categories.filter(x => req.query[x] == 'true');
+  let selectedTags = tags.filter(x => req.query[x] == 'true');
+
+  if (selectedCategories.length > 0) {
+    sql += 'product.category IN (';
+    for (let i = 0; i < selectedCategories.length; i++) {
+      const cat = selectedCategories[i];
+      sql += '\"' + cat + '\"';
+      if ((selectedCategories.length - 1) != i) {
+        sql += ", ";
+      }
+    }
+    sql += ')';
+  }
+  if (selectedTags.length > 0) {
+    for (let i = 0; i < selectedTags.length; i++) {
+      const tag = selectedTags[i];
+      if (selectedCategories.length != 0 || i > 0) {
+        sql += ' AND ';
+      }
+      sql += 'tag.tag_name = \"' + tag + '\"';
+    }
+  }
+  if (req.query['minPrice']) {
+    if (selectedCategories.length != 0 || selectedTags.length != 0) {
+      sql += ' AND ';
+    }
+    sql += 'product.price > ' + req.query['minPrice'];
+  }
+  if (req.query['maxPrice']) {
+    if (selectedCategories.length != 0 || selectedTags.length != 0 || req.query['minPrice']) {
+      sql += ' AND ';
+    }
+    sql += 'product.price < ' + req.query['maxPrice'];
+  }
+  if (req.query['inStock'] == 'true') {
+    if (selectedCategories.length != 0 || selectedTags.length != 0 || req.query['minPrice'] || req.query['maxPrice']) {
+      sql += ' AND ';
+    }
+    sql += 'product.inventory > 0';
+  }
+  if (req.query['madeOnDemand'] == 'true') {
+    if (selectedCategories.length != 0 || selectedTags.length != 0 || req.query['minPrice'] || req.query['maxPrice'] || req.query['inStock'] != 'true') {
+      sql += ' AND ';
+    }
+    sql += 'product.delivery = \'Megrendelésre készül\'';
+  }
+  if (req.query['discount'] == 'true') {
+    if (selectedCategories.length != 0 || selectedTags.length != 0 || req.query['minPrice'] || req.query['maxPrice'] || req.query['inStock'] != 'true' || req.query['madeOnDemand'] != 'true') {
+      sql += ' AND ';
+    }
+    sql += 'product.discount != null';
+  }
+  if (selectedCategories.length == 0 && selectedTags.length == 0 && !req.query['minPrice'] && !req.query['maxPrice'] && req.query['inStock'] != 'true' && req.query['madeOnDemand'] != 'true' && req.query['discount'] != 'true') {
+    sql += '1';
+  }
+  sql += ' ORDER BY product.rating DESC';
+
+  conn = connectDb();
+  conn.query(sql,
+    [], (err, rows, fields) => {
+      if (err) console.log("Query " + err)
+      else {
+        res.status(200);
+        res.json(rows);
       }
     }
   );

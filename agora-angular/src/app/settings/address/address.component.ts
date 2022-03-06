@@ -40,13 +40,26 @@ export class AddressComponent implements OnInit {
   }
 
   deleteAddress($event: any) {
-    $event.preventDeafult();
+    $event.preventDefault();
+    this.addressService.deleteAddress(this.selectedAddress.addressId).subscribe({
+      next: () => {
+        this.addresses.splice(this.addresses.indexOf(this.addresses.filter(x => x.addressId == this.selectedAddress.addressId)[0]),1);
+        this.alertOpen = false;
+      }
+    });
   }
 
   newAddress($event: any) {
-    $event.preventDeafult();
+    $event.preventDefault();
+    this.selectedAddress = new Address();
     this.addressOpen = true;
   }
 
-  ngOnInit(): void {}
+  addressChange(address:Address){
+    let id:number = this.addresses.indexOf(this.addresses.filter(x => x.addressId == address.addressId)[0]);
+    if (id == -1) this.addresses.push(address);
+    else this.addresses[id] = address;
+  }
+
+  ngOnInit(): void { }
 }

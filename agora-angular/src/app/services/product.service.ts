@@ -68,10 +68,6 @@ export class ProductService {
     return this.http.get<[ProductShort]>(this.rootURL + '/list-all-products');
   }
 
-  getProductListLong() {
-    return this.http.get<[ProductShort]>(this.rootURL + '/product-list-long');
-  }
-
   getProductsBySeller(id: any, order?: string, term?: string) {
     let params = new HttpParams();
 
@@ -124,6 +120,12 @@ export class ProductService {
       );
   }
 
+  searchProducts(queryString: string) {
+    return this.http.get<[ProductShort]>(this.rootURL + queryString).pipe(
+      catchError(error => this.handleError(error))
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     if (error.status === 0) {
       // A client-side or network error occurred. Handle it accordingly.
@@ -135,7 +137,7 @@ export class ProductService {
         `Backend returned code ${error.status}, body was: `, error.error);
     }
     // Return an observable with a user-facing error message.
-    return throwError( () =>
+    return throwError(() =>
       'Something bad happened; please try again later.');
   }
 

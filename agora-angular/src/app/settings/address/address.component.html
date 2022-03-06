@@ -1,47 +1,50 @@
-<div class="container shadow rounded p-3 col-md-11 col-lg-9 mb-4">
-    <h2 class="text-center">Szállítási címek</h2>
-    <div *ngIf="addresses[0].addressId != 0" class="row d-flex justify-content-center">
-        <div *ngFor="let address of addresses" class="col-12 col-md-5 p-2 m-3 mb-0 shadow rounded p-4">
-            <div class="d-flex justify-content-between">
-                <h4 class="fw-bold">{{address.addressName}}</h4>
-                <div class="d-flex justify-content-end">
-                    <h5 (click)="openEditModal(address.addressId)" class="mx-2 btn-option">
-                        <fa-icon [icon]="faEdit"></fa-icon>
-                    </h5>
-                    <h5 (click)="openDeleteModal(address.addressId)" class="mx-2 btn-option">
-                        <fa-icon [icon]="faTrash"></fa-icon>
-                    </h5>
+<div class="page">
+    <div class="container shadow rounded p-3 col-md-11 col-lg-9 mb-4">
+        <h2 class="text-center">Szállítási címek</h2>
+        <div *ngIf="addresses[0] != undefined && addresses[0].addressId != 0" class="row d-flex justify-content-center">
+            <div *ngFor="let address of addresses" class="col-12 col-md-5 p-2 m-3 mb-0 shadow rounded p-4">
+                <div class="d-flex justify-content-between">
+                    <h4 class="fw-bold">{{address.addressName}}</h4>
+                    <div class="d-flex justify-content-end">
+                        <h5 (click)="openEditModal(address.addressId)" class="mx-2 btn-option">
+                            <fa-icon [icon]="faEdit"></fa-icon>
+                        </h5>
+                        <h5 (click)="openDeleteModal(address.addressId)" class="mx-2 btn-option">
+                            <fa-icon [icon]="faTrash"></fa-icon>
+                        </h5>
+                    </div>
                 </div>
-            </div>
-            <hr>
-            <div class="m-2 my-3 p-2 px-3 border address col-auto">
-                <span>{{address.userLastName}} {{address.userFirstName}}</span>
-                <br>
-                <div class="large m-0 p-0">
-                    <span>{{address.city}}</span>
+                <hr>
+                <div class="m-2 my-3 p-2 px-3 border address col-auto">
+                    <span>{{address.userLastName}} {{address.userFirstName}}</span>
                     <br>
-                    <span>{{address.streetAddress}}</span>
+                    <div class="large m-0 p-0">
+                        <span>{{address.city}}</span>
+                        <br>
+                        <span>{{address.streetAddress}}</span>
+                    </div>
+                    <span>{{address.postalCode}} </span>
                 </div>
-                <span>{{address.postalCode}} </span>
             </div>
         </div>
-    </div>
-    <div *ngIf="addresses[0].addressId == 0" class="text-center mt-4 pt-4">
-        <h1>
-            <fa-icon [icon]="faMapMarkerAlt"></fa-icon>
-        </h1>
-        <h2>Egyetlen mentett címed sincs</h2>
-        <p>ha hozzáadsz egyet, itt fog megjelenni</p>
-    </div>
-    <div class="px-5 m-4 d-flex justify-content-end">
-        <a href="" (click)="newAddress($event)" class="btn btn-secondary fw-bold shadow">+ Új cím hozzáadása</a>
+        <div *ngIf="addresses[0] == undefined || addresses[0].addressId == 0" class="text-center mt-4 pt-4">
+            <h1>
+                <fa-icon [icon]="faMapMarkerAlt"></fa-icon>
+            </h1>
+            <h2>Egyetlen mentett címed sincs</h2>
+            <p>ha hozzáadsz egyet, itt fog megjelenni</p>
+        </div>
+        <div class="px-5 m-4 d-flex justify-content-end">
+            <a href="" (click)="newAddress($event)" class="btn btn-secondary fw-bold shadow">+ Új cím hozzáadása</a>
+        </div>
     </div>
 </div>
 <page-footer></page-footer>
 <modal-window [(modalVisible)]="alertOpen" [title]="'Figyelmeztetés'">
     <div class="warning">
         <div class="text-center p-3 border-top mt-2">
-            <p class="large">Biztosan törölni szeretné a(z) <span class="fw-bold">{{selectedAddress.addressName}}</span> címet?</p>
+            <p class="large">Biztosan törölni szeretné a(z) <span class="fw-bold">{{selectedAddress.addressName}}</span>
+                címet?</p>
             <p class="mb-0 pb-0">Ezt a műveletet nem lehet visszavonni.</p>
         </div>
         <div class="d-flex justify-content-between border-top pt-2">
@@ -50,5 +53,9 @@
         </div>
     </div>
 </modal-window>
-<modal-window [(modalVisible)]="addressOpen" [title]="''">
+<modal-window [(modalVisible)]="addressOpen" [title]="'Szállítási cím szerkesztése'">
+    <div class="m-2">
+        <address-form [selectedProfile]="selectedAddress" [modalVersion]="true"
+            (addressOpenChange)="addressOpen = false;" (selectedAddressChange)="addressChange($event)"></address-form>
+    </div>
 </modal-window>

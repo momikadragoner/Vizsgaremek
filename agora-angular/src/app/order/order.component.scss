@@ -1,26 +1,3 @@
-input.ng-invalid{
-    border-bottom: red thin solid;
-    // background-color: #ff8b95a6;
-}
-input.ng-untouched{
-    border-color: lightgray;
-}
-input.ng-valid{
-    border-bottom: #859C62 thin solid;
-}
-textarea.ng-untouched{
-    border-color: lightgray;
-}
-textarea.ng-valid{
-    border-bottom: #859C62 thin solid;
-}
-.form-control:focus {   
-    color: #212529;
-    background-color: #fff;
-    border-color: #859C62;
-    outline: 0;
-    box-shadow: 0 0 0 0.25rem #859c625b;
-}
 .large{
     font-size: 1.1rem;
 }

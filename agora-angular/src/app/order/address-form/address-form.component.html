@@ -1,0 +1,79 @@
+<form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+    <h3 class="border-bottom pb-1">Vásárló adatai</h3>
+    <div class="row">
+        <div class="mb-3 col-12 col-md-6" [ngClass]="{'col-lg-3':!modalVersion}">
+            <label for="lastName" class="form-label mb-1">Vezetéknév</label>
+            <input type="text" class="form-control" formControlName="lastName" id="lastName">
+        </div>
+        <div class="mb-3 col-12 col-md-6" [ngClass]="{'col-lg-3':!modalVersion}">
+            <label for="firstName" class="form-label mb-1">Keresztnév</label>
+            <input type="text" class="form-control" formControlName="firstName" id="firstName">
+        </div>
+    </div>
+    <div class="mb-3 col-12 col-md-7" [ngClass]="{'col-lg-5':!modalVersion}">
+        <label for="phone" class="form-label mb-1">Értesítési telefonszám</label>
+        <input type="tel" class="form-control" formControlName="phone" id="phone">
+    </div>
+    <div class="mb-3 col-12 col-md-7" [ngClass]="{'col-lg-5':!modalVersion}">
+        <label for="name" class="form-label mb-1">Értesítési e-mail cím</label>
+        <input type="email" class="form-control" formControlName="email" id="email">
+    </div>
+    <h3 class="border-bottom pb-1">Szállítási cím</h3>
+    <div *ngIf="modalVersion" class="mb-3 col-12 col-md-6" [ngClass]="{'col-lg-3':!modalVersion}">
+        <label for="addressName" class="form-label mb-1">Szállítási cím megnevezése</label>
+        <input type="text" class="form-control" formControlName="addressName" id="addressName">
+    </div>
+    <div class="col-12 col-md-5 mb-3" [ngClass]="{'col-lg-3':!modalVersion}">
+        <label for="country" class="form-label mb-1">Ország</label>
+        <select class="form-select custom-select" aria-label="Default select example" formControlName="country"
+            id="country" name="country">
+            <option value="Magyarország">Magyarország</option>
+        </select>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-3" [ngClass]="{'col-lg-3':!modalVersion}">
+            <div class="mb-3">
+                <label for="postalCode" class="form-label mb-1">Irányítószám</label>
+                <input type="number" class="form-control" formControlName="postalCode" id="postalCode" step="1"
+                    (input)="autoFillAddress()">
+            </div>
+        </div>
+        <div class="col-12 col-md-6" [ngClass]="{'col-lg-5 col-xl-4':!modalVersion}">
+            <div class="mb-3">
+                <label for="postalCode" class="form-label mb-1">Megye/régió</label>
+                <select class="form-select custom-select" aria-label="Default select example" formControlName="region"
+                    id="country" name="country">
+                    <option *ngFor="let region of regions" [ngValue]="region">{{region}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-5 mb-3" [ngClass]="{'col-lg-3':!modalVersion}">
+            <label for="city" class="form-label mb-1">Város/település</label>
+            <input type="text" class="form-control" formControlName="city" id="city">
+        </div>
+        <div class="col-12 col-md-7 mb-3" [ngClass]="{'col-lg-5':!modalVersion}">
+            <label for="streetAddress" class="form-label mb-1">Utca, házszám</label>
+            <input type="text" class="form-control" formControlName="streetAddress" id="streetAddress">
+        </div>
+    </div>
+    <div *ngIf="!modalVersion">
+        <a [routerLink]="['/cart']" class="btn btn-secondary">
+            <fa-icon [icon]="faChevronLeft"></fa-icon>
+            Vissza
+        </a>
+        <button type="submit" class="btn btn-primary m-2" [disabled]="!addressForm.valid">
+            Tovább
+            <fa-icon [icon]="faChevronRight"></fa-icon>
+        </button>
+    </div>
+    <div *ngIf="modalVersion" class="d-flex justify-content-between">
+        <a (click)="backAddress($event)" class="btn btn-secondary my-2 px-2">Mégse</a>
+        <a (click)="saveAddress($event)" class="btn btn-primary my-2 px-2" [ngClass]="{'disabled':!addressForm.valid}">
+            <fa-icon *ngIf="!isLoading" [icon]="faSave"></fa-icon>
+            <fa-icon *ngIf="isLoading" [icon]="faSpinner" [spin]="isLoading"></fa-icon>
+            Mentés
+        </a>
+    </div>
+</form>

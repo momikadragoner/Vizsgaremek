@@ -105,6 +105,13 @@ export class CartService {
         );
     }
 
+    getMyOrders() {
+        return this.http.get<[Cart]>(this.rootURL + '/my-orders/' + this.currentUser.userId,)
+        .pipe(
+            catchError(this.handleError)
+        );
+    }
+
     postCart(productId: number, userId: number = this.currentUser.userId) {
         let cart = {
             "productId": productId,
@@ -135,6 +142,13 @@ export class CartService {
             .pipe(
                 catchError(this.handleError)
             );
+    }
+
+    deleteCartOrder(cartId:number, userId:number = this.currentUser.userId){
+        return this.http.delete(this.rootURL + '/delete-cart-order/' + cartId + "/" + userId)
+        .pipe(
+            catchError(this.handleError)
+        );
     }
 
     private handleError(error: HttpErrorResponse) {

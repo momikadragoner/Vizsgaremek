@@ -27,6 +27,7 @@ export class ProductCardComponent implements OnInit {
 
   addToCart($event: any, id: number) {
     $event.preventDefault();
+    $event.stopPropagation();
     this.cartService.postCart(id, this.currentUser.userId)
       .subscribe({
         next: data => {

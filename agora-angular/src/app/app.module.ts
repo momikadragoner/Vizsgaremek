@@ -55,6 +55,9 @@ import { OrderManagementComponent } from './order-management/order-management.co
 import { SettingsComponent } from './settings/settings.component';
 import { ProfileSettingsComponent } from './settings/profile-settings/profile-settings.component';
 import { AddressComponent } from './settings/address/address.component';
+import { AddressFormComponent } from './order/address-form/address-form.component';
+import { OrderTrackingComponent } from './order-tracking/order-tracking.component';
+import { StatePipe } from './state.pipe';
 
 
 @NgModule({
@@ -96,7 +99,10 @@ import { AddressComponent } from './settings/address/address.component';
     OrderManagementComponent,
     SettingsComponent,
     ProfileSettingsComponent,
-    AddressComponent
+    AddressComponent,
+    AddressFormComponent,
+    OrderTrackingComponent,
+    StatePipe
   ],
   imports: [
     BrowserModule,

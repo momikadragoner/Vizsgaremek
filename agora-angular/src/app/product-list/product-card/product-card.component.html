@@ -1,4 +1,4 @@
-<div class="card my-3 shadow" [ngClass]="{'card-product':wide, 'card-narrow':!wide}">
+<div [routerLink]="['/product-details', product.productId]" class="card my-3 shadow" [ngClass]="{'card-product':wide, 'card-narrow':!wide}">
     <div [ngClass]="{'img-placeholder':wide, 'img-placeholder-narrow':!wide}">
         <img *ngIf="product.imgUrl != '' && product.imgUrl != null" src="{{product.imgUrl}}" class="card-img-top" [ngClass]="{'img-product':wide, 'img-product-wide':!wide}" alt="...">
         <svg *ngIf="product.imgUrl == '' || product.imgUrl == null" class="card-img-top img-placeholder">
@@ -18,7 +18,7 @@
     </div>
     <div class="btn-group mx-2 px-1 mb-3 bottom">
         <a [routerLink]="['/product-details', product.productId]" class="btn btn-primary w-75">Részletek</a>
-        <a href="#" (click)="addToCart($event, product.productId)" class="btn btn-secondary w-25">
+        <a (click)="addToCart($event, product.productId)" class="btn btn-secondary w-25">
             <fa-icon [icon]="faShoppingCart"></fa-icon>
         </a>
     </div>

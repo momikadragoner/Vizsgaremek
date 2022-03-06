@@ -95,6 +95,13 @@ export class AddressService {
             );
     }
 
+    updateAddress(address: Address) {
+        return this.http.put(this.rootURL + '/update-address', address)
+            .pipe(
+                catchError(this.handleError)
+            );
+    }
+
     getCityByPostalCode(postalCode: number) {
         return this.http.get<City>(this.rootURL + '/city-by-code/' + postalCode)
             .pipe(

@@ -256,6 +256,9 @@ exports.deleteCart = (req, res, next) => {
 exports.deleteWishList = (req, res, next) => {
   deleteFromDatabase('CALL deleteWishList(?)', req, res)
 }
+exports.deleteAddress = (req, res, next) => {
+  deleteFromDatabase('CALL deleteAddress(?)', req, res)
+}
 function deleteFromDatabase(sql, req, res) {
   if (!Number(req.params.id)) return res.json({'Error' : 'ID must be a number'});
   let id = Number(req.params.id);
@@ -540,6 +543,89 @@ exports.updateUser = (req, res, next) => {
     else {
       res.status(201);
       res.json();
+    }
+  })
+  conn.end();
+}
+exports.updateAddress = (req, res, next) => {
+  let sql = 'CALL updateAddress(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  let address = req.body;
+  conn = connectDb();
+  conn.query(sql, 
+    [
+      address.userId,
+      address.addressName,
+      address.phone,
+      address.userFirstName,
+      address.userLastName,
+      address.email,
+      address.country,
+      address.region,
+      address.city,
+      address.streetAddress,
+      address.postalCode,
+      address.addressId
+    ], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(201);
+      res.json();
+    }
+  })
+  conn.end();
+}
+exports.deleteCartOrder= (req, res, next) => {
+  if (!Number(req.params.cartId)) return res.json({'Error' : 'ID must be a number'});
+  let cartId = Number(req.params.cartId);
+  if (!Number(req.params.userId)) return res.json({'Error' : 'ID must be a number'});
+  let userId = Number(req.params.userId);
+
+  let sql = 'CALL deleteCartOrder(?, ?)'
+
+  conn = connectDb()
+  conn.query(sql,
+    [userId, cartId], (err, rows, fields) => {
+      if (err) res.json("Query error: " + err)
+      else {
+        res.status(200);
+        res.json();
+      }
+    }
+  );
+  conn.end();
+}
+exports.getMyOrders = (req, res, next) => {
+  if (!Number(req.params.id)) return res.json({'Error' : 'ID must be a number'});
+  let id = Number(req.params.id);
+  conn = connectDb();
+  let sql = 'CALL selectMyOrders(?)'
+  conn.query(sql, [id], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      let orders = results[0];
+      let products = results[1];
+      let addresses = results[2];
+      orders.forEach( order => {
+        for (let index = 0; index < products.length; index++) {
+          const product = products[index];
+          if (order.cartId == product.cartId) {
+            if (order.products == undefined) {
+              order.products = [];
+            }
+            order.products.push(product);
+          }
+        }
+        for (let index = 0; index < addresses.length; index++) {
+          const address = addresses[index];
+          if (address.addressId == order.shippingId) {
+            order.address = address;
+          }
+        }
+      })
+      res.status(200);
+      res.json(orders);
     }
   })
   conn.end();

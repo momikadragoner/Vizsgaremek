@@ -42,16 +42,17 @@ export class ProfileSettingsComponent implements OnInit {
 
   saveContact($event: any) {
     $event.preventDeafult();
+    if (!this.contactForm.valid) return;
     this.contactLoading = true;
     let updatedUser: User = this.user;
     let form = this.contactForm.value;
     updatedUser.email = form.email;
-    updatedUser.phone = form.phone;
+    updatedUser.phone = form.phone == '' ? null : form.phone;
     this.userService.updateUser(updatedUser).subscribe({
       next: () => {
         this.contactLoading = false;
-      },
-    });
+      }
+    })
   }
 
   savePassword($event: any) {

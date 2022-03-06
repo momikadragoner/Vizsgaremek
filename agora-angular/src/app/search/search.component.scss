@@ -1,0 +1,14 @@
+.card-category{
+    cursor: pointer;
+}
+.card-category:hover{
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem #859c625b;
+}
+.card-category-active{
+    border-color: #859C62;
+    background-color: #859c625b;
+}
+.btn{
+    cursor: pointer;
+}

@@ -1,53 +1,79 @@
-<div class="container">
+<div class="page container">
     <div class="row">
         <div class="col-12 col-md-4 mb-2 p-3">
             <div class="rounded shadow p-3">
                 <h1>Szűrés</h1>
-                <product-categories></product-categories>
-                <collapse-panel [title]="'Ár'">
-                    <div class="row">
-                        <div class="col-6">
-                            <label for="" class="form-label ms-2 mb-0">Min. ár</label>
-                            <input type="number" name="" id="" class="form-control">
-                        </div>
-                        <div class="col-6">
-                            <label for="" class="form-label ms-2 mb-0">Max. ár</label>
-                            <input type="number" name="" id="" class="form-control">
+                <collapse-panel [title]="'Kategóriák'" [panelOpen]="true">
+                    <div class="row mt-3">
+                        <div *ngFor="let category of categories; let i = index" (click)="selectCategory(i)" class="col-6 col-md-12 col-xl-6 mb-3">
+                            <div class="card card-category" [ngClass]="{'card-category-active': category.selected}">
+                                <div class="hstack gap-2 card-body mx-auto">
+                                    <fa-icon [icon]="[iconPrefix, (category.name|icon:'category')]"></fa-icon>
+                                    <p class="card-text m-0">{{ category.name }}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </collapse-panel>
-                <collapse-panel [title]="'Címkék'">
-                    <form action="">
-                        <div *ngFor="let tag of tags" class="form-check ms-3">
-                            <input type="checkbox" name="{{tag}}" id="{{tag}}" class="form-check-input">
-                            <label for="{{tag}}" class="form-check-label">{{tag}}</label>
+                <form [formGroup]="filterForm">
+                    <collapse-panel [title]="'Ár'">
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="" class="form-label ms-2 mb-0">Min. ár</label>
+                                <input type="number" name="" id="" class="form-control" formControlName="minPrice">
+                            </div>
+                            <div class="col-6">
+                                <label for="" class="form-label ms-2 mb-0">Max. ár</label>
+                                <input type="number" name="" id="" class="form-control" formControlName="maxPrice">
+                            </div>
                         </div>
-                        <hr class="m-1">
-                        <div class="form-check ms-3">
-                            <input type="checkbox" name="inventory" id="inventory" class="form-check-input">
-                            <label for="inventory" class="form-check-label">Raktáron</label>
+                    </collapse-panel>
+                    <collapse-panel [title]="'Címkék'">
+                        <div formArrayName="tags">
+                            <div *ngFor="let tag of tags.controls; let i=index" class="form-check ms-3">
+                                <input type="checkbox" id="tag-{{i}}" [formControlName]="i" class="form-check-input">
+                                <label for="tag-{{i}}" class="form-check-label">{{tagsList[i]}}</label>
+                            </div>
                         </div>
-                        <div class="form-check ms-3">
-                            <input type="checkbox" name="delivery" id="delivery" class="form-check-input">
-                            <label for="delivery" class="form-check-label">Azonnal szállítható</label>
-                        </div>
-                        <div class="form-check ms-3">
-                            <input type="checkbox" name="madeOnDemand" id="madeOnDemand" class="form-check-input">
-                            <label for="madeOnDemand" class="form-check-label">Megrendelésre készül</label>
-                        </div>
-                        <div class="form-check ms-3 mb-2">
-                            <input type="checkbox" name="discount" id="discount" class="form-check-input">
-                            <label for="discount" class="form-check-label">Kedvezményes</label>   
-                        </div>
-                    </form>
-                </collapse-panel>
+                            <hr class="m-1">
+                            <div class="form-check ms-3">
+                                <input type="checkbox" name="inventory" id="inventory" class="form-check-input" formControlName="inStock">
+                                <label for="inventory" class="form-check-label">Raktáron</label>
+                            </div>
+                            <div class="form-check ms-3">
+                                <input type="checkbox" name="madeOnDemand" id="madeOnDemand" class="form-check-input" formControlName="madeOnDemand">
+                                <label for="madeOnDemand" class="form-check-label">Megrendelésre készül</label>
+                            </div>
+                            <div class="form-check ms-3 mb-2">
+                                <input type="checkbox" name="discount" id="discount" class="form-check-input" formControlName="discount">
+                                <label for="discount" class="form-check-label">Kedvezményes</label>   
+                            </div>
+                    </collapse-panel>
+                </form>
+                <div class="d-flex justify-content-between">
+                    <a (click)="deleteFilter()" class="btn p- btn-secondary">
+                        <fa-icon [icon]="faTrash"></fa-icon>
+                        Szűrők törlése
+                    </a>
+                    <a (click)="filter()" class="btn p- btn-primary">
+                        <fa-icon [icon]="faFilter"></fa-icon>
+                        Szűrés
+                    </a>
+                </div>
             </div>
         </div>
         <div class="col-12 col-md-8 mb-2">
             <div class="p-2">
                 <h1 class="m-3">Termékek</h1>
                 <hr class="m-2">
-                <app-product-list [products]="products" [wide]="false" class="row"></app-product-list>
+                <div *ngIf="!isLoading && products">
+                    <app-product-list [products]="products" [wide]="false" class="row"></app-product-list>
+                </div>
+                <div *ngIf="isLoading" class="text-center mt-3">
+                    <h1>
+                        <fa-icon [icon]="faSpinner" [spin]="isLoading"></fa-icon>
+                    </h1>
+                </div>
             </div>
         </div>
     </div>

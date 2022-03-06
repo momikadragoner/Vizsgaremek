@@ -53,4 +53,12 @@ router.put('/update-cart-products', userController.updateCartProduct);
 
 router.put('/update-user', userController.updateUser);
 
+router.delete('/delete-address/:id', userController.deleteAddress);
+
+router.put('/update-address', userController.updateAddress);
+
+router.delete('/delete-cart-order/:cartId/:userId', userController.deleteCartOrder);
+
+router.get('/my-orders/:id', userController.getMyOrders);
+
 module.exports = router;

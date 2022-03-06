@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { faEdit, faHeart, faSave, faShoppingCart, faTrash, faTruck } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faEnvelope, faHeart, faSave, faShoppingCart, faTrash, faTruck } from '@fortawesome/free-solid-svg-icons';
 import { Cart, CartProduct, CartService } from '../services/cart.service';
 
 @Component({
@@ -19,6 +19,7 @@ export class OrderManagementComponent implements OnInit {
   faEdit = faEdit;
   faSave = faSave;
   faTruck = faTruck;
+  faEnvelope = faEnvelope;
 
   constructor(
     private cartService: CartService,
@@ -30,6 +31,11 @@ export class OrderManagementComponent implements OnInit {
         for (let i = 0; i < this.orders.length; i++) {
           let order = this.orders[i];
           this.fieldSetDisabled[i] = true;
+          if (order.products) {
+            let sum:number = 0;
+            order.products.forEach(x => sum += x.price);
+            order.sumPrice = sum;
+          }
           if (this.orders[i].products && order.products.every( x => x.status == order.products[0].status))
           {
             order.status = order.products[0].status;
@@ -73,7 +79,13 @@ export class OrderManagementComponent implements OnInit {
   }
 
   rejectOrder($event:any, id:number){
-    //this.cartService.deleteCart(this.orders[id].cartId).subscribe();
+    $event.preventDefault();
+    this.cartService.deleteCartOrder(this.orders[id].cartId).subscribe({
+      next: () => {
+        this.orders.splice(id, 1);
+        this.deleteModalOpen = false;
+      }
+    });
   }
 
   back($event:any){

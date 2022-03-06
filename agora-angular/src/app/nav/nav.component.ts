@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, animate, transition, query, stagger } from '@angular/animations';
-import { faCarrot, faAppleAlt, faBreadSlice, faCheese, faBell } from '@fortawesome/free-solid-svg-icons';
+import { faCarrot, faAppleAlt, faBreadSlice, faCheese, faBell, IconPrefix } from '@fortawesome/free-solid-svg-icons';
 import { faPalette, faGem, faTshirt, faGlassMartiniAlt, faShoppingCart, faBoxes } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../account-forms/services/auth.service';
 import { Router } from '@angular/router';
+import { categories } from '../services/product.service';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 
 
 @Component({
@@ -11,97 +13,94 @@ import { Router } from '@angular/router';
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.scss'],
   animations: [
-     trigger('toggleMenu', [
-        state('*', style({
-          opacity: '1',
-        })),
-        state('void', style({
-          opacity: '0',
-          height: '0'
-        })),
-        transition(':enter', [
-          animate('.5s')
-        ]),
-        transition(':leave', [
+    trigger('toggleMenu', [
+      state('*', style({
+        opacity: '1',
+      })),
+      state('void', style({
+        opacity: '0',
+        height: '0'
+      })),
+      transition(':enter', [
         animate('.5s')
-      ]),  
-     ]),
+      ]),
+      transition(':leave', [
+        animate('.5s')
+      ]),
+    ]),
   ]
 })
 export class NavComponent implements OnInit {
-  
-  faCarrot = faCarrot;
-  faBread = faBreadSlice;
-  faApple = faAppleAlt;
-  faCheese = faCheese;
-  faPalette = faPalette;
-  faGem = faGem;
-  faTshirt = faTshirt;
-  faGlassMartiniAlt = faGlassMartiniAlt;
+
+  iconPrefix: IconPrefix = 'fas';
   faShoppingCart = faShoppingCart;
   faBoxes = faBoxes;
   faBell = faBell;
 
   public openView = "";
   menuOpen = false;
+  categories = categories;
 
-  isLogged:Boolean=false;
+  isLogged: Boolean = false;
+  public loggedIn = true;
+
+  constructor(
+    private library: FaIconLibrary,
+    private _auth: AuthService,
+    private _router: Router,
+  ) {
+    library.addIcons( faShoppingCart, faGem, faCarrot, faCheese, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt);
+  }
 
   toggleCategory($event: any) {
     $event.preventDefault();
     if (this.openView != "category") {
       this.openView = "category";
     }
-    else{
+    else {
       this.openView = "";
     }
   }
 
-  toggleNowView($event: any){
+  toggleNowView($event: any) {
     $event.preventDefault();
     if (this.openView != "now") {
       this.openView = "now";
     }
-    else{
+    else {
       this.openView = "";
     }
   }
 
-  toggleBestView($event: any){
+  toggleBestView($event: any) {
     $event.preventDefault();
     if (this.openView != "best") {
       this.openView = "best";
     }
-    else{
+    else {
       this.openView = "";
     }
   }
 
-  toggleCart($event: any){
+  toggleCart($event: any) {
     $event.preventDefault();
     this.menuOpen = !this.menuOpen;
-  }
-
-  public loggedIn = true;
-
-  constructor(private _auth:AuthService, private _router:Router) { 
-    
   }
 
   ngOnInit(): void {
     this.isLoggedIn();
   }
 
-  logout(){
+  logout() {
     this._auth.clearStorage();
     this._router.navigate(['login']);
   }
 
-  isLoggedIn(){
+  isLoggedIn() {
     console.log(this._auth.getUserDetails())
-    if(this._auth.getUserDetails() != null){
-        this.isLogged=true;
-    } 
+    if (this._auth.getUserDetails() != null) {
+      this.isLogged = true;
+    }
 
   }
 

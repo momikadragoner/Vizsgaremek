@@ -19,4 +19,6 @@ router.get('/user/:id', shopController.getUser);
 
 router.get('/wish-list/:id', shopController.getWishList);
 
+router.get('/search', shopController.searchProducts);
+
 module.exports = router;
