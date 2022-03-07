@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { faEdit, faEnvelope, faHeart, faSave, faShoppingCart, faTrash, faTruck } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faEnvelope, faHeart, faSave, faShoppingCart, faSpinner, faTrash, faTruck } from '@fortawesome/free-solid-svg-icons';
 import { Cart, CartProduct, CartService } from '../services/cart.service';
 
 @Component({
@@ -11,7 +11,8 @@ import { Cart, CartProduct, CartService } from '../services/cart.service';
 export class OrderManagementComponent implements OnInit {
 
   orders:Cart[] = [];
-  fieldSetDisabled: Boolean[] = [];
+  fieldSetDisabled: boolean[] = [];
+  isLoading: boolean[] = [];
   deleteModalOpen:boolean = false;
   selectedOrderId:number = 0;
 
@@ -20,6 +21,7 @@ export class OrderManagementComponent implements OnInit {
   faSave = faSave;
   faTruck = faTruck;
   faEnvelope = faEnvelope;
+  faSpinner = faSpinner;
 
   constructor(
     private cartService: CartService,
@@ -31,9 +33,17 @@ export class OrderManagementComponent implements OnInit {
         for (let i = 0; i < this.orders.length; i++) {
           let order = this.orders[i];
           this.fieldSetDisabled[i] = true;
+          this.isLoading[i] = false;
           if (order.products) {
             let sum:number = 0;
-            order.products.forEach(x => sum += x.price);
+            order.products.forEach(x => {
+              if(x.discount){
+                sum += x.price * (1-(x.discount / 100));
+              }
+              else{
+                sum += x.price;
+              }
+            });
             order.sumPrice = sum;
           }
           if (this.orders[i].products && order.products.every( x => x.status == order.products[0].status))
@@ -98,9 +108,15 @@ export class OrderManagementComponent implements OnInit {
   }
 
   save($event:any, id:number){
+    this.isLoading[id]= true;
     $event.preventDefault();
     let order = this.orders[id];
-    this.cartService.updateCartProducts(order.products).subscribe();
+    this.cartService.updateCartProducts(order.products).subscribe({
+      next: () => {
+        this.isLoading[id] = false;
+        this.fieldSetDisabled[id] = true;
+      }
+    });
   }
 
   statuses = [

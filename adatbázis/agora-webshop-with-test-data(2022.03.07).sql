@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2022. Már 07. 09:21
--- Kiszolgáló verziója: 10.4.21-MariaDB-log
+-- Létrehozás ideje: 2022. Már 07. 12:20
+-- Kiszolgáló verziója: 10.4.21-MariaDB
 -- PHP verzió: 8.0.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Adatbázis: `agora-webshop`
 --
+CREATE DATABASE IF NOT EXISTS `agora-webshop` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci;
+USE `agora-webshop`;
 
 DELIMITER $$
 --
@@ -233,7 +235,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `selectMyOrders` (IN `userId` INT)  
 BEGIN
 	SELECT DISTINCT cart.cart_id AS cartId, cart.member_id AS userId, cart.shipping_address_id AS shippingId, cart.sum_price AS sumPrice, cart.status
     FROM `cart`
-    WHERE cart.member_id = userId;
+    WHERE cart.member_id = userId AND cart.status != 'Not Sent'
+    ORDER BY cart.cart_id DESC;
 	SELECT product.product_id AS productId, product.name, product.price, product.vendor_id AS sellerId, product.discount, product.is_published AS isPublic, member.first_name AS sellerFirstName, member.last_name AS sellerLastName, ( SELECT product_picture.resource_link FROM product_picture WHERE product_picture.is_thumbnail = TRUE AND product.product_id = product_picture.product_id LIMIT 1 ) AS imgUrl, cart_product.amount, cart_product.status, cart_product.cart_product_id AS cartProductId, cart.cart_id AS cartId
     FROM cart_product
 INNER JOIN product ON cart_product.product_id = product.product_id
@@ -412,7 +415,8 @@ CREATE TABLE `cart` (
 INSERT INTO `cart` (`cart_id`, `member_id`, `shipping_address_id`, `sum_price`, `status`) VALUES
 (9, 21, 9, 12210, 'Ordered'),
 (10, 21, 9, 8720, 'Ordered'),
-(13, 21, 8, 2580, 'Ordered');
+(13, 21, 8, 2580, 'Ordered'),
+(14, 21, 9, 30560, 'Ordered');
 
 -- --------------------------------------------------------
 
@@ -436,8 +440,11 @@ INSERT INTO `cart_product` (`cart_product_id`, `cart_id`, `product_id`, `amount`
 (34, 9, 2, 1, 'Ordered'),
 (36, 10, 5, 2, 'Delivery in progress'),
 (37, 10, 14, 1, 'Delivery in progress'),
-(43, 13, 17, 1, 'Packaging'),
-(44, 13, 14, 1, 'Packaging');
+(43, 13, 17, 1, 'Delivery in progress'),
+(44, 13, 14, 1, 'Delivery in progress'),
+(45, 14, 2, 1, 'Ordered'),
+(46, 14, 11, 1, 'Packaging'),
+(47, 14, 12, 1, 'Packaging');
 
 -- --------------------------------------------------------
 
@@ -4716,13 +4723,13 @@ ALTER TABLE `wish_list`
 -- AUTO_INCREMENT a táblához `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT a táblához `cart_product`
 --
 ALTER TABLE `cart_product`
-  MODIFY `cart_product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `cart_product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT a táblához `city`

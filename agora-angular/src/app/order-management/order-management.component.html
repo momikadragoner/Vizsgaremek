@@ -80,7 +80,8 @@
                     <p>{{product.amount}} db</p>
                   </div>
                   <div class="col-6 col-lg-2 mt-3">
-                    <h4 class="fw-bold">{{product.price|price}}</h4>
+                    <h4 *ngIf="!product.discount" class="fw-bold">{{product.price|price}}</h4>
+                    <h4 *ngIf="product.discount" class="fw-bold">{{product.price * (1 - (product.discount / 100))|price}}</h4>
                   </div>
                   <div class="col-6 col-lg-3 mt-3 mb-2">
                     <select class="form-select" id="status" (change)="productStatusChange(i,j)"
@@ -99,7 +100,8 @@
             </collapse-panel>
             <div class="d-flex justify-content-end">
               <a href="" class="btn btn-primary" (click)="save($event, i)">
-                <fa-icon [icon]="faSave"></fa-icon>
+                <fa-icon *ngIf="!isLoading[i]" [icon]="faSave"></fa-icon>
+                <fa-icon *ngIf="isLoading[i]" [icon]="faSpinner" [spin]="isLoading[i]" ></fa-icon>
                 Mentés
               </a>
             </div>

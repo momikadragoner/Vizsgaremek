@@ -58,9 +58,9 @@
                 <h4 class="fw-bold">{{cart.sumPrice|price}}</h4>
             </div>
             <div class="input-group d-flex justify-content-center">
-                <a [routerLink]="['/order']" class="btn btn-lg btn-primary">Folytatás
+                <a [routerLink]="['/order']" class="btn btn-lg btn-primary" [ngClass]="{'disabled':cart.products[0] == undefined}">Folytatás
                 </a>
-                <a [routerLink]="['/order']" class="btn btn-secondary btn-lg">
+                <a [routerLink]="['/order']" class="btn btn-secondary btn-lg" [ngClass]="{'disabled':cart.products[0] == undefined}">
                     <fa-icon [icon]="faChevronRight"></fa-icon>
                 </a>
             </div>

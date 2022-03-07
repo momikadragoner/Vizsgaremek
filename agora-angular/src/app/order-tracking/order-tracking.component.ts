@@ -37,7 +37,8 @@ export class OrderTrackingComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  orderArrived(){
+  orderArrived(orderId:number, productId?:number){
+    
   }
 
 }
