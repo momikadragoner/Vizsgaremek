@@ -31,7 +31,12 @@ export class CartComponent implements OnInit {
         this.cart.products = [...data];
         this.cart.sumPrice = 0;
         this.cart.products.forEach( product => {
-          this.cart.sumPrice += (product.price * product.amount);
+          if (product.discount) {
+            this.cart.sumPrice += ((product.price * (1 - (product.discount / 100))) * product.amount);
+          }
+          else{
+            this.cart.sumPrice += (product.price * product.amount);
+          }
         });
       }
     });

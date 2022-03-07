@@ -213,6 +213,7 @@ export class ProductFormComponent implements OnInit {
       productId: 0,
       name: form.name,
       price: form.price,
+      discount: form.discount,
       inventory: form.inventory,
       delivery: form.delivery,
       category: form.category,

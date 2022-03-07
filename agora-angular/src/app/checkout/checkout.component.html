@@ -15,7 +15,8 @@
                     <tr *ngFor="let product of cart.products">
                         <td>{{product.name}}</td>
                         <td class="text-center">{{product.amount}} db</td>
-                        <td class="text-end">{{product.price|price}}</td>
+                        <td *ngIf="!product.discount" class="text-end">{{product.price|price}}</td>
+                        <td *ngIf="product.discount" class="text-end">{{product.price * (1 - (product.discount / 100))|price}}</td>
                     </tr>
                 </tbody>
             </table>

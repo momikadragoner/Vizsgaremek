@@ -247,22 +247,22 @@ exports.searchProducts = (req, res, next) => {
     sql += 'product.inventory > 0';
   }
   if (req.query['madeOnDemand'] == 'true') {
-    if (selectedCategories.length != 0 || selectedTags.length != 0 || req.query['minPrice'] || req.query['maxPrice'] || req.query['inStock'] != 'true') {
+    if (selectedCategories.length != 0 || selectedTags.length != 0 || req.query['minPrice'] || req.query['maxPrice'] || req.query['inStock'] == 'true') {
       sql += ' AND ';
     }
     sql += 'product.delivery = \'Megrendelésre készül\'';
   }
   if (req.query['discount'] == 'true') {
-    if (selectedCategories.length != 0 || selectedTags.length != 0 || req.query['minPrice'] || req.query['maxPrice'] || req.query['inStock'] != 'true' || req.query['madeOnDemand'] != 'true') {
+    if (selectedCategories.length != 0 || selectedTags.length != 0 || req.query['minPrice'] || req.query['maxPrice'] || req.query['inStock'] == 'true' || req.query['madeOnDemand'] == 'true') {
       sql += ' AND ';
     }
-    sql += 'product.discount != null';
+    sql += 'product.discount IS NOT NULL ';
   }
   if (selectedCategories.length == 0 && selectedTags.length == 0 && !req.query['minPrice'] && !req.query['maxPrice'] && req.query['inStock'] != 'true' && req.query['madeOnDemand'] != 'true' && req.query['discount'] != 'true') {
     sql += '1';
   }
   sql += ' ORDER BY product.rating DESC';
-
+  //console.log(sql);
   conn = connectDb();
   conn.query(sql,
     [], (err, rows, fields) => {

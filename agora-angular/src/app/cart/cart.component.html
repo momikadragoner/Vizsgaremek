@@ -16,7 +16,8 @@
                             <p>{{product.amount}} db</p>
                         </div>
                         <div class="col-6 col-lg-2 mt-3">
-                            <h4 class="fw-bold">{{product.price|price}}</h4>
+                            <h4 *ngIf="!product.discount" class="fw-bold">{{product.price|price}}</h4>
+                            <h4 *ngIf="product.discount" class="fw-bold">{{product.price * (1 - (product.discount / 100))|price}}</h4>
                         </div>
                     </div>
                     <div class="row mb-3 mt-0 pt-0">

@@ -33,7 +33,12 @@
                 <h1 class="my-3" [ngClass]="{'placeholder col-8':product.name == ''}">{{product.name}}</h1>
                 <div class="row">
                     <div class="col-12 col-lg-6 m-2">
-                        <h1 class="fw-bold" [ngClass]="{'placeholder col-8':product.price == -1}">{{product.price|price}}</h1>
+                        <p *ngIf="product.discount" class="mb-0 ms-1"><s>{{product.price | price}} </s>
+                            <span class="badge bg-warning text-dark ms-1">-{{product.discount}}%</span>
+                        </p>
+                        <h1 *ngIf="product.discount" class="fw-bold" [ngClass]="{'placeholder col-8':product.price == -1}">{{product.price * (1-(product.discount / 100)) |price}}
+                        </h1>
+                        <h1 *ngIf="!product.discount" class="fw-bold" [ngClass]="{'placeholder col-8':product.price == -1}">{{product.price |price}}</h1>
                         <p class="m-2" [ngClass]="{'placeholder col-5':product.inventory == -1}">Elérhető: {{product.inventory}}db</p>
                     </div>
                     <div class="col-12 col-lg-6 my-2">

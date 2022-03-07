@@ -35,7 +35,7 @@
                         <div class="progress-bar" [ngClass]="{'w-25':('Ordered' == order.status),'w-50':('Packaging' == order.status), 'w-75':('Delivery in progress' == order.status)}" role="progressbar"></div>
                     </div>
                     <div class="d-flex justify-content-end mt-4">
-                        <a class="btn btn-primary">
+                        <a (click)="orderArrived()" class="btn btn-primary">
                             <fa-icon [icon]="faCheckCircle"></fa-icon>
                             Rendelés megérkezett
                         </a>

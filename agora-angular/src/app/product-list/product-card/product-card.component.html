@@ -7,11 +7,11 @@
     </div>
     <div class="card-body card-body-product text-center placeholder-glow">
         <h5 class="card-title fw-bold" [ngClass]="{'placeholder col-10':product.name == ''}" [class.fit-text]="product.name.length> 20">{{product.name}}</h5>
-        <div *ngIf="product.discount != null" class="m-0 p-0">
-            <p class="mb-0"><s>{{product.price | price}} </s><span *ngIf="product.discount != null" class="badge bg-warning text-dark ms-1 mb-1">-{{product.discount}}%</span></p>
-        </div>
         <div class="m-0 p-0">
             <a class="card-text text-primary m-1 text-decoration-none " [routerLink]="['/profile', product.sellerId]" [ngClass]="{'placeholder col-6':product.sellerLastName == ''}">{{product.sellerLastName}} {{product.sellerFirstName}}</a>
+        </div>
+        <div *ngIf="product.discount != null" class="m-0 p-0">
+            <p class="mb-0"><s>{{product.price | price}} </s><span *ngIf="product.discount != null" class="badge bg-warning text-dark ms-1 mb-1">-{{product.discount}}%</span></p>
         </div>
         <h4 *ngIf="product.discount == null" class="m-0 fw-bold" [ngClass]="{'placeholder col-7':(product.price == -1 || product.price == null)}">{{product.price | price}}</h4>
         <h4 *ngIf="product.discount != null" class="m-0 fw-bold" [ngClass]="{'placeholder col-7':product.price == -1 || product.price == null}">{{product.price - (product.price * (product.discount/100)) | price}}</h4>
