@@ -630,3 +630,65 @@ exports.getMyOrders = (req, res, next) => {
   })
   conn.end();
 }
+exports.getReviewLog = (req, res, next) => {
+
+  if (!Number(req.params.review)) return res.json({'Error' : 'ID must be a number'});
+  let review = Number(req.params.review);
+  if (!Number(req.params.log)) return res.json({'Error' : 'ID must be a number'});
+  let log = Number(req.params.log);
+
+  let sql = 'CALL selectReview(?, ?)';
+
+  conn = connectDb();
+  conn.query(sql,
+    [review, log], (err, rows, fields) => {
+      if (err) console.log("Query " + err)
+      else {
+        res.status(200);
+        res.json(rows[0][0]);
+      }
+    }
+  );
+  conn.end();
+};
+exports.postReviewVote = (req, res, next) => {
+  let sql = 'CALL insertReviewVote(?, ?, ?, ?, ?)';
+  let vote = req.body;
+  conn = connectDb();
+  conn.query(sql, 
+    [
+      vote.productId,
+      vote.reviewId,
+      vote.userId,
+      vote.vote,
+      new Date()
+    ], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(201);
+      res.json();
+    }
+  })
+  conn.end();
+}
+exports.deleteReviewVote= (req, res, next) => {
+  if (!Number(req.params.reviewId)) return res.json({'Error' : 'ID must be a number'});
+  let reviewId = Number(req.params.reviewId);
+  if (!Number(req.params.userId)) return res.json({'Error' : 'ID must be a number'});
+  let userId = Number(req.params.userId);
+
+  let sql = 'CALL deletReviewVote(?, ?)'
+
+  conn = connectDb()
+  conn.query(sql,
+    [reviewId, userId], (err, rows, fields) => {
+      if (err) res.json("Query error: " + err)
+      else {
+        res.status(200);
+        res.json();
+      }
+    }
+  );
+  conn.end();
+}

@@ -1,25 +1,25 @@
 <div class="placeholder-glow">
     <div class="col">
-        <h5 class="m-2 mb-0 fw-bold" [ngClass]="{'placeholder col-8':content.title == ''}">{{content.title}}</h5>
+        <h5 class="m-2 mb-0 fw-bold" [ngClass]="{'placeholder col-8':review.title == ''}">{{review.title}}</h5>
     </div>
-    <small class="text-secondary ps-2" [ngClass]="{'placeholder col-4':content.userLastName == ''}">{{content.userLastName}} {{content.userFirstName}} |</small>
-    <small class="text-secondary ms-2">{{content.publishedAt|date}}</small>
+    <small class="text-secondary ps-2" [ngClass]="{'placeholder col-4':review.userLastName == ''}">{{review.userLastName}} {{review.userFirstName}} |</small>
+    <small class="text-secondary ms-2">{{review.publishedAt|date}}</small>
     <div class="col">
         <div class="ms-2">
-            <fa-icon *ngFor="let number of ratingToArray(content.rating)" [icon]="faStar"></fa-icon>
-            <small class="ms-1" [ngClass]="{'placeholder col-6':content.rating == -1}">{{content.rating}}/5</small>
+            <fa-icon *ngFor="let number of ratingToArray(review.rating)" [icon]="faStar"></fa-icon>
+            <small class="ms-1" [ngClass]="{'placeholder col-6':review.rating == -1}">{{review.rating}}/5</small>
         </div>
     </div>
-    <p class="m-2" [ngClass]="{'placeholder col-11':content.content == ''}">{{content.content}}</p>
+    <p class="m-2" [ngClass]="{'placeholder col-11':review.content == ''}">{{review.content}}</p>
     <div class="m-2">
         <div class="nav">
-            <button [@addUpvote]="content.points" [class.upvoted]="hasUpvoted" (click)="upvote()" class="btn me-2" type="button">
+            <a [@addUpvote]="review.points" [class.upvoted]="vote.vote == 'up'" (click)="upvote()" class="btn me-2" type="button">
                 <fa-icon [icon]="faArrowUp"></fa-icon>
-            </button>
-            <h5 class="pt-2 pe-2" [ngClass]="{'placeholder col-2':content.points == -1}">{{content.points}}</h5>
-            <button [@addDownvote]="content.points" [class.downvoted]="hasDownvoted" (click)="downvote()" class="btn" type="button">
+            </a>
+            <h5 class="pt-2 pe-2" [ngClass]="{'placeholder col-2':review.points == null}">{{review.points}}</h5>
+            <a [@addDownvote]="review.points" [class.downvoted]="vote.vote == 'down'" (click)="downvote()" class="btn" type="button">
                 <fa-icon [icon]="faArrowDown"></fa-icon>
-            </button>
+            </a>
         </div>
     </div>
 </div>

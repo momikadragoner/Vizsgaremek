@@ -48,8 +48,8 @@ exports.getReviewById = (req, res, next) => {
 
   let id = Number(req.params.id);
 
-  conn.query('SELECT review.review_id AS reviewId, review.product_id AS productId, review.member_id AS memberId, review.rating, review.points, review.title, review.content, review.published_at AS publishedAt, member.first_name AS userFirstName, member.last_name AS userLastName FROM review INNER JOIN member ON member.member_id = review.member_id WHERE review.review_id = ?',
-    [id], (err, rows, fields) => {
+  conn.query('CALL selectReview(?, ?)',
+    [id, 0], (err, rows, fields) => {
       if (err) res.json("Query error: " + err)
       else {
         res.json(rows[0]);

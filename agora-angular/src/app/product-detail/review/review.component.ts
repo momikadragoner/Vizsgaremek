@@ -3,7 +3,8 @@ import { faArrowUp, faArrowDown, faStar } from '@fortawesome/free-solid-svg-icon
 import { EventEmitter } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { ThrowStmt } from '@angular/compiler';
-import { ratingToArray } from '../../services/product.service'
+import { Product, ratingToArray } from '../../services/product.service'
+import { Review, ReviewService, ReviewVote } from 'src/app/services/review.service';
 
 @Component({
   selector: 'app-review',
@@ -32,70 +33,67 @@ export class ReviewComponent implements OnChanges {
   faArrowDown = faArrowDown;
   faStar = faStar;
 
-  public hasUpvoted: boolean = false;
-  public hasDownvoted: boolean = false;
+  @Input() productId: number = 0;
+  @Input() review: Review = new Review();
+  @Output() reviewChange = new EventEmitter<Review>();
+  vote: ReviewVote = new ReviewVote();
+  baseVotes:number = 0;
+  extraVotes:number = 0;
 
-  private previousContent:any;
+  constructor(
+    private reviewService: ReviewService
+  ) {
 
-  @Input() content: any;
-  @Output() contentChange = new EventEmitter<any>();
+  }
+
+  ngOnInit(): void {
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.baseVotes = this.review.points;
+    this.vote.productId = this.productId;
+    this.vote.reviewId = this.review.reviewId;
+    this.vote.userId = this.reviewService.currentUser.userId;
+  }
 
   upvote() {
-    if ((this.hasDownvoted == false) && (this.hasUpvoted == false)) {
-      this.content.points++;
-      this.hasUpvoted = true;
-      this.hasDownvoted = false;
-      console.log("all flase");
+    if (this.vote.vote == "up") {
+      this.vote.vote = undefined;
+      this.extraVotes = 0;
+      this.deleteVote();
     }
-    else if (this.hasDownvoted == true) {
-      this.content.points += 2;
-      this.hasUpvoted = true;
-      this.hasDownvoted = false;
-      console.log("down");
+    else{
+      this.vote.vote = "up"
+      this.extraVotes = 1;
+      this.sendVote();
     }
-    else if (this.hasUpvoted == true) {
-      this.content.points--;
-      this.hasUpvoted = false;
-      this.hasDownvoted = false;
-      console.log("up");
-    }
-    this.addContent(this.content);
+    this.review.points = this.baseVotes + this.extraVotes;
   }
 
   downvote() {
-    if ((this.hasDownvoted == false) && (this.hasUpvoted == false)) {
-      this.content.points--;
-      this.hasDownvoted = true;
-      this.hasUpvoted = false;
+    if (this.vote.vote == "down") {
+      this.vote.vote = undefined;
+      this.extraVotes = 0;
+      this.deleteVote();
     }
-    else if (this.hasUpvoted == true) {
-      this.content.points -= 2;
-      this.hasUpvoted = false;
-      this.hasDownvoted = true;
+    else{
+      this.vote.vote = "down";
+      this.extraVotes = -1;
+      this.sendVote();
     }
-    else if (this.hasDownvoted == true) {
-      this.content.points++;
-      this.hasDownvoted = false;
-      this.hasUpvoted = false;
-    }
-    this.addContent(this.content);
+    this.review.points = this.baseVotes + this.extraVotes;
+  }
+
+  sendVote() {
+    this.reviewService.postReviewVote(this.vote).subscribe();
+  }
+  deleteVote() {
+    this.reviewService.deleteReview(this.review.reviewId).subscribe();
   }
 
   ratingToArray = ratingToArray;
 
   addContent(value: any) {
-    this.contentChange.emit(value);
-  }
-
-  constructor() {
-
-  }
-
-  ngOnInit(): void {
-    
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-
+    this.reviewChange.emit(value);
   }
 }

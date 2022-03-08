@@ -61,4 +61,10 @@ router.delete('/delete-cart-order/:cartId/:userId', userController.deleteCartOrd
 
 router.get('/my-orders/:id', userController.getMyOrders);
 
+router.get('/review-log/:review/:log', userController.getReviewLog);
+
+router.post('/post-review-vote', userController.postReviewVote);
+
+router.delete('/delete-review-vote', userController.deleteReviewVote);
+
 module.exports = router;

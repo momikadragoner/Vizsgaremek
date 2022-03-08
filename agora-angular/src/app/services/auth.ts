@@ -9,7 +9,7 @@ export class Auth {
         public lastName: string,
         public firstName: string,
         public token: string
-    ) {  
+    ) {
 
     }
 }

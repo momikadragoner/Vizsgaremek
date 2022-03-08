@@ -66,7 +66,7 @@
                                     <fa-icon [icon]="faBoxes"></fa-icon>
                                 </div>
                                 <div *ngIf="product.materials[0] != null" class="ps-0 col-10">
-                                    <p *ngIf="product.materials != []">Anyaga: 
+                                    <p *ngIf="product.materials != []">Anyaga:
                                         <span *ngFor="let material of product.materials; let i = index">
                                             {{material}}<span *ngIf="i != product.materials.length - 1">, </span>
                                         </span>
@@ -219,7 +219,7 @@
 <page-footer></page-footer>
 <!-- Review detailed -->
 <modal-window [(modalVisible)]="modalVisible">
-    <app-review [(content)]="review"></app-review>
+    <app-review [(review)]="review" [productId]="product.productId"></app-review>
 </modal-window>
 <!-- Képnézegető -->
 <modal-window [(modalVisible)]="imgOpen">
