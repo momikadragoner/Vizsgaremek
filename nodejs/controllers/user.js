@@ -678,7 +678,7 @@ exports.deleteReviewVote= (req, res, next) => {
   if (!Number(req.params.userId)) return res.json({'Error' : 'ID must be a number'});
   let userId = Number(req.params.userId);
 
-  let sql = 'CALL deletReviewVote(?, ?)'
+  let sql = 'CALL deleteReviewVote(?, ?)'
 
   conn = connectDb()
   conn.query(sql,

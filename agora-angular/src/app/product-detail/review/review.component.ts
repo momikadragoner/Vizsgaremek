@@ -50,10 +50,15 @@ export class ReviewComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.baseVotes = this.review.points;
+    this.baseVotes = this.review.points ? this.review.points : 0;
+    if (this.review.myVote == 'up') this.baseVotes--;
+    if (this.review.myVote == 'down') this.baseVotes++;
     this.vote.productId = this.productId;
     this.vote.reviewId = this.review.reviewId;
     this.vote.userId = this.reviewService.currentUser.userId;
+    this.vote.vote = this.review.myVote;
+    console.log(this.review);
+    
   }
 
   upvote() {
@@ -88,7 +93,7 @@ export class ReviewComponent implements OnChanges {
     this.reviewService.postReviewVote(this.vote).subscribe();
   }
   deleteVote() {
-    this.reviewService.deleteReview(this.review.reviewId).subscribe();
+    this.reviewService.deleteReviewVote(this.review.reviewId).subscribe();
   }
 
   ratingToArray = ratingToArray;

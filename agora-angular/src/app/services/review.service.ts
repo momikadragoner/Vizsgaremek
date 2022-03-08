@@ -13,7 +13,7 @@ export interface Review {
   title: string,
   content: string,
   rating: number,
-  points: number,
+  points?: number,
   publishedAt: Date,
   myVote?: string
 }
@@ -31,7 +31,7 @@ export class Review {
     public title: string = "",
     public content: string = "",
     public rating: number = -1,
-    public points: number = 0,
+    public points?: number,
     public publishedAt: Date = new Date(),
     public myVote?: string
   ) {
@@ -92,7 +92,7 @@ export class ReviewService {
 
   deleteReviewVote(reviewId: number, userId:number = this.currentUser.userId) {
     return this.http.delete(this.rootURL + '/delete-review-vote/' + reviewId + '/' + userId)
-      .pipe(
+      .pipe(        
         catchError(this.handleError)
       );
   }

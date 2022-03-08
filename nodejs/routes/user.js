@@ -65,6 +65,6 @@ router.get('/review-log/:review/:log', userController.getReviewLog);
 
 router.post('/post-review-vote', userController.postReviewVote);
 
-router.delete('/delete-review-vote', userController.deleteReviewVote);
+router.delete('/delete-review-vote/:reviewId/:userId', userController.deleteReviewVote);
 
 module.exports = router;

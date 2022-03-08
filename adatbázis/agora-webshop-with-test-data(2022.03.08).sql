@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.0.1
 -- https://www.phpmyadmin.net/
 --
--- Gép: 127.0.0.1
--- Létrehozás ideje: 2022. Már 08. 09:33
--- Kiszolgáló verziója: 10.4.22-MariaDB
--- PHP verzió: 8.0.15
+-- Host: 127.0.0.1
+-- Generation Time: Mar 08, 2022 at 10:00 PM
+-- Server version: 10.4.11-MariaDB
+-- PHP Version: 7.4.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -18,14 +19,14 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Adatbázis: `agora-webshop`
+-- Database: `agora-webshop`
 --
 CREATE DATABASE IF NOT EXISTS `agora-webshop` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci;
 USE `agora-webshop`;
 
 DELIMITER $$
 --
--- Eljárások
+-- Procedures
 --
 CREATE DEFINER=`root`@`localhost` PROCEDURE `changeProductVisibility` (IN `isPub` TINYINT, IN `lstUp` DATETIME, IN `prodId` INT)  NO SQL
 BEGIN
@@ -75,6 +76,7 @@ END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteReviewVote` (IN `reviewId` INT, IN `userId` INT)  BEGIN
 	DELETE FROM `review_vote` WHERE review_vote.review_id = reviewId AND review_vote.member_id = userId;
+    UPDATE review SET review.points = ((SELECT COUNT(*) FROM review_vote WHERE review_vote.review_id = reviewId AND review_vote.vote = 'up')-(SELECT COUNT(*) FROM review_vote WHERE review_vote.review_id = reviewId AND review_vote.vote = 'down')) WHERE review.review_id = reviewId;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteWishList` (IN `wishId` INT)  NO SQL
@@ -182,6 +184,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertReviewVote` (IN `prodId` INT,
     	CALL deleteReviewVote(reviewId, userId);
     END IF;
     INSERT INTO `review_vote`(`product_id`, `review_id`, `member_id`, `vote`, `voted_at`) VALUES (prodId, reviewId, userId, vt, vtAt);
+    UPDATE review SET review.points = ((SELECT COUNT(*) FROM review_vote WHERE review_vote.review_id = reviewId AND review_vote.vote = 'up')-(SELECT COUNT(*) FROM review_vote WHERE review_vote.review_id = reviewId AND review_vote.vote = 'down')) WHERE review.review_id = reviewId;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertTags` (IN `tgs` VARCHAR(255), IN `length` INT, IN `prodId` INT)  NO SQL
@@ -425,7 +428,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `cart`
+-- Table structure for table `cart`
 --
 
 CREATE TABLE `cart` (
@@ -437,7 +440,7 @@ CREATE TABLE `cart` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `cart`
+-- Dumping data for table `cart`
 --
 
 INSERT INTO `cart` (`cart_id`, `member_id`, `shipping_address_id`, `sum_price`, `status`) VALUES
@@ -449,7 +452,7 @@ INSERT INTO `cart` (`cart_id`, `member_id`, `shipping_address_id`, `sum_price`, 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `cart_product`
+-- Table structure for table `cart_product`
 --
 
 CREATE TABLE `cart_product` (
@@ -461,7 +464,7 @@ CREATE TABLE `cart_product` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `cart_product`
+-- Dumping data for table `cart_product`
 --
 
 INSERT INTO `cart_product` (`cart_product_id`, `cart_id`, `product_id`, `amount`, `status`) VALUES
@@ -477,7 +480,7 @@ INSERT INTO `cart_product` (`cart_product_id`, `cart_id`, `product_id`, `amount`
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `city`
+-- Table structure for table `city`
 --
 
 CREATE TABLE `city` (
@@ -488,7 +491,7 @@ CREATE TABLE `city` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `city`
+-- Dumping data for table `city`
 --
 
 INSERT INTO `city` (`city_id`, `city_name`, `postal_code`, `region_id`) VALUES
@@ -4076,7 +4079,7 @@ INSERT INTO `city` (`city_id`, `city_name`, `postal_code`, `region_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `follower_relations`
+-- Table structure for table `follower_relations`
 --
 
 CREATE TABLE `follower_relations` (
@@ -4085,7 +4088,7 @@ CREATE TABLE `follower_relations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `follower_relations`
+-- Dumping data for table `follower_relations`
 --
 
 INSERT INTO `follower_relations` (`follower_id`, `following_id`) VALUES
@@ -4095,7 +4098,7 @@ INSERT INTO `follower_relations` (`follower_id`, `following_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `material`
+-- Table structure for table `material`
 --
 
 CREATE TABLE `material` (
@@ -4104,7 +4107,7 @@ CREATE TABLE `material` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `material`
+-- Dumping data for table `material`
 --
 
 INSERT INTO `material` (`material_id`, `material_name`) VALUES
@@ -4122,7 +4125,7 @@ INSERT INTO `material` (`material_id`, `material_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `member`
+-- Table structure for table `member`
 --
 
 CREATE TABLE `member` (
@@ -4142,7 +4145,7 @@ CREATE TABLE `member` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `member`
+-- Dumping data for table `member`
 --
 
 INSERT INTO `member` (`member_id`, `first_name`, `last_name`, `email`, `password`, `phone`, `about`, `profile_picture_link`, `header_picture_link`, `registered_at`, `last_login`, `is_vendor`, `is_admin`) VALUES
@@ -4177,7 +4180,7 @@ INSERT INTO `member` (`member_id`, `first_name`, `last_name`, `email`, `password
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `message`
+-- Table structure for table `message`
 --
 
 CREATE TABLE `message` (
@@ -4190,7 +4193,7 @@ CREATE TABLE `message` (
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `product`
+-- Table structure for table `product`
 --
 
 CREATE TABLE `product` (
@@ -4212,7 +4215,7 @@ CREATE TABLE `product` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `product`
+-- Dumping data for table `product`
 --
 
 INSERT INTO `product` (`product_id`, `name`, `price`, `description`, `inventory`, `delivery`, `category`, `rating`, `vendor_id`, `discount`, `is_published`, `is_removed`, `created_at`, `last_updated_at`, `published_at`) VALUES
@@ -4237,7 +4240,7 @@ INSERT INTO `product` (`product_id`, `name`, `price`, `description`, `inventory`
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `product_material`
+-- Table structure for table `product_material`
 --
 
 CREATE TABLE `product_material` (
@@ -4247,7 +4250,7 @@ CREATE TABLE `product_material` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `product_material`
+-- Dumping data for table `product_material`
 --
 
 INSERT INTO `product_material` (`product_material_id`, `material_id`, `product_id`) VALUES
@@ -4278,7 +4281,7 @@ INSERT INTO `product_material` (`product_material_id`, `material_id`, `product_i
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `product_picture`
+-- Table structure for table `product_picture`
 --
 
 CREATE TABLE `product_picture` (
@@ -4290,7 +4293,7 @@ CREATE TABLE `product_picture` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `product_picture`
+-- Dumping data for table `product_picture`
 --
 
 INSERT INTO `product_picture` (`product_picture_id`, `product_id`, `resource_name`, `resource_link`, `is_thumbnail`) VALUES
@@ -4333,7 +4336,7 @@ INSERT INTO `product_picture` (`product_picture_id`, `product_id`, `resource_nam
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `product_tag`
+-- Table structure for table `product_tag`
 --
 
 CREATE TABLE `product_tag` (
@@ -4343,7 +4346,7 @@ CREATE TABLE `product_tag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `product_tag`
+-- Dumping data for table `product_tag`
 --
 
 INSERT INTO `product_tag` (`product_tag_id`, `tag_id`, `product_id`) VALUES
@@ -4393,7 +4396,7 @@ INSERT INTO `product_tag` (`product_tag_id`, `tag_id`, `product_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `region`
+-- Table structure for table `region`
 --
 
 CREATE TABLE `region` (
@@ -4402,7 +4405,7 @@ CREATE TABLE `region` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `region`
+-- Dumping data for table `region`
 --
 
 INSERT INTO `region` (`region_id`, `region_name`) VALUES
@@ -4430,7 +4433,7 @@ INSERT INTO `region` (`region_id`, `region_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `review`
+-- Table structure for table `review`
 --
 
 CREATE TABLE `review` (
@@ -4445,7 +4448,7 @@ CREATE TABLE `review` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `review`
+-- Dumping data for table `review`
 --
 
 INSERT INTO `review` (`review_id`, `product_id`, `member_id`, `rating`, `points`, `title`, `content`, `published_at`) VALUES
@@ -4469,7 +4472,7 @@ INSERT INTO `review` (`review_id`, `product_id`, `member_id`, `rating`, `points`
 (18, 10, 20, 3, 11, 'rendetlenséget! ajtót! ', 'szeret. hozzá jól ezzel tudom jól érdekében hiszem, életforma. ', '2022-01-04 00:00:00'),
 (19, 4, 15, 5, 2, 'szó ', 'szeret. viszont mikor szabadságra ebben őket ', '2022-01-28 00:00:00'),
 (20, 4, 17, 3, 7, 'és ', 'különböző csukott azt szeret. három ', '2022-01-28 00:00:00'),
-(21, 4, 3, 2, 2, 'mint ', 'során soha mikor tovább működik. során ', '2022-01-28 00:00:00'),
+(21, 4, 3, 2, -1, 'mint ', 'során soha mikor tovább működik. során ', '2022-01-28 00:00:00'),
 (22, 4, 6, 1, 6, 'akár ', 'legjobb elég nem nekem van jog ', '2022-01-28 00:00:00'),
 (23, 5, 6, 5, 8, 'csinálni. Hol ', 'amelyek csinálni. szükségem, építsen egy szálljon ebben szép ', '2022-01-09 00:00:00'),
 (24, 5, 13, 3, 9, 'nem egy ', 'felé kopog, az. közé mondanom, kétszer mondanom, ', '2022-01-09 00:00:00'),
@@ -4490,14 +4493,15 @@ INSERT INTO `review` (`review_id`, `product_id`, `member_id`, `rating`, `points`
 (39, 9, 13, 2, 7, 'szükséges következő ', 'azok teljes gyengéd azt szinte ma érdekében mikor jól koffeinfüggő Féltékeny tovább ', '2022-01-22 00:00:00'),
 (40, 10, 2, 2, 10, 'terve, fene ', 'amíg mely jog Hogy nekem vacsora. soha szükségem, ', '2022-01-04 00:00:00'),
 (41, 10, 7, 3, 11, 'elég vagyok ', 'ember együtt a lehetőség szép bumról, lesz szép áldja hiszem, és ', '2022-01-04 00:00:00'),
-(42, 10, 6, 3, 2, 'áldja Beszélgetek, ', 'össze keresztül neki megfelelő itt évente. Szia, tudom ', '2022-01-04 00:00:00'),
+(42, 10, 6, 3, 1, 'áldja Beszélgetek, ', 'össze keresztül neki megfelelő itt évente. Szia, tudom ', '2022-01-04 00:00:00'),
 (43, 13, 5, 1, 14, 'erre mondanom, ', 'hónap tudom következő hónap övék. Mindenkinek vagyok azon ', '2022-01-17 00:00:00'),
-(44, 17, 21, 5, 0, 'Nagyon fini barack lekvár', 'Az egyik legjobb amit valaha ettem', '2022-03-08 07:38:24');
+(44, 17, 21, 5, 1, 'Nagyon fini barack lekvár', 'Az egyik legjobb amit valaha ettem', '2022-03-08 07:38:24'),
+(45, 17, 21, 3, 1, 'asd', 'asd', '2022-03-08 19:18:37');
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `review_vote`
+-- Table structure for table `review_vote`
 --
 
 CREATE TABLE `review_vote` (
@@ -4510,16 +4514,19 @@ CREATE TABLE `review_vote` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `review_vote`
+-- Dumping data for table `review_vote`
 --
 
 INSERT INTO `review_vote` (`review_vote_id`, `product_id`, `review_id`, `member_id`, `vote`, `voted_at`) VALUES
-(1, 17, 44, 21, 'up', '2022-03-08 09:30:44');
+(18, 10, 42, 21, 'up', '2022-03-08 19:53:32'),
+(19, 17, 44, 21, 'up', '2022-03-08 19:53:54'),
+(29, 17, 45, 21, 'up', '2022-03-08 19:56:01'),
+(33, 4, 21, 21, 'down', '2022-03-08 19:56:43');
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `shipping_address`
+-- Table structure for table `shipping_address`
 --
 
 CREATE TABLE `shipping_address` (
@@ -4538,7 +4545,7 @@ CREATE TABLE `shipping_address` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `shipping_address`
+-- Dumping data for table `shipping_address`
 --
 
 INSERT INTO `shipping_address` (`shipping_address_id`, `member_id`, `name`, `phone`, `first_name`, `last_name`, `email`, `country`, `region`, `city`, `street_adress`, `postal_code`) VALUES
@@ -4551,7 +4558,7 @@ INSERT INTO `shipping_address` (`shipping_address_id`, `member_id`, `name`, `pho
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `tag`
+-- Table structure for table `tag`
 --
 
 CREATE TABLE `tag` (
@@ -4560,7 +4567,7 @@ CREATE TABLE `tag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `tag`
+-- Dumping data for table `tag`
 --
 
 INSERT INTO `tag` (`tag_id`, `tag_name`) VALUES
@@ -4576,7 +4583,7 @@ INSERT INTO `tag` (`tag_id`, `tag_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `vendor_detail`
+-- Table structure for table `vendor_detail`
 --
 
 CREATE TABLE `vendor_detail` (
@@ -4589,7 +4596,7 @@ CREATE TABLE `vendor_detail` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `vendor_detail`
+-- Dumping data for table `vendor_detail`
 --
 
 INSERT INTO `vendor_detail` (`vendor_detail_id`, `member_id`, `company_name`, `site_location`, `website`, `takes_custom_orders`) VALUES
@@ -4604,7 +4611,7 @@ INSERT INTO `vendor_detail` (`vendor_detail_id`, `member_id`, `company_name`, `s
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `wish_list`
+-- Table structure for table `wish_list`
 --
 
 CREATE TABLE `wish_list` (
@@ -4615,7 +4622,7 @@ CREATE TABLE `wish_list` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `wish_list`
+-- Dumping data for table `wish_list`
 --
 
 INSERT INTO `wish_list` (`wish_list_id`, `product_id`, `member_id`, `added_at`) VALUES
@@ -4624,11 +4631,11 @@ INSERT INTO `wish_list` (`wish_list_id`, `product_id`, `member_id`, `added_at`) 
 (4, 8, 25, '2022-03-05 15:53:08');
 
 --
--- Indexek a kiírt táblákhoz
+-- Indexes for dumped tables
 --
 
 --
--- A tábla indexei `cart`
+-- Indexes for table `cart`
 --
 ALTER TABLE `cart`
   ADD PRIMARY KEY (`cart_id`),
@@ -4636,7 +4643,7 @@ ALTER TABLE `cart`
   ADD KEY `member_id` (`member_id`);
 
 --
--- A tábla indexei `cart_product`
+-- Indexes for table `cart_product`
 --
 ALTER TABLE `cart_product`
   ADD PRIMARY KEY (`cart_product_id`),
@@ -4644,32 +4651,32 @@ ALTER TABLE `cart_product`
   ADD KEY `cart_id` (`cart_id`);
 
 --
--- A tábla indexei `city`
+-- Indexes for table `city`
 --
 ALTER TABLE `city`
   ADD PRIMARY KEY (`city_id`);
 
 --
--- A tábla indexei `follower_relations`
+-- Indexes for table `follower_relations`
 --
 ALTER TABLE `follower_relations`
   ADD PRIMARY KEY (`follower_id`,`following_id`),
   ADD KEY `following_id` (`following_id`);
 
 --
--- A tábla indexei `material`
+-- Indexes for table `material`
 --
 ALTER TABLE `material`
   ADD PRIMARY KEY (`material_id`);
 
 --
--- A tábla indexei `member`
+-- Indexes for table `member`
 --
 ALTER TABLE `member`
   ADD PRIMARY KEY (`member_id`);
 
 --
--- A tábla indexei `message`
+-- Indexes for table `message`
 --
 ALTER TABLE `message`
   ADD PRIMARY KEY (`message_id`),
@@ -4677,14 +4684,14 @@ ALTER TABLE `message`
   ADD KEY `reciver_id` (`reciver_id`);
 
 --
--- A tábla indexei `product`
+-- Indexes for table `product`
 --
 ALTER TABLE `product`
   ADD PRIMARY KEY (`product_id`),
   ADD KEY `vendor_id` (`vendor_id`);
 
 --
--- A tábla indexei `product_material`
+-- Indexes for table `product_material`
 --
 ALTER TABLE `product_material`
   ADD PRIMARY KEY (`product_material_id`),
@@ -4692,14 +4699,14 @@ ALTER TABLE `product_material`
   ADD KEY `material_id` (`material_id`);
 
 --
--- A tábla indexei `product_picture`
+-- Indexes for table `product_picture`
 --
 ALTER TABLE `product_picture`
   ADD PRIMARY KEY (`product_picture_id`),
   ADD KEY `product_id` (`product_id`);
 
 --
--- A tábla indexei `product_tag`
+-- Indexes for table `product_tag`
 --
 ALTER TABLE `product_tag`
   ADD PRIMARY KEY (`product_tag_id`),
@@ -4707,7 +4714,7 @@ ALTER TABLE `product_tag`
   ADD KEY `tag_id` (`tag_id`);
 
 --
--- A tábla indexei `review`
+-- Indexes for table `review`
 --
 ALTER TABLE `review`
   ADD PRIMARY KEY (`review_id`),
@@ -4715,7 +4722,7 @@ ALTER TABLE `review`
   ADD KEY `member_id` (`member_id`);
 
 --
--- A tábla indexei `review_vote`
+-- Indexes for table `review_vote`
 --
 ALTER TABLE `review_vote`
   ADD PRIMARY KEY (`review_vote_id`),
@@ -4724,27 +4731,27 @@ ALTER TABLE `review_vote`
   ADD KEY `member_id` (`member_id`);
 
 --
--- A tábla indexei `shipping_address`
+-- Indexes for table `shipping_address`
 --
 ALTER TABLE `shipping_address`
   ADD PRIMARY KEY (`shipping_address_id`),
   ADD KEY `member_id` (`member_id`);
 
 --
--- A tábla indexei `tag`
+-- Indexes for table `tag`
 --
 ALTER TABLE `tag`
   ADD PRIMARY KEY (`tag_id`);
 
 --
--- A tábla indexei `vendor_detail`
+-- Indexes for table `vendor_detail`
 --
 ALTER TABLE `vendor_detail`
   ADD PRIMARY KEY (`vendor_detail_id`),
   ADD KEY `member_id` (`member_id`);
 
 --
--- A tábla indexei `wish_list`
+-- Indexes for table `wish_list`
 --
 ALTER TABLE `wish_list`
   ADD PRIMARY KEY (`wish_list_id`),
@@ -4752,172 +4759,172 @@ ALTER TABLE `wish_list`
   ADD KEY `member_id` (`member_id`);
 
 --
--- A kiírt táblák AUTO_INCREMENT értéke
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT a táblához `cart`
+-- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
   MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT a táblához `cart_product`
+-- AUTO_INCREMENT for table `cart_product`
 --
 ALTER TABLE `cart_product`
   MODIFY `cart_product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
--- AUTO_INCREMENT a táblához `city`
+-- AUTO_INCREMENT for table `city`
 --
 ALTER TABLE `city`
   MODIFY `city_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3579;
 
 --
--- AUTO_INCREMENT a táblához `material`
+-- AUTO_INCREMENT for table `material`
 --
 ALTER TABLE `material`
   MODIFY `material_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT a táblához `member`
+-- AUTO_INCREMENT for table `member`
 --
 ALTER TABLE `member`
   MODIFY `member_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
--- AUTO_INCREMENT a táblához `message`
+-- AUTO_INCREMENT for table `message`
 --
 ALTER TABLE `message`
   MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT a táblához `product`
+-- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
   MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
--- AUTO_INCREMENT a táblához `product_material`
+-- AUTO_INCREMENT for table `product_material`
 --
 ALTER TABLE `product_material`
   MODIFY `product_material_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
--- AUTO_INCREMENT a táblához `product_picture`
+-- AUTO_INCREMENT for table `product_picture`
 --
 ALTER TABLE `product_picture`
   MODIFY `product_picture_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
--- AUTO_INCREMENT a táblához `product_tag`
+-- AUTO_INCREMENT for table `product_tag`
 --
 ALTER TABLE `product_tag`
   MODIFY `product_tag_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
--- AUTO_INCREMENT a táblához `review`
+-- AUTO_INCREMENT for table `review`
 --
 ALTER TABLE `review`
-  MODIFY `review_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `review_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
--- AUTO_INCREMENT a táblához `review_vote`
+-- AUTO_INCREMENT for table `review_vote`
 --
 ALTER TABLE `review_vote`
-  MODIFY `review_vote_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `review_vote_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
--- AUTO_INCREMENT a táblához `shipping_address`
+-- AUTO_INCREMENT for table `shipping_address`
 --
 ALTER TABLE `shipping_address`
   MODIFY `shipping_address_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT a táblához `tag`
+-- AUTO_INCREMENT for table `tag`
 --
 ALTER TABLE `tag`
   MODIFY `tag_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT a táblához `vendor_detail`
+-- AUTO_INCREMENT for table `vendor_detail`
 --
 ALTER TABLE `vendor_detail`
   MODIFY `vendor_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT a táblához `wish_list`
+-- AUTO_INCREMENT for table `wish_list`
 --
 ALTER TABLE `wish_list`
   MODIFY `wish_list_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- Megkötések a kiírt táblákhoz
+-- Constraints for dumped tables
 --
 
 --
--- Megkötések a táblához `cart`
+-- Constraints for table `cart`
 --
 ALTER TABLE `cart`
   ADD CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`shipping_address_id`) REFERENCES `shipping_address` (`shipping_address_id`),
   ADD CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `cart_product`
+-- Constraints for table `cart_product`
 --
 ALTER TABLE `cart_product`
   ADD CONSTRAINT `cart_product_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
   ADD CONSTRAINT `cart_product_ibfk_2` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`cart_id`);
 
 --
--- Megkötések a táblához `follower_relations`
+-- Constraints for table `follower_relations`
 --
 ALTER TABLE `follower_relations`
   ADD CONSTRAINT `follower_relations_ibfk_1` FOREIGN KEY (`follower_id`) REFERENCES `member` (`member_id`),
   ADD CONSTRAINT `follower_relations_ibfk_2` FOREIGN KEY (`following_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `message`
+-- Constraints for table `message`
 --
 ALTER TABLE `message`
   ADD CONSTRAINT `message_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `member` (`member_id`),
   ADD CONSTRAINT `message_ibfk_2` FOREIGN KEY (`reciver_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `product`
+-- Constraints for table `product`
 --
 ALTER TABLE `product`
   ADD CONSTRAINT `product_ibfk_1` FOREIGN KEY (`vendor_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `product_material`
+-- Constraints for table `product_material`
 --
 ALTER TABLE `product_material`
   ADD CONSTRAINT `product_material_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
   ADD CONSTRAINT `product_material_ibfk_2` FOREIGN KEY (`material_id`) REFERENCES `material` (`material_id`);
 
 --
--- Megkötések a táblához `product_picture`
+-- Constraints for table `product_picture`
 --
 ALTER TABLE `product_picture`
   ADD CONSTRAINT `product_picture_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`);
 
 --
--- Megkötések a táblához `product_tag`
+-- Constraints for table `product_tag`
 --
 ALTER TABLE `product_tag`
   ADD CONSTRAINT `product_tag_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
   ADD CONSTRAINT `product_tag_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`tag_id`);
 
 --
--- Megkötések a táblához `review`
+-- Constraints for table `review`
 --
 ALTER TABLE `review`
   ADD CONSTRAINT `review_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
   ADD CONSTRAINT `review_ibfk_2` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `review_vote`
+-- Constraints for table `review_vote`
 --
 ALTER TABLE `review_vote`
   ADD CONSTRAINT `review_vote_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
@@ -4925,19 +4932,19 @@ ALTER TABLE `review_vote`
   ADD CONSTRAINT `review_vote_ibfk_3` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `shipping_address`
+-- Constraints for table `shipping_address`
 --
 ALTER TABLE `shipping_address`
   ADD CONSTRAINT `shipping_address_ibfk_1` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `vendor_detail`
+-- Constraints for table `vendor_detail`
 --
 ALTER TABLE `vendor_detail`
   ADD CONSTRAINT `vendor_detail_ibfk_1` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `wish_list`
+-- Constraints for table `wish_list`
 --
 ALTER TABLE `wish_list`
   ADD CONSTRAINT `wish_list_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
