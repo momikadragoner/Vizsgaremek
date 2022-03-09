@@ -6,7 +6,7 @@
             </div>
             <div class="shadow rounded row p-1 m-2 col-xl-6" [ngClass]="{'bg-unread':!notif.seen}" [routerLink]="notif.link">
                 <span class="col-1 text-center py-1 pt-2">
-                    <fa-icon [icon]="faShoppingBag"></fa-icon>
+                    <fa-icon [icon]="[iconPrefix, (notif.type|icon:'notif')]"></fa-icon>
                 </span>
                 <div class="col-10 py-1 pt-2">
                     <span [routerLink]="'/profile/' + notif.senderId" class="fw-bold sender"> {{notif.senderLastName}} {{notif.senderFirstName}} </span>

@@ -12,6 +12,8 @@ export class StatePipe implements PipeTransform {
                 return 'Szállítás folyamatban';
             case "Unavailable":
                 return 'Nem elérhető';
+            case "Arrived":
+                return 'Megérkezett';
             default:
                 break;
         }

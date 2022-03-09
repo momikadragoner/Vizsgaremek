@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.0.1
 -- https://www.phpmyadmin.net/
 --
--- Gép: 127.0.0.1
--- Létrehozás ideje: 2022. Már 09. 10:28
--- Kiszolgáló verziója: 10.4.21-MariaDB-log
--- PHP verzió: 8.0.10
+-- Host: 127.0.0.1
+-- Generation Time: Mar 09, 2022 at 10:56 PM
+-- Server version: 10.4.11-MariaDB
+-- PHP Version: 7.4.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -18,18 +19,21 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Adatbázis: `agora-webshop`
+-- Database: `agora-webshop`
 --
 CREATE DATABASE IF NOT EXISTS `agora-webshop` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci;
 USE `agora-webshop`;
 
 DELIMITER $$
 --
--- Eljárások
+-- Procedures
 --
 CREATE DEFINER=`root`@`localhost` PROCEDURE `changeProductVisibility` (IN `isPub` TINYINT, IN `lstUp` DATETIME, IN `prodId` INT)  NO SQL
 BEGIN
 	UPDATE `product` SET `is_published`=isPub, `last_updated_at`=lstUp WHERE product_id = prodId;
+    IF isPub THEN
+    	CALL insertProductNotifs((SELECT product.vendor_id FROM product WHERE product.product_id = prodId), prodId);
+    END IF;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAddress` (IN `addressId` INT)  NO SQL
@@ -154,10 +158,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertNotification` (IN `senderId` 
         SET @cont = 'új terméket tett közzé.';
     ELSEIF typ = 'order-tracking' THEN
     	SET @lnk = '/order-tracking';
-        SET @cont = 'rendelésed állapota frissült.';
-    ELSEIF @typ = 'order-arrived' THEN
+        SET @cont = 'frissítette egy rendelésed állapotát.';
+    ELSEIF typ = 'order-arrived' THEN
     	SET @lnk = '/order-management';
-        SET @cont = 'megkapta a tőled rendelt termékeket.';
+        SET @cont = 'megkapott egy tőled rendelt terméket.';
     END IF;
 	INSERT INTO `notification`(`sender_id`, `reciver_id`, `content`, `type`, `item_id`, `link`, `seen`, `sent_at`) VALUES (senderId, reciverId, @cont, typ, itemId, @lnk, FALSE, NOW());
 END$$
@@ -296,7 +300,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `selectNotifications` (IN `userId` I
 	SELECT notification.notification_id AS notificationId, notification.sender_id AS senderId, notification.reciver_id AS reciverId, notification.content, notification.type, notification.item_id AS itemId, notification.link, notification.seen, notification.sent_at AS sentAt, member.first_name AS senderFirstName, member.last_name AS senderLastName 
 FROM notification 
 INNER JOIN member ON member.member_id = notification.sender_id
-WHERE notification.reciver_id = userId;
+WHERE notification.reciver_id = userId
+ORDER BY notification.sent_at DESC;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `selectOrder` (IN `userId` INT)  BEGIN
@@ -304,7 +309,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `selectOrder` (IN `userId` INT)  BEG
     FROM `cart` 
     INNER JOIN cart_product ON cart_product.cart_id = cart.cart_id
     INNER JOIN product ON product.product_id = cart_product.product_id
-    WHERE product.vendor_id = userId AND cart.status != 'Not Sent';
+    WHERE product.vendor_id = userId AND cart.status != 'Not Sent'
+    ORDER BY cart.cart_id DESC;
 	SELECT product.product_id AS productId, product.name, product.price, product.vendor_id AS sellerId, product.discount, product.is_published AS isPublic, member.first_name AS sellerFirstName, member.last_name AS sellerLastName, ( SELECT product_picture.resource_link FROM product_picture WHERE product_picture.is_thumbnail = TRUE AND product.product_id = product_picture.product_id LIMIT 1 ) AS imgUrl, cart_product.amount, cart_product.status, cart_product.cart_product_id AS cartProductId, cart.cart_id AS cartId
     FROM cart_product
 INNER JOIN product ON cart_product.product_id = product.product_id
@@ -415,6 +421,13 @@ BEGIN
   	DEALLOCATE PREPARE stmt;
     WHILE (x < (length + 1)) DO
         UPDATE cart_product SET cart_product.status = ( SELECT statuses.name FROM statuses WHERE statuses.i = x) WHERE cart_product.cart_product_id =  (SELECT statuses.cpId FROM statuses WHERE statuses.i = x);
+        SET @cartProdId = (SELECT statuses.cpId FROM statuses WHERE statuses.i = x);
+        SET @stat = ( SELECT statuses.name FROM statuses WHERE statuses.i = x);
+        IF @stat = 'Arrived' THEN
+        	CALL insertNotification((SELECT cart.member_id FROM cart INNER JOIN cart_product ON cart_product.cart_id = cart.cart_id WHERE cart_product.cart_product_id = @cartProdId), (SELECT product.vendor_id FROM product INNER JOIN cart_product ON cart_product.product_id = product.product_id WHERE cart_product.cart_product_id = @cartProdId), 'order-arrived', @cartProdId);
+        ELSE
+            CALL insertNotification((SELECT product.vendor_id FROM product INNER JOIN cart_product ON cart_product.product_id = product.product_id WHERE cart_product.cart_product_id = @cartProdId), (SELECT cart.member_id FROM cart INNER JOIN cart_product ON cart_product.cart_id = cart.cart_id WHERE cart_product.cart_product_id = @cartProdId), 'order-tracking', @cartProdId);
+        END IF;
         SET x = x + 1;
     END WHILE;
 END$$
@@ -463,7 +476,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `cart`
+-- Table structure for table `cart`
 --
 
 CREATE TABLE `cart` (
@@ -475,19 +488,20 @@ CREATE TABLE `cart` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `cart`
+-- Dumping data for table `cart`
 --
 
 INSERT INTO `cart` (`cart_id`, `member_id`, `shipping_address_id`, `sum_price`, `status`) VALUES
 (9, 21, 9, 12210, 'Ordered'),
 (10, 21, 9, 8720, 'Ordered'),
 (13, 21, 8, 2580, 'Ordered'),
-(14, 21, 9, 30560, 'Ordered');
+(14, 21, 9, 30560, 'Ordered'),
+(15, 21, 8, 1500, 'Ordered');
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `cart_product`
+-- Table structure for table `cart_product`
 --
 
 CREATE TABLE `cart_product` (
@@ -499,23 +513,25 @@ CREATE TABLE `cart_product` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `cart_product`
+-- Dumping data for table `cart_product`
 --
 
 INSERT INTO `cart_product` (`cart_product_id`, `cart_id`, `product_id`, `amount`, `status`) VALUES
-(34, 9, 2, 1, 'Ordered'),
-(36, 10, 5, 2, 'Delivery in progress'),
-(37, 10, 14, 1, 'Delivery in progress'),
-(43, 13, 17, 1, 'Delivery in progress'),
-(44, 13, 14, 1, 'Delivery in progress'),
-(45, 14, 2, 1, 'Ordered'),
-(46, 14, 11, 1, 'Packaging'),
-(47, 14, 12, 1, 'Packaging');
+(34, 9, 2, 1, 'Arrived'),
+(36, 10, 5, 2, 'Arrived'),
+(37, 10, 14, 1, 'Arrived'),
+(43, 13, 17, 1, 'Arrived'),
+(44, 13, 14, 1, 'Arrived'),
+(45, 14, 2, 1, 'Arrived'),
+(46, 14, 11, 1, 'Arrived'),
+(47, 14, 12, 1, 'Arrived'),
+(48, 15, 18, 1, 'Arrived'),
+(49, 15, 17, 1, 'Packaging');
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `city`
+-- Table structure for table `city`
 --
 
 CREATE TABLE `city` (
@@ -526,7 +542,7 @@ CREATE TABLE `city` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `city`
+-- Dumping data for table `city`
 --
 
 INSERT INTO `city` (`city_id`, `city_name`, `postal_code`, `region_id`) VALUES
@@ -4114,7 +4130,7 @@ INSERT INTO `city` (`city_id`, `city_name`, `postal_code`, `region_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `follower_relations`
+-- Table structure for table `follower_relations`
 --
 
 CREATE TABLE `follower_relations` (
@@ -4123,7 +4139,7 @@ CREATE TABLE `follower_relations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `follower_relations`
+-- Dumping data for table `follower_relations`
 --
 
 INSERT INTO `follower_relations` (`follower_id`, `following_id`) VALUES
@@ -4136,7 +4152,7 @@ INSERT INTO `follower_relations` (`follower_id`, `following_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `material`
+-- Table structure for table `material`
 --
 
 CREATE TABLE `material` (
@@ -4145,7 +4161,7 @@ CREATE TABLE `material` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `material`
+-- Dumping data for table `material`
 --
 
 INSERT INTO `material` (`material_id`, `material_name`) VALUES
@@ -4164,7 +4180,7 @@ INSERT INTO `material` (`material_id`, `material_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `member`
+-- Table structure for table `member`
 --
 
 CREATE TABLE `member` (
@@ -4184,7 +4200,7 @@ CREATE TABLE `member` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `member`
+-- Dumping data for table `member`
 --
 
 INSERT INTO `member` (`member_id`, `first_name`, `last_name`, `email`, `password`, `phone`, `about`, `profile_picture_link`, `header_picture_link`, `registered_at`, `last_login`, `is_vendor`, `is_admin`) VALUES
@@ -4219,7 +4235,7 @@ INSERT INTO `member` (`member_id`, `first_name`, `last_name`, `email`, `password
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `message`
+-- Table structure for table `message`
 --
 
 CREATE TABLE `message` (
@@ -4232,7 +4248,7 @@ CREATE TABLE `message` (
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `notification`
+-- Table structure for table `notification`
 --
 
 CREATE TABLE `notification` (
@@ -4248,7 +4264,7 @@ CREATE TABLE `notification` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `notification`
+-- Dumping data for table `notification`
 --
 
 INSERT INTO `notification` (`notification_id`, `sender_id`, `reciver_id`, `content`, `type`, `item_id`, `link`, `seen`, `sent_at`) VALUES
@@ -4256,12 +4272,54 @@ INSERT INTO `notification` (`notification_id`, `sender_id`, `reciver_id`, `conte
 (2, 25, 21, 'új terméket tett közzé.', 'product', 4, '/product-details/4', 1, '2022-03-09 09:25:24'),
 (3, 25, 22, 'új terméket tett közzé.', 'product', 4, '/product-details/4', 0, '2022-03-09 09:25:24'),
 (4, 21, 17, 'új terméket tett közzé.', 'product', 18, '/product-details/18', 0, '2022-03-09 09:32:16'),
-(5, 21, 18, 'új terméket tett közzé.', 'product', 18, '/product-details/18', 0, '2022-03-09 09:32:16');
+(5, 21, 18, 'új terméket tett közzé.', 'product', 18, '/product-details/18', 0, '2022-03-09 09:32:16'),
+(6, 22, 21, 'új terméket tett közzé.', 'product', 8, '/product-details/8', 0, '2022-03-09 19:22:13'),
+(7, 21, 21, 'rendelésed állapota frissült.', 'order-tracking', 36, '/order-tracking', 0, '2022-03-09 19:56:27'),
+(8, 21, 21, 'rendelésed állapota frissült.', 'order-tracking', 37, '/order-tracking', 0, '2022-03-09 19:56:27'),
+(9, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 36, '/order-tracking', 0, '2022-03-09 19:57:46'),
+(10, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 37, '/order-tracking', 0, '2022-03-09 19:57:46'),
+(11, 2, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 34, '/order-tracking', 0, '2022-03-09 20:46:29'),
+(12, 2, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 34, '/order-tracking', 0, '2022-03-09 20:47:31'),
+(13, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 36, '/order-tracking', 0, '2022-03-09 20:57:55'),
+(14, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 37, '/order-tracking', 0, '2022-03-09 20:57:55'),
+(15, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 36, '/order-tracking', 0, '2022-03-09 21:17:59'),
+(16, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 37, '/order-tracking', 0, '2022-03-09 21:17:59'),
+(17, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 36, '/order-tracking', 0, '2022-03-09 21:19:15'),
+(18, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 37, '/order-tracking', 0, '2022-03-09 21:19:15'),
+(19, 2, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 34, '/order-tracking', 0, '2022-03-09 21:19:25'),
+(20, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 43, '/order-tracking', 0, '2022-03-09 21:21:39'),
+(21, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 48, '/order-tracking', 0, '2022-03-09 21:38:50'),
+(22, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 49, '/order-tracking', 0, '2022-03-09 21:38:50'),
+(23, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 44, '/order-tracking', 0, '2022-03-09 21:41:23'),
+(24, 21, 21, '', 'order-arrived', 36, '', 0, '2022-03-09 21:56:31'),
+(25, 21, 2, '', 'order-arrived', 34, '', 0, '2022-03-09 22:29:49'),
+(26, 21, 25, '', 'order-arrived', 47, '', 0, '2022-03-09 22:30:17'),
+(27, 21, 2, '', 'order-arrived', 45, '', 0, '2022-03-09 22:31:19'),
+(28, 21, 25, '', 'order-arrived', 46, '', 0, '2022-03-09 22:31:19'),
+(29, 21, 25, '', 'order-arrived', 47, '', 0, '2022-03-09 22:31:19'),
+(30, 21, 2, '', 'order-arrived', 34, '', 0, '2022-03-09 22:34:03'),
+(31, 21, 21, '', 'order-arrived', 37, '', 0, '2022-03-09 22:35:30'),
+(32, 21, 21, '', 'order-arrived', 36, '', 0, '2022-03-09 22:35:40'),
+(33, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 48, '/order-tracking', 0, '2022-03-09 22:35:56'),
+(34, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 49, '/order-tracking', 0, '2022-03-09 22:35:56'),
+(35, 21, 21, 'megkapta a tőled rendelt termékeket.', 'order-arrived', 44, '/order-management', 0, '2022-03-09 22:43:31'),
+(36, 21, 21, '', 'order-arrived', 43, '', 0, '2022-03-09 22:44:14'),
+(37, 21, 2, 'megkapott egy tőled rendelt terméket.', 'order-arrived', 45, '/order-management', 0, '2022-03-09 22:44:42'),
+(38, 21, 25, 'megkapott egy tőled rendelt terméket.', 'order-arrived', 46, '/order-management', 0, '2022-03-09 22:45:37'),
+(39, 21, 25, 'megkapott egy tőled rendelt terméket.', 'order-arrived', 47, '/order-management', 0, '2022-03-09 22:47:24'),
+(40, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 43, '/order-tracking', 0, '2022-03-09 22:50:57'),
+(41, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 44, '/order-tracking', 0, '2022-03-09 22:50:57'),
+(42, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 48, '/order-tracking', 0, '2022-03-09 22:51:02'),
+(43, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 49, '/order-tracking', 0, '2022-03-09 22:51:02'),
+(44, 21, 21, 'megkapott egy tőled rendelt terméket.', 'order-arrived', 48, '/order-management', 0, '2022-03-09 22:52:13'),
+(45, 21, 21, 'megkapott egy tőled rendelt terméket.', 'order-arrived', 43, '/order-management', 0, '2022-03-09 22:53:25'),
+(46, 21, 21, 'megkapott egy tőled rendelt terméket.', 'order-arrived', 43, '/order-management', 0, '2022-03-09 22:53:33'),
+(47, 21, 21, 'megkapott egy tőled rendelt terméket.', 'order-arrived', 44, '/order-management', 0, '2022-03-09 22:53:33');
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `product`
+-- Table structure for table `product`
 --
 
 CREATE TABLE `product` (
@@ -4283,7 +4341,7 @@ CREATE TABLE `product` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `product`
+-- Dumping data for table `product`
 --
 
 INSERT INTO `product` (`product_id`, `name`, `price`, `description`, `inventory`, `delivery`, `category`, `rating`, `vendor_id`, `discount`, `is_published`, `is_removed`, `created_at`, `last_updated_at`, `published_at`) VALUES
@@ -4294,12 +4352,12 @@ INSERT INTO `product` (`product_id`, `name`, `price`, `description`, `inventory`
 (5, 'Friss Ementáli Sajt', 3610, 'reggeli, érdekében most isten alszom, van hozzá dolog sokkal vagyok? most mely meleg Nagyon ember. vacsora. ', 24, 'Azonnal szállítható', 'Tejtermék', 4, 21, NULL, 1, NULL, '2022-01-09 00:00:00', '2022-02-27 15:43:03', '2022-01-09 00:00:00'),
 (6, 'Füstölt Cheddar Sajt', 6830, 'dolog lehetőség során az lesz évente. nem a szájba évente. szemben szabadságra ', 14, 'Azonnal szállítható', 'Tejtermék', 1, 25, NULL, 1, NULL, '2022-01-29 00:00:00', NULL, '2022-01-29 00:00:00'),
 (7, 'Füstölt Edami Sajt', 6240, 'fene van eljön. szemmel reggeli, övék. jól tovább viszont hiszem, eddig Két ember szó ', 5, 'Megrendelésre készül', 'Tejtermék', 3.5, 25, NULL, 1, NULL, '2022-01-14 00:00:00', NULL, '2022-01-14 00:00:00'),
-(8, 'Finom Brie Sajt', 4010, 'ajtót! tehát évente. idő Féltékeny közé És lesz kövér, tudom a mégis szüleimre, ', 18, 'Azonnal szállítható', 'Tejtermék', 1.25, 22, NULL, 1, NULL, '2022-01-14 00:00:00', NULL, '2022-01-14 00:00:00'),
+(8, 'Finom Brie Sajt', 4010, 'ajtót! tehát évente. idő Féltékeny közé És lesz kövér, tudom a mégis szüleimre, ', 18, 'Azonnal szállítható', 'Tejtermék', 1.25, 22, NULL, 1, NULL, '2022-01-14 00:00:00', '2022-03-09 19:22:13', '2022-01-14 00:00:00'),
 (9, 'Házi Parmezan Sajt', 8620, 'keresztül meleg ebben életforma. értem, tudom Hol az életforma. hónap övék. jól ', 18, 'Azonnal szállítható', 'Tejtermék', 4, 22, NULL, 1, NULL, '2022-01-22 00:00:00', NULL, '2022-01-22 00:00:00'),
 (10, ' Ementáli Sajt', 7400, 'darabig közé jog tudom szó áldja azon kopog, nem vagyok ', 16, 'Azonnal szállítható', 'Tejtermék', 2.75, 24, NULL, 1, NULL, '2022-01-04 00:00:00', NULL, '2022-01-04 00:00:00'),
 (11, 'Friss Ementáli Sajt', 610, 'azok néhány koffeinfüggő azon látni, szinte azon Hol őket van ', 15, 'Megrendelésre készül', 'Tejtermék', 3, 25, NULL, 1, NULL, '2022-01-01 00:00:00', NULL, '2022-01-01 00:00:00'),
 (12, ' Parmezan Sajt', 24960, 'kopog, mint Hol ezzel különböző ezzel szájba vagyok kerül mint őket legtöbb szüleimre, ide? vacsora. szájba ', 24, 'Azonnal szállítható', 'Tejtermék', 2.75, 25, NULL, 1, NULL, '2022-01-09 00:00:00', NULL, '2022-01-09 00:00:00'),
-(13, 'Füstölt Trapista Sajt', 16640, 'olyan alszom, isten mégis mai fizetek szájba tehát kerültem ember. hiszen kövér, kövér, ', 12, 'Megrendelésre készül', 'Tejtermék', 1.5, 23, NULL, 1, NULL, '2022-01-17 00:00:00', NULL, '2022-01-17 00:00:00'),
+(13, 'Füstölt Trapista Sajt', 16640, 'olyan alszom, isten mégis mai fizetek szájba tehát kerültem ember. hiszen kövér, kövér, ', 12, 'Megrendelésre készül', 'Tejtermék', 1.5, 23, NULL, 1, NULL, '2022-01-17 00:00:00', '2022-03-09 19:17:06', '2022-01-17 00:00:00'),
 (14, 'Product-02', 1500, 'dffhjk', NULL, 'Azonnal szállítható', 'Ital', NULL, 21, NULL, 1, NULL, '2022-02-19 21:43:30', '2022-02-19 21:43:40', '2022-02-19 21:43:30'),
 (15, 'Teljes kiőrlésű kenyér', 450, 'A legjobb teljes kiőrlésű kenyér.', 12, 'Azonnal szállítható', 'Pékáru', NULL, 21, NULL, 1, NULL, '2022-03-07 08:17:26', NULL, '2022-03-07 08:17:26'),
 (16, 'Lekvár', 1500, 'Lekvár ', 20, 'Azonnal szállítható', 'Ital', NULL, 21, NULL, 1, NULL, '2022-03-07 08:23:02', NULL, '2022-03-07 08:23:00'),
@@ -4309,7 +4367,7 @@ INSERT INTO `product` (`product_id`, `name`, `price`, `description`, `inventory`
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `product_material`
+-- Table structure for table `product_material`
 --
 
 CREATE TABLE `product_material` (
@@ -4319,7 +4377,7 @@ CREATE TABLE `product_material` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `product_material`
+-- Dumping data for table `product_material`
 --
 
 INSERT INTO `product_material` (`product_material_id`, `material_id`, `product_id`) VALUES
@@ -4352,7 +4410,7 @@ INSERT INTO `product_material` (`product_material_id`, `material_id`, `product_i
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `product_picture`
+-- Table structure for table `product_picture`
 --
 
 CREATE TABLE `product_picture` (
@@ -4364,7 +4422,7 @@ CREATE TABLE `product_picture` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `product_picture`
+-- Dumping data for table `product_picture`
 --
 
 INSERT INTO `product_picture` (`product_picture_id`, `product_id`, `resource_name`, `resource_link`, `is_thumbnail`) VALUES
@@ -4408,7 +4466,7 @@ INSERT INTO `product_picture` (`product_picture_id`, `product_id`, `resource_nam
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `product_tag`
+-- Table structure for table `product_tag`
 --
 
 CREATE TABLE `product_tag` (
@@ -4418,7 +4476,7 @@ CREATE TABLE `product_tag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `product_tag`
+-- Dumping data for table `product_tag`
 --
 
 INSERT INTO `product_tag` (`product_tag_id`, `tag_id`, `product_id`) VALUES
@@ -4470,7 +4528,7 @@ INSERT INTO `product_tag` (`product_tag_id`, `tag_id`, `product_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `region`
+-- Table structure for table `region`
 --
 
 CREATE TABLE `region` (
@@ -4479,7 +4537,7 @@ CREATE TABLE `region` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `region`
+-- Dumping data for table `region`
 --
 
 INSERT INTO `region` (`region_id`, `region_name`) VALUES
@@ -4507,7 +4565,7 @@ INSERT INTO `region` (`region_id`, `region_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `review`
+-- Table structure for table `review`
 --
 
 CREATE TABLE `review` (
@@ -4522,7 +4580,7 @@ CREATE TABLE `review` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `review`
+-- Dumping data for table `review`
 --
 
 INSERT INTO `review` (`review_id`, `product_id`, `member_id`, `rating`, `points`, `title`, `content`, `published_at`) VALUES
@@ -4575,7 +4633,7 @@ INSERT INTO `review` (`review_id`, `product_id`, `member_id`, `rating`, `points`
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `review_vote`
+-- Table structure for table `review_vote`
 --
 
 CREATE TABLE `review_vote` (
@@ -4588,7 +4646,7 @@ CREATE TABLE `review_vote` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `review_vote`
+-- Dumping data for table `review_vote`
 --
 
 INSERT INTO `review_vote` (`review_vote_id`, `product_id`, `review_id`, `member_id`, `vote`, `voted_at`) VALUES
@@ -4599,7 +4657,7 @@ INSERT INTO `review_vote` (`review_vote_id`, `product_id`, `review_id`, `member_
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `shipping_address`
+-- Table structure for table `shipping_address`
 --
 
 CREATE TABLE `shipping_address` (
@@ -4618,7 +4676,7 @@ CREATE TABLE `shipping_address` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `shipping_address`
+-- Dumping data for table `shipping_address`
 --
 
 INSERT INTO `shipping_address` (`shipping_address_id`, `member_id`, `name`, `phone`, `first_name`, `last_name`, `email`, `country`, `region`, `city`, `street_adress`, `postal_code`) VALUES
@@ -4631,7 +4689,7 @@ INSERT INTO `shipping_address` (`shipping_address_id`, `member_id`, `name`, `pho
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `tag`
+-- Table structure for table `tag`
 --
 
 CREATE TABLE `tag` (
@@ -4640,7 +4698,7 @@ CREATE TABLE `tag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `tag`
+-- Dumping data for table `tag`
 --
 
 INSERT INTO `tag` (`tag_id`, `tag_name`) VALUES
@@ -4656,7 +4714,7 @@ INSERT INTO `tag` (`tag_id`, `tag_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `vendor_detail`
+-- Table structure for table `vendor_detail`
 --
 
 CREATE TABLE `vendor_detail` (
@@ -4669,7 +4727,7 @@ CREATE TABLE `vendor_detail` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `vendor_detail`
+-- Dumping data for table `vendor_detail`
 --
 
 INSERT INTO `vendor_detail` (`vendor_detail_id`, `member_id`, `company_name`, `site_location`, `website`, `takes_custom_orders`) VALUES
@@ -4684,7 +4742,7 @@ INSERT INTO `vendor_detail` (`vendor_detail_id`, `member_id`, `company_name`, `s
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `wish_list`
+-- Table structure for table `wish_list`
 --
 
 CREATE TABLE `wish_list` (
@@ -4695,7 +4753,7 @@ CREATE TABLE `wish_list` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `wish_list`
+-- Dumping data for table `wish_list`
 --
 
 INSERT INTO `wish_list` (`wish_list_id`, `product_id`, `member_id`, `added_at`) VALUES
@@ -4704,11 +4762,11 @@ INSERT INTO `wish_list` (`wish_list_id`, `product_id`, `member_id`, `added_at`) 
 (4, 8, 25, '2022-03-05 15:53:08');
 
 --
--- Indexek a kiírt táblákhoz
+-- Indexes for dumped tables
 --
 
 --
--- A tábla indexei `cart`
+-- Indexes for table `cart`
 --
 ALTER TABLE `cart`
   ADD PRIMARY KEY (`cart_id`),
@@ -4716,7 +4774,7 @@ ALTER TABLE `cart`
   ADD KEY `member_id` (`member_id`);
 
 --
--- A tábla indexei `cart_product`
+-- Indexes for table `cart_product`
 --
 ALTER TABLE `cart_product`
   ADD PRIMARY KEY (`cart_product_id`),
@@ -4724,32 +4782,32 @@ ALTER TABLE `cart_product`
   ADD KEY `cart_id` (`cart_id`);
 
 --
--- A tábla indexei `city`
+-- Indexes for table `city`
 --
 ALTER TABLE `city`
   ADD PRIMARY KEY (`city_id`);
 
 --
--- A tábla indexei `follower_relations`
+-- Indexes for table `follower_relations`
 --
 ALTER TABLE `follower_relations`
   ADD PRIMARY KEY (`follower_id`,`following_id`),
   ADD KEY `following_id` (`following_id`);
 
 --
--- A tábla indexei `material`
+-- Indexes for table `material`
 --
 ALTER TABLE `material`
   ADD PRIMARY KEY (`material_id`);
 
 --
--- A tábla indexei `member`
+-- Indexes for table `member`
 --
 ALTER TABLE `member`
   ADD PRIMARY KEY (`member_id`);
 
 --
--- A tábla indexei `message`
+-- Indexes for table `message`
 --
 ALTER TABLE `message`
   ADD PRIMARY KEY (`message_id`),
@@ -4757,7 +4815,7 @@ ALTER TABLE `message`
   ADD KEY `reciver_id` (`reciver_id`);
 
 --
--- A tábla indexei `notification`
+-- Indexes for table `notification`
 --
 ALTER TABLE `notification`
   ADD PRIMARY KEY (`notification_id`),
@@ -4765,14 +4823,14 @@ ALTER TABLE `notification`
   ADD KEY `reciver_id` (`reciver_id`);
 
 --
--- A tábla indexei `product`
+-- Indexes for table `product`
 --
 ALTER TABLE `product`
   ADD PRIMARY KEY (`product_id`),
   ADD KEY `vendor_id` (`vendor_id`);
 
 --
--- A tábla indexei `product_material`
+-- Indexes for table `product_material`
 --
 ALTER TABLE `product_material`
   ADD PRIMARY KEY (`product_material_id`),
@@ -4780,14 +4838,14 @@ ALTER TABLE `product_material`
   ADD KEY `material_id` (`material_id`);
 
 --
--- A tábla indexei `product_picture`
+-- Indexes for table `product_picture`
 --
 ALTER TABLE `product_picture`
   ADD PRIMARY KEY (`product_picture_id`),
   ADD KEY `product_id` (`product_id`);
 
 --
--- A tábla indexei `product_tag`
+-- Indexes for table `product_tag`
 --
 ALTER TABLE `product_tag`
   ADD PRIMARY KEY (`product_tag_id`),
@@ -4795,7 +4853,7 @@ ALTER TABLE `product_tag`
   ADD KEY `tag_id` (`tag_id`);
 
 --
--- A tábla indexei `review`
+-- Indexes for table `review`
 --
 ALTER TABLE `review`
   ADD PRIMARY KEY (`review_id`),
@@ -4803,7 +4861,7 @@ ALTER TABLE `review`
   ADD KEY `member_id` (`member_id`);
 
 --
--- A tábla indexei `review_vote`
+-- Indexes for table `review_vote`
 --
 ALTER TABLE `review_vote`
   ADD PRIMARY KEY (`review_vote_id`),
@@ -4812,27 +4870,27 @@ ALTER TABLE `review_vote`
   ADD KEY `member_id` (`member_id`);
 
 --
--- A tábla indexei `shipping_address`
+-- Indexes for table `shipping_address`
 --
 ALTER TABLE `shipping_address`
   ADD PRIMARY KEY (`shipping_address_id`),
   ADD KEY `member_id` (`member_id`);
 
 --
--- A tábla indexei `tag`
+-- Indexes for table `tag`
 --
 ALTER TABLE `tag`
   ADD PRIMARY KEY (`tag_id`);
 
 --
--- A tábla indexei `vendor_detail`
+-- Indexes for table `vendor_detail`
 --
 ALTER TABLE `vendor_detail`
   ADD PRIMARY KEY (`vendor_detail_id`),
   ADD KEY `member_id` (`member_id`);
 
 --
--- A tábla indexei `wish_list`
+-- Indexes for table `wish_list`
 --
 ALTER TABLE `wish_list`
   ADD PRIMARY KEY (`wish_list_id`),
@@ -4840,185 +4898,185 @@ ALTER TABLE `wish_list`
   ADD KEY `member_id` (`member_id`);
 
 --
--- A kiírt táblák AUTO_INCREMENT értéke
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT a táblához `cart`
+-- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- AUTO_INCREMENT a táblához `cart_product`
+-- AUTO_INCREMENT for table `cart_product`
 --
 ALTER TABLE `cart_product`
-  MODIFY `cart_product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `cart_product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
--- AUTO_INCREMENT a táblához `city`
+-- AUTO_INCREMENT for table `city`
 --
 ALTER TABLE `city`
   MODIFY `city_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3579;
 
 --
--- AUTO_INCREMENT a táblához `material`
+-- AUTO_INCREMENT for table `material`
 --
 ALTER TABLE `material`
   MODIFY `material_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
--- AUTO_INCREMENT a táblához `member`
+-- AUTO_INCREMENT for table `member`
 --
 ALTER TABLE `member`
   MODIFY `member_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
--- AUTO_INCREMENT a táblához `message`
+-- AUTO_INCREMENT for table `message`
 --
 ALTER TABLE `message`
   MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT a táblához `notification`
+-- AUTO_INCREMENT for table `notification`
 --
 ALTER TABLE `notification`
-  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
--- AUTO_INCREMENT a táblához `product`
+-- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
   MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
--- AUTO_INCREMENT a táblához `product_material`
+-- AUTO_INCREMENT for table `product_material`
 --
 ALTER TABLE `product_material`
   MODIFY `product_material_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
--- AUTO_INCREMENT a táblához `product_picture`
+-- AUTO_INCREMENT for table `product_picture`
 --
 ALTER TABLE `product_picture`
   MODIFY `product_picture_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
--- AUTO_INCREMENT a táblához `product_tag`
+-- AUTO_INCREMENT for table `product_tag`
 --
 ALTER TABLE `product_tag`
   MODIFY `product_tag_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
--- AUTO_INCREMENT a táblához `review`
+-- AUTO_INCREMENT for table `review`
 --
 ALTER TABLE `review`
   MODIFY `review_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
--- AUTO_INCREMENT a táblához `review_vote`
+-- AUTO_INCREMENT for table `review_vote`
 --
 ALTER TABLE `review_vote`
   MODIFY `review_vote_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
--- AUTO_INCREMENT a táblához `shipping_address`
+-- AUTO_INCREMENT for table `shipping_address`
 --
 ALTER TABLE `shipping_address`
   MODIFY `shipping_address_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT a táblához `tag`
+-- AUTO_INCREMENT for table `tag`
 --
 ALTER TABLE `tag`
   MODIFY `tag_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT a táblához `vendor_detail`
+-- AUTO_INCREMENT for table `vendor_detail`
 --
 ALTER TABLE `vendor_detail`
   MODIFY `vendor_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT a táblához `wish_list`
+-- AUTO_INCREMENT for table `wish_list`
 --
 ALTER TABLE `wish_list`
   MODIFY `wish_list_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- Megkötések a kiírt táblákhoz
+-- Constraints for dumped tables
 --
 
 --
--- Megkötések a táblához `cart`
+-- Constraints for table `cart`
 --
 ALTER TABLE `cart`
   ADD CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`shipping_address_id`) REFERENCES `shipping_address` (`shipping_address_id`),
   ADD CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `cart_product`
+-- Constraints for table `cart_product`
 --
 ALTER TABLE `cart_product`
   ADD CONSTRAINT `cart_product_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
   ADD CONSTRAINT `cart_product_ibfk_2` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`cart_id`);
 
 --
--- Megkötések a táblához `follower_relations`
+-- Constraints for table `follower_relations`
 --
 ALTER TABLE `follower_relations`
   ADD CONSTRAINT `follower_relations_ibfk_1` FOREIGN KEY (`follower_id`) REFERENCES `member` (`member_id`),
   ADD CONSTRAINT `follower_relations_ibfk_2` FOREIGN KEY (`following_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `message`
+-- Constraints for table `message`
 --
 ALTER TABLE `message`
   ADD CONSTRAINT `message_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `member` (`member_id`),
   ADD CONSTRAINT `message_ibfk_2` FOREIGN KEY (`reciver_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `notification`
+-- Constraints for table `notification`
 --
 ALTER TABLE `notification`
   ADD CONSTRAINT `notification_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `member` (`member_id`),
   ADD CONSTRAINT `notification_ibfk_2` FOREIGN KEY (`reciver_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `product`
+-- Constraints for table `product`
 --
 ALTER TABLE `product`
   ADD CONSTRAINT `product_ibfk_1` FOREIGN KEY (`vendor_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `product_material`
+-- Constraints for table `product_material`
 --
 ALTER TABLE `product_material`
   ADD CONSTRAINT `product_material_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
   ADD CONSTRAINT `product_material_ibfk_2` FOREIGN KEY (`material_id`) REFERENCES `material` (`material_id`);
 
 --
--- Megkötések a táblához `product_picture`
+-- Constraints for table `product_picture`
 --
 ALTER TABLE `product_picture`
   ADD CONSTRAINT `product_picture_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`);
 
 --
--- Megkötések a táblához `product_tag`
+-- Constraints for table `product_tag`
 --
 ALTER TABLE `product_tag`
   ADD CONSTRAINT `product_tag_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
   ADD CONSTRAINT `product_tag_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`tag_id`);
 
 --
--- Megkötések a táblához `review`
+-- Constraints for table `review`
 --
 ALTER TABLE `review`
   ADD CONSTRAINT `review_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
   ADD CONSTRAINT `review_ibfk_2` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `review_vote`
+-- Constraints for table `review_vote`
 --
 ALTER TABLE `review_vote`
   ADD CONSTRAINT `review_vote_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
@@ -5026,19 +5084,19 @@ ALTER TABLE `review_vote`
   ADD CONSTRAINT `review_vote_ibfk_3` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `shipping_address`
+-- Constraints for table `shipping_address`
 --
 ALTER TABLE `shipping_address`
   ADD CONSTRAINT `shipping_address_ibfk_1` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `vendor_detail`
+-- Constraints for table `vendor_detail`
 --
 ALTER TABLE `vendor_detail`
   ADD CONSTRAINT `vendor_detail_ibfk_1` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `wish_list`
+-- Constraints for table `wish_list`
 --
 ALTER TABLE `wish_list`
   ADD CONSTRAINT `wish_list_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),

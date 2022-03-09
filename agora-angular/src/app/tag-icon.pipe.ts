@@ -64,6 +64,20 @@ export class TagIconPipe implements PipeTransform {
         default:
           break;
       }
+    } else if (type == 'notif'){
+      switch (value) {
+        case "product":
+          iconName = 'shopping-bag';
+          return iconName;
+        case "order-tracking":
+          iconName = 'truck';
+          return iconName;
+        case "order-arrived":
+          iconName = 'home';
+          return iconName;
+        default:
+          break;
+      }
     }
     iconName = 'exclamation-circle';
     return iconName;

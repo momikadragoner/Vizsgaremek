@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { faCheckCircle, faCircle, faGripLinesVertical, faLongArrowAltDown, faLongArrowAltUp, faTruck } from '@fortawesome/free-solid-svg-icons';
-import { Cart, CartService } from '../services/cart.service';
+import { Cart, CartProduct, CartService } from '../services/cart.service';
 
 @Component({
   selector: 'app-order-tracking',
@@ -29,6 +29,13 @@ export class OrderTrackingComponent implements OnInit {
           {
             order.status = order.products[0].status;
           }
+          else if (this.orders[i].products) {
+            let statuses:string[] = [];
+            order.products.forEach(x=>{
+              if(x.status != 'Arrived' && x.status != 'Unavailable') statuses.push(x.status);
+            })
+            if(statuses.every( x => x == statuses[0])) order.status = statuses[0];
+          }
         }
       }
     })
@@ -38,7 +45,21 @@ export class OrderTrackingComponent implements OnInit {
   }
 
   orderArrived(orderId:number, productId?:number){
-    
+    let cartproducts: CartProduct[] = [];
+    console.log(orderId, productId);
+    if (productId != undefined) {
+      this.orders[orderId].products[productId].status = 'Arrived';
+      cartproducts = [this.orders[orderId].products[productId]];
+    }
+    else if (productId == undefined) {
+      this.orders[orderId].products.forEach(x => x.status = 'Arrived');
+      cartproducts = this.orders[orderId].products;
+    }
+    this.cartService.updateCartProducts(cartproducts).subscribe({
+      next: () => {
+
+      }
+    });
   }
 
 }

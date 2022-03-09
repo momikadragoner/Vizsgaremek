@@ -20,29 +20,29 @@
                             <fa-icon [icon]="faLongArrowAltUp"></fa-icon>
                         </div>
                         <div class="col-3 mb-0 text-end pe-4">
-                            <span>Megérkezett </span>
+                            <span [ngClass]="{'fw-bold':('Arrived' == order.status)}">Megérkezett </span>
                             <fa-icon [icon]="faLongArrowAltUp"></fa-icon> 
                         </div>
                     </div>
                     <div class="row">
                         <div *ngFor="let i of [0,1,2,3]" class="col-3 mb-0 text-end text-secondary progress-circle">
-                            <h3 [ngClass]="{'text-primary': (i < 2 && order.status == 'Packaging')||(i<1 && order.status == 'Ordered')||(i<3 && order.status == 'Delivery in progress')}">
+                            <h3 [ngClass]="{'text-primary': (i < 2 && order.status == 'Packaging')||(i<1 && order.status == 'Ordered')||(i<3 && order.status == 'Delivery in progress')||(i<4 && order.status == 'Arrived')}">
                                 <fa-icon [icon]="faCircle"></fa-icon>
                             </h3>
                         </div>
                     </div>
                     <div class="progress bg-secondary">
-                        <div class="progress-bar" [ngClass]="{'w-25':('Ordered' == order.status),'w-50':('Packaging' == order.status), 'w-75':('Delivery in progress' == order.status)}" role="progressbar"></div>
+                        <div class="progress-bar" [ngClass]="{'w-25':('Ordered' == order.status),'w-50':('Packaging' == order.status), 'w-75':('Delivery in progress' == order.status), 'w-100':('Arrived' == order.status)}" role="progressbar"></div>
                     </div>
                     <div class="d-flex justify-content-end mt-4">
-                        <a (click)="orderArrived(i)" class="btn btn-primary">
+                        <a (click)="orderArrived(i)" class="btn btn-primary" [ngClass]="{'disabled':order.status == 'Arrived'}">
                             <fa-icon [icon]="faCheckCircle"></fa-icon>
                             Teljes rendelés megérkezett
                         </a>
                     </div>
                     <collapse-panel [panelOpen]="true" [title]="'Termékek'" class="mx-2">
                         <div *ngFor="let product of order.products; let j = index" class="border-bottom">
-                            <div class="row p-2 pb-0 mt-2">
+                            <div class="row p-2 pb-0 mt-2" [ngClass]="{'bg-arrived':product.status == 'Arrived'}">
                                 <div class="col-auto mb-3">
                                     <img src="{{product.imgUrl}}" alt="" class="img img-fluid rounded"
                                         style="max-height: 4rem;">
@@ -67,7 +67,7 @@
                                     </span>
                                 </div>
                                 <div *ngIf="order.products.length>1" class="col-6 col-lg-2 mt-3 mb-2">
-                                    <a (click)="orderArrived(i, j)" class="btn btn-primary">
+                                    <a (click)="orderArrived(i, j)" class="btn btn-primary" [ngClass]="{'disabled':product.status == 'Arrived'}">
                                         <fa-icon [icon]="faCheckCircle"></fa-icon>
                                         Megérkezett
                                     </a>
