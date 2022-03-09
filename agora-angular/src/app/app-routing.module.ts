@@ -20,6 +20,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { ProfileSettingsComponent } from './settings/profile-settings/profile-settings.component';
 import { AddressComponent } from './settings/address/address.component';
 import { OrderTrackingComponent } from './order-tracking/order-tracking.component';
+import { NotificationsComponent } from './notifications/notifications.component';
 
 const routes: Routes = [
   { path: '', component: FrontPageComponent, canActivate: [AuthGuardService] },
@@ -37,6 +38,7 @@ const routes: Routes = [
   { path: 'checkout', component: CheckoutComponent },
   { path: 'order-management', component: OrderManagementComponent },
   { path: 'order-tracking', component: OrderTrackingComponent },
+  { path: 'notifications', component: NotificationsComponent },
   { path: 'settings', component: SettingsComponent },
   { path: 'settings/profile-settings', component: ProfileSettingsComponent },
   { path: 'settings/address', component: AddressComponent },

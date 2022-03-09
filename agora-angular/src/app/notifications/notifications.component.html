@@ -1,0 +1,22 @@
+<div class="page">
+    <div class="container shadow rounded p-3 col-md-11 col-lg-9 mb-4">
+        <h2 class="text-center">Értesítések</h2>
+        <div *ngFor="let notif of notifications" class="row">
+            <div class="col-xl-3">
+            </div>
+            <div class="shadow rounded row p-1 m-2 col-xl-6" [ngClass]="{'bg-unread':!notif.seen}" [routerLink]="notif.link">
+                <span class="col-1 text-center py-1 pt-2">
+                    <fa-icon [icon]="faShoppingBag"></fa-icon>
+                </span>
+                <div class="col-10 py-1 pt-2">
+                    <span [routerLink]="'/profile/' + notif.senderId" class="fw-bold sender"> {{notif.senderLastName}} {{notif.senderFirstName}} </span>
+                    <span>{{notif.content}}</span>
+                </div>
+                <span class="col-1 text-center btn btn-outline-primary">
+                    <fa-icon [icon]="faArrowRight"></fa-icon>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<page-footer></page-footer>

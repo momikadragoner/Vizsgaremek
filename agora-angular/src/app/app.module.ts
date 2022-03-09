@@ -58,6 +58,8 @@ import { AddressComponent } from './settings/address/address.component';
 import { AddressFormComponent } from './order/address-form/address-form.component';
 import { OrderTrackingComponent } from './order-tracking/order-tracking.component';
 import { StatePipe } from './state.pipe';
+import { NotificationService } from './services/notification.service';
+import { NotificationsComponent } from './notifications/notifications.component';
 
 
 @NgModule({
@@ -102,7 +104,8 @@ import { StatePipe } from './state.pipe';
     AddressComponent,
     AddressFormComponent,
     OrderTrackingComponent,
-    StatePipe
+    StatePipe,
+    NotificationsComponent
   ],
   imports: [
     BrowserModule,
@@ -127,7 +130,8 @@ import { StatePipe } from './state.pipe';
     WishListService,
     ReviewService,
     FollowService,
-    AddressService
+    AddressService,
+    NotificationService,
   ],
   bootstrap: [AppComponent]
 })

@@ -692,3 +692,18 @@ exports.deleteReviewVote= (req, res, next) => {
   );
   conn.end();
 }
+exports.getNotifications = (req, res, next) => {
+  if (!Number(req.params.id)) return res.json({'Error' : 'ID must be a number'});
+  let id = Number(req.params.id);
+  conn = connectDb();
+  let sql = 'CALL selectNotifications(?)'
+  conn.query(sql, [id], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(200);
+      res.json(results[0]);
+    }
+  })
+  conn.end();
+}

@@ -67,4 +67,6 @@ router.post('/post-review-vote', userController.postReviewVote);
 
 router.delete('/delete-review-vote/:reviewId/:userId', userController.deleteReviewVote);
 
+router.get('/notifications/:id', userController.getNotifications);
+
 module.exports = router;
