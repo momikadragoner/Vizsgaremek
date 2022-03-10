@@ -707,3 +707,16 @@ exports.getNotifications = (req, res, next) => {
   })
   conn.end();
 }
+exports.updateNotifSeen = (req, res, next) => {
+  conn = connectDb();
+  let sql = 'CALL updateNotifSeen(?)'
+  conn.query(sql, [req.body.notificationId], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(200);
+      res.json(results[0]);
+    }
+  })
+  conn.end();
+}

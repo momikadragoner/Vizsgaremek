@@ -51,6 +51,13 @@ export class NotificationService {
             );
     }
 
+    updateNotification(notification:Notification){
+        return this.http.put<object>(this.rootURL + '/update-notification', notification)
+        .pipe(
+            catchError(this.handleError)
+        );
+    }
+
 
     private handleError(error: HttpErrorResponse) {
         if (error.status === 0) {

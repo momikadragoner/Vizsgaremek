@@ -57,8 +57,6 @@ export class ReviewComponent implements OnChanges {
     this.vote.reviewId = this.review.reviewId;
     this.vote.userId = this.reviewService.currentUser.userId;
     this.vote.vote = this.review.myVote;
-    console.log(this.review);
-    
   }
 
   upvote() {

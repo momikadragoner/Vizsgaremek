@@ -164,7 +164,7 @@
                     (click)="openModal([review.reviewId], $event)">
                     <div class="row">
                         <div class="col">
-                            <h5 class="m-2 fw-bold" [ngClass]="{'placeholder col-8':review.title == ''}">{{review.title}}</h5>
+                            <h5 class="m-2 fw-bold" [ngClass]="{'placeholder col-8':review.title == '', 'small': review.title.length > 20}">{{review.title|trim:20}}</h5>
                         </div>
                         <div class="text-end col-auto m-2 ps-0 ms-0">
                             <small class="text-secondary">{{review.publishedAt|date}}</small>
@@ -183,7 +183,7 @@
                                 [ngClass]="{'placeholder col-8':review.userLastName == ''}">{{review.userLastName}} {{review.userFirstName}}</small>
                         </div>
                     </div>
-                    <p class="m-2" [ngClass]="{'placeholder col-11':review.content == ''}">{{review.content|trim: 75}}</p>
+                    <p class="m-2" [ngClass]="{'placeholder col-11':review.content == ''}">{{review.content|trim: 90}}</p>
                     <p *ngIf="review.content == ''" class="mx-2 mb-2">
                         <span class="placeholder col-4"></span>
                         <span class="placeholder col-4"></span>

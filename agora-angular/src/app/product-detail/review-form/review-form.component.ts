@@ -47,7 +47,7 @@ export class ReviewFormComponent implements OnInit {
   }
 
   reviewForm = this.fb.group({
-    title: ['', Validators.required],
+    title: ['', [Validators.required, Validators.maxLength(30)]],
     review: ['', Validators.required]
   });
 

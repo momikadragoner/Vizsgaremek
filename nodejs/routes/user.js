@@ -69,4 +69,6 @@ router.delete('/delete-review-vote/:reviewId/:userId', userController.deleteRevi
 
 router.get('/notifications/:id', userController.getNotifications);
 
+router.put('/update-notification', userController.updateNotifSeen);
+
 module.exports = router;

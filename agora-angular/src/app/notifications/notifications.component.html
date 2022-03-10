@@ -4,7 +4,7 @@
         <div *ngFor="let notif of notifications" class="row">
             <div class="col-xl-3">
             </div>
-            <div class="shadow rounded row p-1 m-2 col-xl-6" [ngClass]="{'bg-unread':!notif.seen}" [routerLink]="notif.link">
+            <div class="shadow rounded row p-1 m-2 col-xl-6" [ngClass]="{'bg-unread':!notif.seen}" (click)="open(notif.notificationId)">
                 <span class="col-1 text-center py-1 pt-2">
                     <fa-icon [icon]="[iconPrefix, (notif.type|icon:'notif')]"></fa-icon>
                 </span>
