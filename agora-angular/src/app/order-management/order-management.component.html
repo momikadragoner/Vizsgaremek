@@ -20,7 +20,7 @@
                   <label class="form-label mb-1" for="status">Feldolgozási állapot</label>
                   <select class="form-select" id="status" (change)="orderStatusChange(i)"
                     [(ngModel)]="orders[i].status">
-                    <option *ngFor="let status of statuses" [ngValue]="status.value">{{status.name}}</option>
+                    <option *ngFor="let status of statuses" [ngValue]="status.value" [disabled]="status.disabled">{{status.name}}</option>
                   </select>
                 </div>
                 <div class="mb-3">
@@ -86,7 +86,7 @@
                   <div class="col-6 col-lg-3 mt-3 mb-2">
                     <select class="form-select" id="status" (change)="productStatusChange(i,j)"
                       [(ngModel)]="orders[i].products[j].status">
-                      <option *ngFor="let status of statuses" [ngValue]="status.value">{{status.name}}</option>
+                      <option *ngFor="let status of statuses" [ngValue]="status.value" [disabled]="status.disabled">{{status.name}}</option>
                     </select>
                     <!-- <select class="form-select">
                   <option value="">Rendelés fogadva</option>

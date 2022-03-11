@@ -12,29 +12,29 @@ $secondary: #c0c0c0;
     border-radius: 1.2rem;
     font-size: 1rem;
 }
-.message-sent{
+.sent{
     background-color: $secondary;
 }
-.message-recived{
+.recived{
     background-color: $primary;
 }
-.message-sent-burger-bottom{
+.sent-bottom{
     border-top-right-radius: 0;
 }
-.message-sent-burger-top{
+.sent-top{
     border-bottom-right-radius: 0;
 }
-.message-sent-burger-middle{
+.sent-middle{
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
-.message-recived-burger-bottom{
+.recived-bottom{
     border-top-left-radius: 0;
 }
-.message-recived-burger-top{
+.recived-top{
     border-bottom-left-radius: 0;
 }
-.message-recived-burger-middle{
+.recived-middle{
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }

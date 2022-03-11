@@ -25,7 +25,7 @@ export class OrderManagementComponent implements OnInit {
 
   constructor(
     private cartService: CartService,
-  ) 
+  )
   {
     cartService.getOrders().subscribe({
       next: data => {
@@ -99,7 +99,7 @@ export class OrderManagementComponent implements OnInit {
   }
 
   back($event:any){
-    $event.preventDefault(); 
+    $event.preventDefault();
     this.orders[this.selectedOrderId].status = "Ordered";
     this.orders[this.selectedOrderId].products.forEach(product => {
       product.status = "Ordered";
@@ -120,10 +120,11 @@ export class OrderManagementComponent implements OnInit {
   }
 
   statuses = [
-    {value: "Ordered", name: "Rendelés fogadva" },
-    {value: "Packaging", name: "Összekészítés alatt" },
-    {value: "Delivery in progress", name: "Szállítás folyamatban" },
-    {value: "Unavailable", name: "Nem elérhető" }
+    {value: "Ordered", name: "Rendelés fogadva", disabled: false },
+    {value: "Packaging", name: "Összekészítés alatt", disabled: false },
+    {value: "Delivery in progress", name: "Szállítás folyamatban", disabled: false },
+    {value: "Unavailable", name: "Nem elérhető", disabled: false },
+    {value: "Arrived", name: "Megérkezett", disabled: true }
   ]
 
   ngOnInit(): void {
