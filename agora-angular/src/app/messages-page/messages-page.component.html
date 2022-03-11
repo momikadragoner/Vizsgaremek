@@ -2,27 +2,34 @@
     <div class="row">
         <div class="col-12 col-md-5 col-lg-4">
             <div class="shadow rounded m-2 p-2 mt-1 pt-0">
-                <h2 class="fw-bold p-3 pb-0 mb-0">Üzenetek</h2>
-                <hr>
-                <div *ngFor="let contact of contacts">
-                    <div class="row">
-                        <div class="col-3">
-                            <img *ngIf="contact.profileImgUrl != ''" src="{{contact.profileImgUrl}}" class="profile-picture float-start mx-2" alt="">
-                            <svg *ngIf="contact.profileImgUrl == ''" height="100" width="100">
-                                <circle cx="40" cy="50" r="2rem" fill="#868e96" />
+                <h2 class="fw-bold p-3 mb-0">Üzenetek</h2>
+                <hr class="p-0 m-0">
+                <div *ngFor="let contact of contacts" class="contact">
+                    <div class="row py-2">
+                        <div class="col-auto">
+                            <img *ngIf="contact.profileImgUrl != ''" src="{{contact.profileImgUrl}}" class="profile-picture float-start mx-1" alt="">
+                            <svg *ngIf="contact.profileImgUrl == ''" height="64" width="64" class="mx-1">
+                                <circle cx="32" cy="32" r="2rem" fill="#868e96" />
                             </svg>
                         </div>
-                        <div class="col-8 ms-3">
-                            <h5 class="fw-bold mb-0 mt-3">{{contact.name}}</h5>
+                        <div class="col-auto">
+                            <h5 class="fw-bold mb-0 mt-1">{{contact.name}}</h5>
                             <p>{{contact.lastMessage}}</p>
                         </div>
                     </div>
-                    <hr>
+                    <hr class="m-0 p-0">
                 </div>
             </div>
         </div>
         <div class="col-12 col-md-7">
-            <app-messages [messages]=messages>
+            <div *ngIf="!messages" class="text-center mt-4 pt-4">
+                <h1>
+                    <fa-icon [icon]="faEnvelope"></fa-icon>
+                </h1>
+                <h2>Üzenetek</h2>
+                <p>kattints egy kontaktra, hogy megtekintsd őket</p>
+            </div>
+            <app-messages *ngIf="messages" [messages]=messages>
             </app-messages>
         </div>
     </div>

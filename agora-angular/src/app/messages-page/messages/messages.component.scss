@@ -1,52 +1,60 @@
-$primary: #859C62;
+$primary: #859c62;
 $secondary: #c0c0c0;
-.top{
-    position: absolute;
-    top: 0;
+.top {
+  position: absolute;
+  top: 0;
 }
-.bottom{
-    position: absolute;
-    bottom: 0;
+.bottom {
+  position: absolute;
+  bottom: 0;
 }
-.message{
-    border-radius: 1.2rem;
-    font-size: 1rem;
+.message {
+  border-radius: 1.2rem;
+  font-size: 1rem;
 }
-.sent{
-    background-color: $secondary;
+.sent {
+  background-color: $secondary;
 }
-.recived{
-    background-color: $primary;
+.recived {
+  background-color: $primary;
 }
-.sent-bottom{
-    border-top-right-radius: 0;
+.sent-bottom {
+  border-top-right-radius: 0;
+  margin-top: 0.1rem;
 }
-.sent-top{
-    border-bottom-right-radius: 0;
+.sent-top {
+  border-bottom-right-radius: 0;
+  margin-bottom: 0.1rem;
 }
-.sent-middle{
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+.sent-middle {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  margin-top: 0.1rem;
+  margin-bottom: 0.1rem;
 }
-.recived-bottom{
-    border-top-left-radius: 0;
+.recived-bottom {
+  border-top-left-radius: 0;
+  margin-top: 0.1rem;
 }
-.recived-top{
-    border-bottom-left-radius: 0;
+.recived-top {
+  border-bottom-left-radius: 0;
+  margin-bottom: 0.1rem;
 }
-.recived-middle{
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+.recived-middle {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  margin-top: 0.1rem;
+  margin-bottom: 0.1rem;
 }
-.messages-field{
-    width: inherit;
-    position: relative;
+.messages-field {
+  width: inherit;
+  position: relative;
 }
-.scroll{
-    overflow-y: scroll;
-    overflow-x: hidden;
-    max-height: 82vh;
+.scroll {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  max-height: 82vh;
 }
-.place-holder{
-    height: 3rem;
+.place-holder {
+  height: 3rem;
 }
