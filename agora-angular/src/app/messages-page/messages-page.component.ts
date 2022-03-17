@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
-import { messages, contactList, Message } from '../services/messages';
+import { Message, MessageService } from '../services/messages.service';
+import { UserService, UserShort } from '../services/user.service';
 
 @Component({
   selector: 'app-messages-page',
@@ -9,11 +10,29 @@ import { messages, contactList, Message } from '../services/messages';
 })
 export class MessagesPageComponent implements OnInit {
   faEnvelope = faEnvelope;
-  messages = messages;
 
-  constructor() {}
+  messages:Message[] = [];
+  contacts:UserShort[] = [];
+  selectedContact:UserShort = new UserShort();
 
-  contacts = contactList;
+  constructor(
+    private messageService: MessageService,
+    private userService: UserService
+  ) { 
+    messageService.getMessages(undefined, 22).subscribe({
+      next: (data) => {
+        this.messages = [...data];        
+      }
+    })
+    userService.getContacts().subscribe({
+      next: (data) => {
+        this.contacts = [...data];
+        console.log(this.contacts);
+      }
+    })
+  }
 
-  ngOnInit(): void {}
+  // contacts = contactList;
+
+  ngOnInit(): void { }
 }

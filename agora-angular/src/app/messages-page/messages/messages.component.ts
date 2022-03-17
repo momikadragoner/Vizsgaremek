@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
-import { Message } from '../../services/messages';
+import { Auth } from 'src/app/services/auth';
+import { Message, MessageService } from '../../services/messages.service';
 
 @Component({
   selector: 'app-messages',
@@ -11,10 +12,32 @@ export class MessagesComponent implements OnInit {
   faPaperPlane = faPaperPlane;
 
   @Input() public messages: Message[] = [];
+  @Input() public contactId: number = 22;
+  message:string = '';
+  currentUser = Auth.currentUser;
 
-  constructor() {}
+  constructor(
+    private messageService: MessageService
+  ) {}
 
   ngOnInit(): void {}
+
+  send(){
+    let message = new Message();
+    message.senderId = this.currentUser.userId;
+    message.reciverId = this.contactId;
+    message.message = this.message;
+    this.messageService.insertMessages(message).subscribe({
+      next: () => {
+        this.message = '';
+        this.messageService.getMessages(undefined, this.contactId).subscribe({
+          next: (data) => {
+            this.messages = [...data];        
+          }
+        })
+      }
+    });
+  }
 
   getStyle(id: number) {
     let message: Message = this.messages[id];

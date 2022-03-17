@@ -60,6 +60,7 @@ import { OrderTrackingComponent } from './order-tracking/order-tracking.componen
 import { StatePipe } from './state.pipe';
 import { NotificationService } from './services/notification.service';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { MessageService } from './services/messages.service';
 
 
 @NgModule({
@@ -132,6 +133,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
     FollowService,
     AddressService,
     NotificationService,
+    MessageService
   ],
   bootstrap: [AppComponent]
 })

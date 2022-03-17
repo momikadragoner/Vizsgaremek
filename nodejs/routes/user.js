@@ -71,4 +71,10 @@ router.get('/notifications/:id', userController.getNotifications);
 
 router.put('/update-notification', userController.updateNotifSeen);
 
+router.get('/messages/:userId/:contactId', userController.getMessages);
+
+router.post('/post-message', userController.postMessage);
+
+router.get('/contacts/:id', userController.getContacts);
+
 module.exports = router;

@@ -720,3 +720,61 @@ exports.updateNotifSeen = (req, res, next) => {
   })
   conn.end();
 }
+exports.postMessage = (req, res, next) => {
+  let sql = 'CALL insertMessage(?, ?, ?, ?)';
+  let message = req.body;
+  conn = connectDb();
+  conn.query(sql, 
+    [
+      message.senderId,
+      message.reciverId,
+      message.message,
+      new Date()
+    ], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      res.status(201);
+      res.json();
+    }
+  })
+  conn.end();
+}
+exports.getMessages = (req, res, next) => {
+
+  if (!Number(req.params.userId)) return res.json({'Error' : 'ID must be a number'});
+  let userId = Number(req.params.userId);
+  if (!Number(req.params.contactId)) return res.json({'Error' : 'ID must be a number'});
+  let contactId = Number(req.params.contactId);
+
+  let sql = 'CALL selectMessages(?, ?)';
+
+  conn = connectDb();
+  conn.query(sql,
+    [userId, contactId], (err, rows, fields) => {
+      if (err) console.log("Query " + err)
+      else {
+        res.status(200);
+        res.json(rows[0]);
+      }
+    }
+  );
+  conn.end();
+};
+exports.getContacts = (req, res, next) => {
+  if (!Number(req.params.id)) return res.json({'Error' : 'This product does not exist.'});
+  let id = Number(req.params.id);
+  conn = connectDb();
+  let sql = 'CALL selectContacts(?)';
+  conn.query(sql, [id], 
+  (err, results, fields) => {
+    if (err) console.log("Query " + err)
+    else {
+      results[0][0].products = results[1];
+      var cart = results[0];
+      res.status(200);
+      res.json(cart[0]);
+    }
+  })
+  conn.end();
+}

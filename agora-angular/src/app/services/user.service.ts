@@ -64,11 +64,11 @@ export interface UserShort {
 
 export class UserShort {
   constructor(
-    public userId: number,
-    public firstName: string,
-    public lastName: string,
-    public about: string,
-    public profileImgUrl: string,
+    public userId: number = 0,
+    public firstName: string = '',
+    public lastName: string = '',
+    public about: string = '',
+    public profileImgUrl: string = '',
     public companyName?: string,
     public takesCustomOrders?: boolean,
     public iFollow?: boolean
@@ -107,6 +107,13 @@ export class UserService {
     .pipe(
       catchError(this.handleError)
     );
+  }
+
+  getContacts(id: number = Auth.currentUser.userId) {
+    return this.http.get<[UserShort]>(this.rootURL + '/contacts/' + id)
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   private handleError(error: HttpErrorResponse) {
