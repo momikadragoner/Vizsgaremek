@@ -1,0 +1,72 @@
+{
+  "productId": 10,
+  "name": " Ementáli Sajt",
+  "price": 7400,
+  "description": "darabig közé jog tudom szó áldja azon kopog, nem vagyok ",
+  "inventory": 16,
+  "delivery": "Azonnal szállítható",
+  "category": "Tejtermék",
+  "rating": 2.75,
+  "sellerId": 24,
+  "discount": null,
+  "isPublic": 1,
+  "createdAt": "2022-01-03T23:00:00.000Z",
+  "lastUpdatedAt": null,
+  "publishedAt": "2022-01-03T23:00:00.000Z",
+  "sellerFirstName": "Rozália",
+  "sellerLastName": "Papp",
+  "materials": [
+    "tehéntej"
+  ],
+  "tags": [
+    "Bio",
+    "Vegán"
+  ],
+  "imgUrl": [
+    "assets/product-pictures/cheese6.jpg",
+    "assets/product-pictures/cheese3.jpg",
+    "assets/product-pictures/cheese4.jpg"
+  ],
+  "reviews": [
+    {
+      "reviewId": 18,
+      "userId": 20,
+      "rating": 3,
+      "title": "rendetlenséget! ajtót! ",
+      "content": "szeret. hozzá jól ezzel tudom jól érdekében hiszem, életforma. ",
+      "publishedAt": "2022-01-03T23:00:00.000Z",
+      "userFirstName": "Ildikó",
+      "userLastName": "Biró"
+    },
+    {
+      "reviewId": 41,
+      "userId": 7,
+      "rating": 3,
+      "title": "elég vagyok ",
+      "content": "ember együtt a lehetőség szép bumról, lesz szép áldja hiszem, és ",
+      "publishedAt": "2022-01-03T23:00:00.000Z",
+      "userFirstName": "Melinda",
+      "userLastName": "László"
+    },
+    {
+      "reviewId": 40,
+      "userId": 2,
+      "rating": 2,
+      "title": "terve, fene ",
+      "content": "amíg mely jog Hogy nekem vacsora. soha szükségem, ",
+      "publishedAt": "2022-01-03T23:00:00.000Z",
+      "userFirstName": "Aranka",
+      "userLastName": "Németh"
+    },
+    {
+      "reviewId": 42,
+      "userId": 6,
+      "rating": 3,
+      "title": "áldja Beszélgetek, ",
+      "content": "össze keresztül neki megfelelő itt évente. Szia, tudom ",
+      "publishedAt": "2022-01-03T23:00:00.000Z",
+      "userFirstName": "Gabriella",
+      "userLastName": "Kiss"
+    }
+  ]
+}

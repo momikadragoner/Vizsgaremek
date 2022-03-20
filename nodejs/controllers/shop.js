@@ -8,7 +8,10 @@ app.use(bodyParser.json());
 
 exports.getProduct = (req, res, next) => {
 
-  if (!Number(req.params.id)) return res.json({ 'Error': 'This URL does not lead to any products.' });
+  if (!Number(req.params.id)) {
+    res.status(400);
+    return res.json({ 'message': 'ID must be a number' });
+  }
   let id = Number(req.params.id);
 
   let materials = [];
@@ -20,7 +23,11 @@ exports.getProduct = (req, res, next) => {
   conn = connectDb()
   conn.query(sql,
     [id], (err, rows, fields) => {
-      if (err) console.log("Query " + err)
+      if (err) return res.json({ "Error": "Query" + err });
+      else if (!rows[4][0]) {
+        res.status(400);
+        return res.json({ 'message': "Product with given ID doesn't exist." });
+      }
       else {
         let result = [];
         rows[0].forEach((rows) => { materials.push(rows.material_name) });
@@ -44,7 +51,10 @@ exports.getReviewById = (req, res, next) => {
 
   conn = connectDb()
 
-  if (!Number(req.params.id)) return res.json('Error: This URL does not lead to any products.');
+  if (!Number(req.params.id)) {
+    res.status(400);
+    return res.json({ 'message': 'ID must be a number' });
+  }
 
   let id = Number(req.params.id);
 
@@ -75,7 +85,10 @@ exports.getProductsBySeller = (req, res, next) => {
 
   conn = connectDb()
 
-  if (!Number(req.params.id)) return res.json('Error: This URL does not lead to any products.');
+  if (!Number(req.params.id)) {
+    res.status(400);
+    return res.json({ 'message': 'ID must be a number' });
+  }
 
   let id = Number(req.params.id);
   let sorter = req.query.orderby;
