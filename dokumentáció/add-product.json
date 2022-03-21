@@ -1,0 +1,14 @@
+{
+  "name": "Teljes kiőrlésű kenyér",
+  "price": 500,
+  "discount": 20,
+  "inventory": 23,
+  "delivery": "Azonnal szállítható",
+  "category": "Pékáru",
+  "sellerId": 21,
+  "materials": [ "liszt", "élesztő" ],
+  "tags": [ "Kézzel készült", "Bio" ],
+  "imgUrl": [ "assets/default_assets/def-prod.png" ],
+  "description": "A legfinomabb friss, teljes kiőrlésű kenyér a régióban.",
+  "isPublic": true
+}

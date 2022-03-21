@@ -72,6 +72,10 @@ function stringifyArray(array) {
   return strArray;
 };
 exports.postNewProduct = (req, res, next) => {
+  if (!(req.body.name && req.body.price)) {
+    res.status(400);
+    return res.json({ 'message': 'Required fields were left empty.' });
+  }
   product = req.body;
   let productId;
   var publshedAt = product.isPublic ? new Date() : null;
@@ -105,7 +109,7 @@ exports.postNewProduct = (req, res, next) => {
       if (err) console.log("Query " + err)
       else {
         res.status(201);
-        res.json(product)
+        res.json(product);
       }
     }
   )
