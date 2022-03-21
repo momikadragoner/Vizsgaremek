@@ -81,6 +81,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const isAuth = require('./util/is-auth');
 
 app.use(express.urlencoded({ extended: false }));
 
@@ -109,6 +110,6 @@ app.use('/user', authRoutes);
 
 
 app.use('/api', shopRoutes);
-app.use('/api', userRoutes);
+app.use('/api', isAuth, userRoutes);
 
 app.listen(3080);

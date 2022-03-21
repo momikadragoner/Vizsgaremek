@@ -44,9 +44,12 @@ exports.userLogin=(req,res,next)=>{
             if(!result.length){
                 res.send({status:0, data:err});
             } else{
-                
                 let token = jwt.sign({data:result}, 'secret')
                 res.send({status:1, data:result, token:token})
+                conn.query('CALL beginSession(?, ?)', 
+                [userEmail, token], function(err, result,fields){
+                    if (err) res.json({'message':"Query " + err})
+                })
             }
         })
     } catch(error){

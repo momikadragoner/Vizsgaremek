@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
 import { Auth } from './auth';
 
@@ -95,8 +95,10 @@ export class UserService {
   }
 
   getUser(id: number = Auth.currentUser.userId) {
+    let token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
+    let headers = token ? new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }) : new HttpHeaders({ 'Content-Type': 'application/json' });
     let url = this.isLoggedIn ? this.rootURL + '/user-log/' + id + "/" + this.currentUser.userId : this.rootURL + '/user/' + id;
-    return this.http.get<User>(url)
+    return this.http.get<User>(url, {headers: headers})
       .pipe(
         catchError(this.handleError)
       );
