@@ -41,13 +41,11 @@ export class NavComponent implements OnInit {
   menuOpen = false;
   categories = categories;
 
-  isLogged: Boolean = false;
-  public loggedIn = true;
-
   constructor(
     private library: FaIconLibrary,
     private _auth: AuthService,
     private _router: Router,
+    private authService: AuthService
   ) {
     library.addIcons( faShoppingCart, faGem, faCarrot, faCheese, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt);
   }
@@ -97,11 +95,17 @@ export class NavComponent implements OnInit {
   }
 
   isLoggedIn() {
-    console.log(this._auth.getUserDetails())
+    // console.log(this._auth.getUserDetails())
     if (this._auth.getUserDetails() != null) {
-      this.isLogged = true;
+      return true;
     }
+    else{
+      return false;
+    }
+  }
 
+  currentUser() {
+    return this.authService.getUserDetails()[0];
   }
 
 }

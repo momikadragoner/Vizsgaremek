@@ -77,7 +77,9 @@ export class CartService {
     private authService: AuthService
     ) { }
 
-    currentUser = this.authService.getUserDetails()[0];
+    currentUserId() {
+      return this.authService.getUserDetails()[0].member_id
+    }
     rootURL = '/api';
 
     httpOptions = {
@@ -88,68 +90,67 @@ export class CartService {
     };
 
     getCartProducts() {
-
-        return this.http.get<[CartProduct]>(this.rootURL + '/cart-products/' + this.currentUser.member_id, this.httpOptions)
+        return this.http.get<[CartProduct]>(this.rootURL + '/cart-products/' + this.currentUserId(), this.httpOptions)
             .pipe(
                 catchError(this.handleError)
             );
     }
 
     getCart() {
-        return this.http.get<Cart>(this.rootURL + '/cart/' + this.currentUser.member_id, this.httpOptions)
+        return this.http.get<Cart>(this.rootURL + '/cart/' + this.currentUserId(), this.httpOptions)
         .pipe(
             catchError(this.handleError)
         );
     }
 
     getOrders() {
-        return this.http.get<[Cart]>(this.rootURL + '/order/' + this.currentUser.member_id, this.httpOptions)
+        return this.http.get<[Cart]>(this.rootURL + '/order/' + this.currentUserId(), this.httpOptions)
         .pipe(
             catchError(this.handleError)
         );
     }
 
     getMyOrders() {
-        return this.http.get<[Cart]>(this.rootURL + '/my-orders/' + this.currentUser.member_id, this.httpOptions)
+        return this.http.get<[Cart]>(this.rootURL + '/my-orders/' + this.currentUserId(), this.httpOptions)
         .pipe(
             catchError(this.handleError)
         );
     }
 
-    postCart(productId: number, userId: number = this.currentUser.member_id) {
+    postCart(productId: number, userId: number = this.currentUserId()) {
         let cart = {
             "productId": productId,
             "userId": userId
         }
-        return this.http.post<object>(this.rootURL + '/post-cart', cart, this.httpOptions)
+        return this.http.post<object>(this.rootURL + '/cart', cart, this.httpOptions)
             .pipe(
                 catchError(error => this.handleError(error))
             );
     }
 
     sendCart(cart:Cart){
-        return this.http.put<object>(this.rootURL + '/put-cart', cart, this.httpOptions)
+        return this.http.put<object>(this.rootURL + '/cart', cart, this.httpOptions)
             .pipe(
                 catchError(error => this.handleError(error))
             );
     }
 
     updateCartProducts(cartProducts:CartProduct[]){
-        return this.http.put<object>(this.rootURL + '/update-cart-products', cartProducts, this.httpOptions)
+        return this.http.put<object>(this.rootURL + '/cart-products', cartProducts, this.httpOptions)
         .pipe(
             catchError(error => this.handleError(error))
         );
     }
 
     deleteCartProduct(id:number) {
-        return this.http.delete(this.rootURL + '/delete-cart/' + id, this.httpOptions)
+        return this.http.delete(this.rootURL + '/cart/' + id, this.httpOptions)
             .pipe(
                 catchError(this.handleError)
             );
     }
 
-    deleteCartOrder(cartId:number, userId:number = this.currentUser.member_id){
-        return this.http.delete(this.rootURL + '/delete-cart-order/' + cartId + "/" + userId, this.httpOptions)
+    deleteCartOrder(cartId:number, userId:number = this.currentUserId()){
+        return this.http.delete(this.rootURL + '/cart-order/' + cartId + "/" + userId, this.httpOptions)
         .pipe(
             catchError(this.handleError)
         );

@@ -48,7 +48,9 @@ export class WishListService {
     private authService: AuthService
   ) { }
 
-  currentUserId = this.authService.getUserDetails()[0].member_id;
+  currentUserId() {
+    return this.authService.getUserDetails()[0].member_id
+  }
   rootURL = '/api';
   httpOptions = {
     headers: new HttpHeaders({
@@ -69,14 +71,14 @@ export class WishListService {
       "productId": productId,
       "userId": userId
     }
-    return this.http.post<object>(this.rootURL + '/post-wish-list', wishList, this.httpOptions)
+    return this.http.post<object>(this.rootURL + '/wish-list', wishList, this.httpOptions)
       .pipe(
         catchError(error => this.handleError(error))
       );
   }
 
   deleteWishList(id: number) {
-    return this.http.delete(this.rootURL + '/delete-wish-list/' + id, this.httpOptions)
+    return this.http.delete(this.rootURL + '/wish-list/' + id, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );

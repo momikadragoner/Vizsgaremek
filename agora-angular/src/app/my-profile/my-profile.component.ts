@@ -46,9 +46,6 @@ export class MyProfileComponent implements OnInit {
 
   order?: any;
   searchTerm?: string;
-
-  currentUserId = this.authService.getUserDetails()[0].member_id;
-
   orderOptions: string[] = ["Összes", "Legújabb", "Legrégebbi", "Ár szerint csökkenő", "Ár szerint növekvő", "Készleten", "Közzétett", "Nincs közzétéve"];
 
   tabOpen = 1;
@@ -98,6 +95,10 @@ export class MyProfileComponent implements OnInit {
     this.ShowWishList();
   }
 
+  currentUserId() {
+    return this.authService.getUserDetails()[0].member_id
+  }
+
   selectTab($event:any, id:number){
     $event.preventDefault();
     this.tabOpen = id;
@@ -139,7 +140,7 @@ export class MyProfileComponent implements OnInit {
   }
 
   ShowWishList() {
-    this.wishListService.getWishList(this.currentUserId)
+    this.wishListService.getWishList(this.currentUserId())
       .subscribe({
         next: (data: [WishListProduct]) => this.wishList = [...data],
         error: error => this.error = error
@@ -189,7 +190,7 @@ export class MyProfileComponent implements OnInit {
 
   addToCart($event: any, id: number) {
     $event.preventDefault();
-    this.cartService.postCart(id, this.currentUserId)
+    this.cartService.postCart(id, this.currentUserId())
       .subscribe({
         next: data => {
         },

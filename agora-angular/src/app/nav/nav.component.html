@@ -17,7 +17,7 @@
                         class="nav-link-selectable nav-link px-2 link-dark">Most</a></li>
             </ul>
 
-            <div *ngIf="loggedIn" class="col-md-3 text-end loggedin-nav">
+            <div *ngIf="isLoggedIn()" class="col-md-3 text-end loggedin-nav">
                 <a [routerLink]="['/notifications']" class="btn p-1 m-1 btn-cart">
                     <fa-layers [fixedWidth]="true">
                         <fa-icon [icon]="faBell"></fa-icon>
@@ -31,14 +31,14 @@
                     </fa-layers>
                 </a>
                 <a (click)="toggleCart($event)" href="/my-profile" class="p-1 m-1">
-                    <img class="profile-nav" src="assets/profilepic.jpg" alt="">
+                    <img class="profile-nav" src="{{ currentUser().profile_picture_link }}" alt="">
                 </a>
                 <div *ngIf="menuOpen">
                     <div class="menu-bg" (click)="toggleCart($event)"></div>
                     <div class="rounded shadow menu">
                         <ul class="list-unstyled mb-0">
                             <li class="text-start m-2 mx-3">
-                                <p class="small m-0">Bejelentkezve mint <span class="fw-bold">Nagy Erzsébet</span> </p>
+                                <p class="small m-0">Bejelentkezve mint <span class="fw-bold">{{currentUser().last_name}} {{currentUser().first_name}}</span> </p>
                             </li>
                             <li>
                                 <hr class="dropdown-divider m-0">
@@ -46,8 +46,8 @@
                             <li><a class="dropdown-item" (click)="toggleCart($event)" [routerLink]="['/my-profile']" [queryParams]="{tab: 1}">Profil</a></li>
                             <li><a class="dropdown-item" (click)="toggleCart($event)" [routerLink]="['/my-profile']" [queryParams]="{tab: 2}">Kívánság lista</a></li>
                             <li><a class="dropdown-item" (click)="toggleCart($event)" [routerLink]="['/order-tracking']">Rendelés követés</a></li>
-                            <li><a class="dropdown-item" (click)="toggleCart($event)" [routerLink]="['/order-management']">Bejövő rendelések</a></li>
-                            <li><a class="dropdown-item" (click)="toggleCart($event)" [routerLink]="['/settings']" href="#">Beállítások</a></li>
+                            <li *ngIf="currentUser().is_vendor"><a class="dropdown-item" (click)="toggleCart($event)" [routerLink]="['/order-management']">Bejövő rendelések</a></li>
+                            <li><a class="dropdown-item" (click)="toggleCart($event)" [routerLink]="['/settings/address']" href="#">Szállítási címek</a></li>
                             <li>
                                 <hr class="dropdown-divider m-0">
                             </li>
@@ -58,7 +58,7 @@
 
 
         </div>
-        <div *ngIf="loggedIn == false" class="col-md-3 text-end">
+        <div *ngIf="isLoggedIn() == false" class="col-md-3 text-end">
             <a [routerLink]="['/signup-vendor']" class="btn p-1 m-1 btn-sell">Eladok</a>
             <a href="/login" class="btn p-1 m-1 btn-login">Belépés</a>
         </div>

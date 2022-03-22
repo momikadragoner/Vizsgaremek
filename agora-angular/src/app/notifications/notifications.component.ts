@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faArrowRight, faHome, faShoppingBag, faTruck, IconPrefix } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faBell, faHome, faShoppingBag, faTruck, IconPrefix } from '@fortawesome/free-solid-svg-icons';
 import { Notification, NotificationService } from '../services/notification.service';
 
 @Component({
@@ -15,13 +15,14 @@ export class NotificationsComponent implements OnInit {
 
   iconPrefix: IconPrefix = 'fas';
   faArrowRight = faArrowRight;
+  faBell = faBell;
 
   constructor(
     private notificationService: NotificationService,
     private library: FaIconLibrary,
     private router: Router
-  ) 
-  { 
+  )
+  {
     library.addIcons(faShoppingBag, faTruck, faHome);
     notificationService.getNotifications().subscribe({
       next: data => {

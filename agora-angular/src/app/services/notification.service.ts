@@ -45,7 +45,9 @@ export class NotificationService {
     private authService: AuthService
   ) { }
 
-  currentUserId = this.authService.getUserDetails()[0].member_id;
+  currentUserId() {
+    return this.authService.getUserDetails()[0].member_id
+  }
   rootURL = '/api';
   httpOptions = {
     headers: new HttpHeaders({
@@ -54,7 +56,7 @@ export class NotificationService {
     })
   };
 
-    getNotifications( userId: number = this.currentUserId) {
+    getNotifications( userId: number = this.currentUserId()) {
         return this.http.get<[Notification]>(this.rootURL + '/notifications/' + userId, this.httpOptions)
             .pipe(
                 catchError(this.handleError)
@@ -62,7 +64,7 @@ export class NotificationService {
     }
 
     updateNotification(notification:Notification){
-        return this.http.put<object>(this.rootURL + '/update-notification', notification, this.httpOptions)
+        return this.http.put<object>(this.rootURL + '/notification', notification, this.httpOptions)
         .pipe(
             catchError(this.handleError)
         );

@@ -17,6 +17,11 @@
                 </span>
             </div>
         </div>
+        <div *ngIf="notifications[0] == undefined" class="text-center mt-4 pt-4">
+          <h1><fa-icon [icon]="faBell"></fa-icon></h1>
+          <h2>Nincsenek értesítésid</h2>
+          <p>mikor érkeznek, itt fognak megjelnni</p>
+      </div>
     </div>
 </div>
 <page-footer></page-footer>

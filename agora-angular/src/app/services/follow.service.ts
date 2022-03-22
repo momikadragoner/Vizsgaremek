@@ -11,7 +11,9 @@ export class FollowService {
     private authService: AuthService
   ) { }
 
-  currentUserId = this.authService.getUserDetails()[0].member_id;
+  currentUserId() {
+    return this.authService.getUserDetails()[0].member_id
+  }
   rootURL = '/api';
   httpOptions = {
     headers: new HttpHeaders({
@@ -22,17 +24,17 @@ export class FollowService {
 
   postFollow(userId: number) {
     let follow = {
-      "follower": this.currentUserId,
+      "follower": this.currentUserId(),
       "following": userId
     }
-    return this.http.post<object>(this.rootURL + '/post-follow', follow, this.httpOptions)
+    return this.http.post<object>(this.rootURL + '/follow', follow, this.httpOptions)
       .pipe(
         catchError(error => this.handleError(error))
       );
   }
 
   deleteFollow(followingId: number) {
-    return this.http.delete(this.rootURL + '/delete-follow/' + this.currentUserId + '/' + followingId, this.httpOptions)
+    return this.http.delete(this.rootURL + '/follow/' + this.currentUserId() + '/' + followingId, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );

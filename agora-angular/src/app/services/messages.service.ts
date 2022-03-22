@@ -38,7 +38,9 @@ export class MessageService {
     private authService: AuthService
   ) { }
 
-  currentUserId = this.authService.getUserDetails()[0].member_id;
+  currentUserId() {
+    return this.authService.getUserDetails()[0].member_id
+  }
   rootURL = '/api';
   httpOptions = {
     headers: new HttpHeaders({
@@ -47,7 +49,7 @@ export class MessageService {
     })
   };
 
-  getMessages(userId: number = this.currentUserId, contactId: number) {
+  getMessages(userId: number = this.currentUserId(), contactId: number) {
     return this.http.get<[Message]>(this.rootURL + '/messages/' + userId + '/' + contactId, this.httpOptions)
       .pipe(
         catchError(this.handleError)
@@ -55,7 +57,7 @@ export class MessageService {
   }
 
   insertMessages(message: Message) {
-    return this.http.post<object>(this.rootURL + '/post-message', message, this.httpOptions)
+    return this.http.post<object>(this.rootURL + '/message', message, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );

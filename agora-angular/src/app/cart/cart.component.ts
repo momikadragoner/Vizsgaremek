@@ -19,7 +19,9 @@ export class CartComponent implements OnInit {
   faShoppingCart = faShoppingCart;
 
   cart: Cart = new Cart();
-  currentUserId = this.authService.getUserDetails()[0].member_id;
+  currentUserId() {
+    return this.authService.getUserDetails()[0].member_id
+  }
 
   constructor(
     private cartService: CartService,
@@ -45,7 +47,7 @@ export class CartComponent implements OnInit {
 
   addToWishList($event: any, id: number) {
     $event.preventDefault();
-    this.wishListService.postWishList(id, this.currentUserId)
+    this.wishListService.postWishList(id, this.currentUserId())
       .subscribe({
         next: data => {}
       });

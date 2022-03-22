@@ -48,17 +48,20 @@ export class ProductService {
   constructor(
     private http: HttpClient,
     private authService: AuthService
-    ) { }
-
-  currentUser = this.authService.getUserDetails()[0];
+  ) { }
 
   rootURL = '/api';
 
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
     })
   };
+
+  currentUserId() {
+    return this.authService.getUserDetails()[0].member_id
+  }
 
   getProduct(id: any) {
     return this.http.get<Product>(this.rootURL + '/product/' + id,)
@@ -68,7 +71,7 @@ export class ProductService {
   }
 
   getAllProducts() {
-    return this.http.get<[ProductShort]>(this.rootURL + '/list-all-products');
+    return this.http.get<[ProductShort]>(this.rootURL + '/products');
   }
 
   getProductsBySeller(id: any, order?: string, term?: string) {
@@ -78,37 +81,36 @@ export class ProductService {
       order && term ? { params: new HttpParams().set('orderby', order).set('term', term.trim()) } :
         !order && term ? { params: new HttpParams().set('term', term.trim()) } : {};
 
-    return this.http.get<[ProductShort]>(this.rootURL + '/products-by-seller/' + id, options);
+    return this.http.get<[ProductShort]>(this.rootURL + '/products/seller/' + id, options);
   }
 
   getMyProducts(order?: string, term?: string) {
-    let id = this.currentUser.member_id;
     let token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
     let headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` });
     let options = order && !term ? { params: new HttpParams().set('orderby', order), headers: headers } :
       order && term ? { params: new HttpParams().set('orderby', order).set('term', term.trim()), header: headers } :
         !order && term ? { params: new HttpParams().set('term', term.trim()), headers: headers } : { headers: headers };
 
-    return this.http.get<[ProductShort]>(this.rootURL + '/my-products/' + id, options);
+    return this.http.get<[ProductShort]>(this.rootURL + '/my-products/' + this.currentUserId(), options);
   }
 
   addProduct(product: Product): Observable<Product> {
-    return this.http.post<Product>(this.rootURL + '/add-product', product, this.httpOptions)
+    return this.http.post<Product>(this.rootURL + '/product', product, this.httpOptions)
       .pipe(
         catchError((error) => this.handleError(error))
       );
   }
 
   deleteProduct(id: number): Observable<unknown> {
-    const url = this.rootURL + '/delete-product/' + id;
-    return this.http.delete(url)
+    const url = this.rootURL + '/product/' + id;
+    return this.http.delete(url, this.httpOptions)
       .pipe(
         catchError(error => this.handleError(error))
       );
   }
 
   updateProduct(product: Product, id: number): Observable<Product> {
-    return this.http.put<Product>(this.rootURL + '/update-product/' + id, product, this.httpOptions)
+    return this.http.put<Product>(this.rootURL + '/product/' + id, product, this.httpOptions)
       .pipe(
         catchError(error => this.handleError(error))
       );

@@ -49,7 +49,9 @@ export class ProductDetailComponent implements OnInit {
   productList: ProductShort[] = [{ productId: 0, name: "", sellerFirstName: "", sellerLastName: "", price: -1, imgUrl: "" }];
   seller: User = { userId: 0, firstName: '', lastName: '', about: "", profileImgUrl: "", companyName: undefined, takesCustomOrders: true };
 
-  currentUserId = this.authService.getUserDetails()[0].member_id;
+  currentUserId() {
+    return this.authService.getUserDetails()[0].member_id
+  }
   message: string = "";
   success?: boolean;
   id: any;
@@ -182,7 +184,7 @@ export class ProductDetailComponent implements OnInit {
     $event.preventDefault();
     this.toCartIcon = 'spinner';
     this.toCartSpin = true;
-    this.cartService.postCart(id, this.currentUserId)
+    this.cartService.postCart(id, this.currentUserId())
       .subscribe({
         next: data => {
           this.message = "Termék hozzáadva a kosárhoz";
@@ -199,7 +201,7 @@ export class ProductDetailComponent implements OnInit {
     $event.preventDefault();
     this.toWishListIcon = 'spinner';
     this.toWishListSpin = true;
-    this.wishListService.postWishList(id, this.currentUserId)
+    this.wishListService.postWishList(id, this.currentUserId())
       .subscribe({
         next: data => {
           this.toWishListIcon = 'heart';

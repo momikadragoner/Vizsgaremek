@@ -60,7 +60,7 @@ export class AddressService {
     private authService: AuthService
     ) { }
 
-    currentUser = this.authService.getUserDetails()[0];
+    currentUserId = this.authService.getUserDetails()[0].member_id;
     rootURL = '/api';
 
     httpOptions = {
@@ -71,35 +71,35 @@ export class AddressService {
     };
 
     getAddress() {
-        return this.http.get<[Address]>(this.rootURL + '/address/' + this.currentUser.userId, this.httpOptions)
+        return this.http.get<[Address]>(this.rootURL + '/address/' + this.currentUserId, this.httpOptions)
             .pipe(
                 catchError(this.handleError)
             );
     }
 
     postAddress(address: Address) {
-        return this.http.post<object>(this.rootURL + '/post-address', address, this.httpOptions)
+        return this.http.post<object>(this.rootURL + '/address', address, this.httpOptions)
             .pipe(
                 catchError(error => this.handleError(error))
             );
     }
 
     postAddressToCart(address: Address) {
-        return this.http.post<object>(this.rootURL + '/post-address-to-cart', address, this.httpOptions)
+        return this.http.post<object>(this.rootURL + '/address-to-cart', address, this.httpOptions)
             .pipe(
                 catchError(error => this.handleError(error))
             );
     }
 
     deleteAddress(id: number) {
-        return this.http.delete(this.rootURL + '/delete-address/' + id, this.httpOptions)
+        return this.http.delete(this.rootURL + '/address/' + id, this.httpOptions)
             .pipe(
                 catchError(this.handleError)
             );
     }
 
     updateAddress(address: Address) {
-        return this.http.put(this.rootURL + '/update-address', address, this.httpOptions)
+        return this.http.put(this.rootURL + '/address', address, this.httpOptions)
             .pipe(
                 catchError(this.handleError)
             );

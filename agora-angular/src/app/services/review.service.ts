@@ -59,8 +59,17 @@ export class ReviewService {
     private authService: AuthService
   ) { }
 
-  currentUserId = this.authService.getUserDetails()[0].member_id;
-  isLoggedIn: boolean = this.currentUserId;
+  currentUserId() {
+    return this.authService.getUserDetails()[0].member_id
+  }
+  isLoggedIn() {
+    if (this.authService.getUserDetails()[0].member_id) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
   rootURL = '/api';
   httpOptions = {
     headers: new HttpHeaders({
@@ -70,15 +79,15 @@ export class ReviewService {
   };
 
   getReview(id: number): Observable<Review> {
-    let url = this.isLoggedIn ? this.rootURL + '/review-log/' + id + "/" + this.currentUserId : this.rootURL + '/review/' + id;
-    return this.http.get<Review>(url)
+    let url = this.isLoggedIn() ? this.rootURL + '/review/' + id + "/auth/" + this.currentUserId() : this.rootURL + '/review/' + id;
+    return this.http.get<Review>(url, this.httpOptions)
       .pipe(
         catchError(error => this.handleError(error))
       );
   }
 
   postReview(review: Review) {
-    return this.http.post<object>(this.rootURL + '/post-review', review, this.httpOptions)
+    return this.http.post<object>(this.rootURL + '/review', review, this.httpOptions)
       .pipe(
         catchError(error => this.handleError(error))
       );
@@ -92,14 +101,14 @@ export class ReviewService {
   }
 
   postReviewVote(reviewVote:ReviewVote) {
-    return this.http.post<object>(this.rootURL + '/post-review-vote', reviewVote, this.httpOptions)
+    return this.http.post<object>(this.rootURL + '/review-vote', reviewVote, this.httpOptions)
       .pipe(
         catchError(error => this.handleError(error))
       );
   }
 
-  deleteReviewVote(reviewId: number, userId:number = this.currentUserId) {
-    return this.http.delete(this.rootURL + '/delete-review-vote/' + reviewId + '/' + userId, this.httpOptions)
+  deleteReviewVote(reviewId: number, userId:number = this.currentUserId()) {
+    return this.http.delete(this.rootURL + '/review-vote/' + reviewId + '/' + userId, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );

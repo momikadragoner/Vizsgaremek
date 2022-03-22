@@ -35,7 +35,9 @@ export class ProductFormComponent implements OnInit {
   //newProduct: Product = {productId: 0, name: '', sellerFirstName: '', sellerLastName: '', price: -1, inventory: -1, delivery: '', category: '', tags: [], materials: [], imgUrl: [], description: '', isPublic: true, rating: -1};
   tagsList = tags;
   categories = categories;
-  currentUser = this.authService.getUserDetails()[0];
+  currentUser() {
+    return this.authService.getUserDetails()[0];
+  }
 
   faTruck = faTruck;
   faBoxes = faBoxes;
@@ -142,7 +144,7 @@ export class ProductFormComponent implements OnInit {
   }
 
   inputChange(){
-    this.newProduct = new ProductShort (0, this.productForm.value.name, this.currentUser.first_name, this.currentUser.last_name,
+    this.newProduct = new ProductShort (0, this.productForm.value.name, this.currentUser().first_name, this.currentUser().last_name,
       this.productForm.value.price, this.productForm.value.imgUrl, undefined, undefined,  this.productForm.value.discount
     );
   }
@@ -218,9 +220,9 @@ export class ProductFormComponent implements OnInit {
       inventory: form.inventory,
       delivery: form.delivery,
       category: form.category,
-      sellerFirstName: this.currentUser.first_name,
-      sellerLastName: this.currentUser.last_name,
-      sellerId: this.currentUser.member_d,
+      sellerFirstName: this.currentUser().first_name,
+      sellerLastName: this.currentUser().last_name,
+      sellerId: this.currentUser().member_id,
       materials: form.materials,
       tags: form.tags,
       imgUrl: [form.pictureUrl],

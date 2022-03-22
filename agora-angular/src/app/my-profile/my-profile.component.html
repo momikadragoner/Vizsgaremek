@@ -61,6 +61,7 @@
         </ul>
     </div>
     <div [@visibilityChange] *ngIf="tabOpen == 1">
+      <div *ngIf="user.isVendor">
         <form action="" [formGroup]="searchForm">
             <div class="row d-flex justify-content-between">
                 <div class="col-12 col-md-4 mt-2">
@@ -80,6 +81,12 @@
             <h2>Nem találtunk termékeket</h2>
             <p>amit keresel nics itt</p>
         </div>
+      </div>
+      <div *ngIf="!user.isVendor" class="text-center mt-4 pt-4">
+        <h1><fa-icon [icon]="faTimesCircle"></fa-icon></h1>
+        <h2>Nem vagy eladó</h2>
+        <p>nincsenek itt termékek</p>
+    </div>
     </div>
     <div [@visibilityChange] *ngIf="tabOpen == 2">
         <div class="mx-5">

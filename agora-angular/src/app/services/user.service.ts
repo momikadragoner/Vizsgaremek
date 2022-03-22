@@ -84,8 +84,17 @@ export class UserService {
     private authService: AuthService
   ) { }
 
-  currentUser = this.authService.getUserDetails()[0];
-  isLoggedIn: boolean = this.currentUser.member_id;
+  currentUserId() {
+    return this.authService.getUserDetails()[0].member_id
+  }
+  isLoggedIn() {
+    if (this.authService.getUserDetails()[0].member_id) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
   rootURL = '/api';
   httpOptions = {
     headers: new HttpHeaders({
@@ -95,7 +104,7 @@ export class UserService {
   };
 
   getUserShort(id: number) {
-    let url = this.isLoggedIn ? this.rootURL + '/user-short-log/' + id + "/" + this.currentUser.member_id : this.rootURL + '/user-short/' + id;
+    let url = this.isLoggedIn() ? this.rootURL + '/user/' + id + "/short/auth/" + this.currentUserId() : this.rootURL + '/user/' + id + '/short';
     let token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
     let headers = token ? new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }) : new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.get<UserShort>(url, { headers: headers })
@@ -104,10 +113,10 @@ export class UserService {
       );
   }
 
-  getUser(id: number = this.currentUser.member_id) {
+  getUser(id: number = this.currentUserId()) {
     let token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
     let headers = token ? new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }) : new HttpHeaders({ 'Content-Type': 'application/json' });
-    let url = this.isLoggedIn ? this.rootURL + '/user-log/' + id + "/" + this.currentUser.member_id : this.rootURL + '/user/' + id;
+    let url = this.isLoggedIn() ? this.rootURL + '/user/' + id + "/auth/" + this.currentUserId() : this.rootURL + '/user/' + id;
     return this.http.get<User>(url, { headers: headers })
       .pipe(
         catchError(this.handleError)
@@ -115,13 +124,13 @@ export class UserService {
   }
 
   updateUser(user: User) {
-    return this.http.put<object>(this.rootURL + '/update-user', user, this.httpOptions)
+    return this.http.put<object>(this.rootURL + '/user', user, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  getContacts(id: number = this.currentUser.member_id) {
+  getContacts(id: number = this.currentUserId()) {
     return this.http.get<[UserShort]>(this.rootURL + '/contacts/' + id, this.httpOptions)
       .pipe(
         catchError(this.handleError)
