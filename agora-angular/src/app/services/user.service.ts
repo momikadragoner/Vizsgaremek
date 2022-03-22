@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
-import { Auth } from './auth';
+import { AuthService } from '../account-forms/services/auth.service';
 
 export interface User {
   userId: number,
@@ -79,40 +79,48 @@ export class UserShort {
 @Injectable()
 export class UserService {
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) { }
 
-  currentUser:Auth = Auth.currentUser;
-  isLoggedIn = this.currentUser.userId != 0;
-
+  currentUser = this.authService.getUserDetails()[0];
+  isLoggedIn: boolean = this.currentUser.member_id;
   rootURL = '/api';
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    })
+  };
 
   getUserShort(id: number) {
-    let url = this.isLoggedIn ? this.rootURL + '/user-short-log/' + id + "/" + this.currentUser.userId : this.rootURL + '/user-short/' + id;
+    let url = this.isLoggedIn ? this.rootURL + '/user-short-log/' + id + "/" + this.currentUser.member_id : this.rootURL + '/user-short/' + id;
     return this.http.get<UserShort>(url)
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  getUser(id: number = Auth.currentUser.userId) {
+  getUser(id: number = this.currentUser.member_id) {
     let token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
     let headers = token ? new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }) : new HttpHeaders({ 'Content-Type': 'application/json' });
-    let url = this.isLoggedIn ? this.rootURL + '/user-log/' + id + "/" + this.currentUser.userId : this.rootURL + '/user/' + id;
-    return this.http.get<User>(url, {headers: headers})
+    let url = this.isLoggedIn ? this.rootURL + '/user-log/' + id + "/" + this.currentUser.member_id : this.rootURL + '/user/' + id;
+    return this.http.get<User>(url, { headers: headers })
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  updateUser(user:User) {
-    return this.http.put<object>(this.rootURL + '/update-user', user)
-    .pipe(
-      catchError(this.handleError)
-    );
+  updateUser(user: User) {
+    return this.http.put<object>(this.rootURL + '/update-user', user, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
-  getContacts(id: number = Auth.currentUser.userId) {
-    return this.http.get<[UserShort]>(this.rootURL + '/contacts/' + id)
+  getContacts(id: number = this.currentUser.member_id) {
+    return this.http.get<[UserShort]>(this.rootURL + '/contacts/' + id, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );

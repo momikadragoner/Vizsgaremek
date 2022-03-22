@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
-import { Auth } from './auth';
+import { AuthService } from '../account-forms/services/auth.service';
 
 export interface Review {
   reviewId: number,
@@ -54,15 +54,23 @@ export class ReviewVote {
 @Injectable()
 export class ReviewService {
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) { }
 
-  currentUser = Auth.currentUser;
-  isLoggedIn = this.currentUser.userId != 0;
-
+  currentUserId = this.authService.getUserDetails()[0].member_id;
+  isLoggedIn: boolean = this.currentUserId;
   rootURL = '/api';
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    })
+  };
 
   getReview(id: number): Observable<Review> {
-    let url = this.isLoggedIn ? this.rootURL + '/review-log/' + id + "/" + this.currentUser.userId : this.rootURL + '/review/' + id;
+    let url = this.isLoggedIn ? this.rootURL + '/review-log/' + id + "/" + this.currentUserId : this.rootURL + '/review/' + id;
     return this.http.get<Review>(url)
       .pipe(
         catchError(error => this.handleError(error))
@@ -70,7 +78,7 @@ export class ReviewService {
   }
 
   postReview(review: Review) {
-    return this.http.post<object>(this.rootURL + '/post-review', review)
+    return this.http.post<object>(this.rootURL + '/post-review', review, this.httpOptions)
       .pipe(
         catchError(error => this.handleError(error))
       );
@@ -84,15 +92,15 @@ export class ReviewService {
   }
 
   postReviewVote(reviewVote:ReviewVote) {
-    return this.http.post<object>(this.rootURL + '/post-review-vote', reviewVote)
+    return this.http.post<object>(this.rootURL + '/post-review-vote', reviewVote, this.httpOptions)
       .pipe(
         catchError(error => this.handleError(error))
       );
   }
 
-  deleteReviewVote(reviewId: number, userId:number = this.currentUser.userId) {
-    return this.http.delete(this.rootURL + '/delete-review-vote/' + reviewId + '/' + userId)
-      .pipe(        
+  deleteReviewVote(reviewId: number, userId:number = this.currentUserId) {
+    return this.http.delete(this.rootURL + '/delete-review-vote/' + reviewId + '/' + userId, this.httpOptions)
+      .pipe(
         catchError(this.handleError)
       );
   }

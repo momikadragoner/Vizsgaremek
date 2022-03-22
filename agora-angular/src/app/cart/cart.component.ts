@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Product, ProductService } from "../services/product.service";
 import { faShoppingCart, faChevronRight, faTrash, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { Cart, CartProduct, CartService } from '../services/cart.service';
-import { Auth } from '../services/auth';
 import { WishListService } from '../services/wishlist.service';
+import { AuthService } from '../account-forms/services/auth.service';
 
 @Component({
   selector: 'app-cart',
@@ -19,12 +19,13 @@ export class CartComponent implements OnInit {
   faShoppingCart = faShoppingCart;
 
   cart: Cart = new Cart();
-  currentUser: Auth = Auth.currentUser;
+  currentUserId = this.authService.getUserDetails()[0].member_id;
 
   constructor(
     private cartService: CartService,
     private productService: ProductService,
-    private wishListService: WishListService
+    private wishListService: WishListService,
+    private authService: AuthService
   ) {
     cartService.getCartProducts().subscribe({
       next: (data: [CartProduct]) => {
@@ -44,7 +45,7 @@ export class CartComponent implements OnInit {
 
   addToWishList($event: any, id: number) {
     $event.preventDefault();
-    this.wishListService.postWishList(id, this.currentUser.userId)
+    this.wishListService.postWishList(id, this.currentUserId)
       .subscribe({
         next: data => {}
       });

@@ -11,12 +11,12 @@ import { HttpClient } from '@angular/common/http';
 import { ProductService, Product, ProductShort, ratingToArray } from '../services/product.service';
 import { UserService, UserShort as User } from '../services/user.service';
 import { asapScheduler } from 'rxjs';
-import { Auth } from '../services/auth';
 import { WishListService } from '../services/wishlist.service';
 import { CartService } from '../services/cart.service';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { ReviewService, Review } from '../services/review.service';
 import { FollowService } from '../services/follow.service';
+import { AuthService } from '../account-forms/services/auth.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -49,7 +49,7 @@ export class ProductDetailComponent implements OnInit {
   productList: ProductShort[] = [{ productId: 0, name: "", sellerFirstName: "", sellerLastName: "", price: -1, imgUrl: "" }];
   seller: User = { userId: 0, firstName: '', lastName: '', about: "", profileImgUrl: "", companyName: undefined, takesCustomOrders: true };
 
-  currentUser = Auth.currentUser;
+  currentUserId = this.authService.getUserDetails()[0].member_id;
   message: string = "";
   success?: boolean;
   id: any;
@@ -66,6 +66,7 @@ export class ProductDetailComponent implements OnInit {
     private followService: FollowService,
     private route: ActivatedRoute,
     private router: Router,
+    private authService: AuthService
   ) {
     library.addIcons(faHeart, faSpinner, faShoppingCart, faHandPaper, faTree, faBalanceScale, faExclamationCircle, faGem, faBoxOpen, faLeaf, faSeedling, faCarrot, faCheese, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt);
     this.currentRoute = "";
@@ -181,7 +182,7 @@ export class ProductDetailComponent implements OnInit {
     $event.preventDefault();
     this.toCartIcon = 'spinner';
     this.toCartSpin = true;
-    this.cartService.postCart(id, this.currentUser.userId)
+    this.cartService.postCart(id, this.currentUserId)
       .subscribe({
         next: data => {
           this.message = "Termék hozzáadva a kosárhoz";
@@ -198,7 +199,7 @@ export class ProductDetailComponent implements OnInit {
     $event.preventDefault();
     this.toWishListIcon = 'spinner';
     this.toWishListSpin = true;
-    this.wishListService.postWishList(id, this.currentUser.userId)
+    this.wishListService.postWishList(id, this.currentUserId)
       .subscribe({
         next: data => {
           this.toWishListIcon = 'heart';

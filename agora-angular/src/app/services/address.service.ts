@@ -4,8 +4,8 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
-import { Auth } from './auth';
 import { faHourglassEnd } from '@fortawesome/free-solid-svg-icons';
+import { AuthService } from '../account-forms/services/auth.service';
 
 export interface Address {
     addressId: number,
@@ -55,15 +55,18 @@ export class City {
 @Injectable()
 export class AddressService {
 
-    constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+    ) { }
 
-    currentUser = Auth.currentUser;
-
+    currentUser = this.authService.getUserDetails()[0];
     rootURL = '/api';
 
     httpOptions = {
         headers: new HttpHeaders({
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.authService.getToken()}`
         })
     };
 

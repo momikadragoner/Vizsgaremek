@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Address, AddressService } from '../services/address.service';
 import { User, UserService } from '../services/user.service';
-import { Auth } from '../services/auth';
 import { faChevronLeft, faChevronRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@angular/router';
 import { pairwise, startWith } from 'rxjs';
@@ -14,7 +13,6 @@ import { pairwise, startWith } from 'rxjs';
 })
 export class OrderComponent implements OnInit {
 
-  currentUser: Auth = Auth.currentUser;
   userInfo: User = new User();
   addresses?: Address[];
   emptyAddress: Address = new Address();

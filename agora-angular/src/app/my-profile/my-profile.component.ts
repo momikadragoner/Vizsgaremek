@@ -5,10 +5,10 @@ import { faEnvelope, faLink, faLocationArrow, faCalendarAlt, faTimesCircle, faLo
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Auth } from '../services/auth';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { WishListProduct, WishListService } from '../services/wishlist.service';
 import { CartService } from '../services/cart.service';
+import { AuthService } from '../account-forms/services/auth.service';
 
 @Component({
   selector: 'app-my-profile',
@@ -46,7 +46,8 @@ export class MyProfileComponent implements OnInit {
 
   order?: any;
   searchTerm?: string;
-  currentUser = Auth.currentUser;
+
+  currentUserId = this.authService.getUserDetails()[0].member_id;
 
   orderOptions: string[] = ["Összes", "Legújabb", "Legrégebbi", "Ár szerint csökkenő", "Ár szerint növekvő", "Készleten", "Közzétett", "Nincs közzétéve"];
 
@@ -85,7 +86,8 @@ export class MyProfileComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder,
-    private wishListService: WishListService
+    private wishListService: WishListService,
+    private authService: AuthService
   ) {
     route.queryParams.subscribe(param => this.params = { ...param['keys'], ...param });
     if (this.params.tab) {
@@ -129,7 +131,7 @@ export class MyProfileComponent implements OnInit {
   }
 
   ShowUser() {
-    this.userService.getUser(this.currentUser.userId)
+    this.userService.getUser()
       .subscribe({
         next: (data: User) => this.user = { ...data },
         error: error => this.error = error
@@ -137,7 +139,7 @@ export class MyProfileComponent implements OnInit {
   }
 
   ShowWishList() {
-    this.wishListService.getWishList(this.currentUser.userId)
+    this.wishListService.getWishList(this.currentUserId)
       .subscribe({
         next: (data: [WishListProduct]) => this.wishList = [...data],
         error: error => this.error = error
@@ -187,7 +189,7 @@ export class MyProfileComponent implements OnInit {
 
   addToCart($event: any, id: number) {
     $event.preventDefault();
-    this.cartService.postCart(id, this.currentUser.userId)
+    this.cartService.postCart(id, this.currentUserId)
       .subscribe({
         next: data => {
         },

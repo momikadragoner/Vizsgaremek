@@ -4,8 +4,8 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
-import { Auth } from './auth';
 import { Review } from './review.service';
+import { AuthService } from '../account-forms/services/auth.service';
 
 export interface Product {
   productId: number,
@@ -45,9 +45,12 @@ export interface ProductShort {
 @Injectable()
 export class ProductService {
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+    ) { }
 
-  currentUser = Auth.currentUser;
+  currentUser = this.authService.getUserDetails()[0];
 
   rootURL = '/api';
 
@@ -79,7 +82,7 @@ export class ProductService {
   }
 
   getMyProducts(order?: string, term?: string) {
-    let id = this.currentUser.userId;
+    let id = this.currentUser.member_id;
     let token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
     let headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` });
     let options = order && !term ? { params: new HttpParams().set('orderby', order), headers: headers } :

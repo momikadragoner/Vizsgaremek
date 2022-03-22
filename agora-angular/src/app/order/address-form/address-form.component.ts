@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faChevronLeft, faChevronRight, faSave, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { AuthService } from 'src/app/account-forms/services/auth.service';
 import { Address, AddressService } from 'src/app/services/address.service';
-import { Auth } from 'src/app/services/auth';
 import { User } from 'src/app/services/user.service';
 
 @Component({
@@ -13,7 +13,7 @@ import { User } from 'src/app/services/user.service';
 })
 export class AddressFormComponent implements OnChanges {
 
-  currentUser: Auth = Auth.currentUser;
+  currentUserId = this.authService.getUserDetails()[0].member_id;
   isLoading = false;
   @Input() userInfo:User = new User();
   @Input() selectedProfile?:Address = new Address();
@@ -33,6 +33,7 @@ export class AddressFormComponent implements OnChanges {
     private fb: FormBuilder,
     private addressService: AddressService,
     private router: Router,
+    private authService: AuthService
   ) { }
 
   addressForm = this.fb.group({
@@ -80,7 +81,7 @@ export class AddressFormComponent implements OnChanges {
     let form = this.addressForm.value;
     let shippingAddress: Address = {
       addressId: 0,
-      userId: this.currentUser.userId,
+      userId: this.currentUserId,
       userFirstName: form.firstName,
       userLastName: form.lastName,
       phone: form.phone,
@@ -137,7 +138,7 @@ export class AddressFormComponent implements OnChanges {
     this.isLoading = true;
     let shippingAddress: Address = {
       addressId: this.selectedProfile?.addressId ? this.selectedProfile?.addressId : 0,
-      userId: this.currentUser.userId,
+      userId: this.currentUserId,
       userFirstName: form.firstName,
       userLastName: form.lastName,
       phone: form.phone,

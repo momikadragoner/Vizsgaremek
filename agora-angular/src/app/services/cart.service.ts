@@ -4,8 +4,8 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
-import { Auth } from './auth';
 import { Address } from './address.service';
+import { AuthService } from '../account-forms/services/auth.service';
 
 export interface CartProduct {
     cartProductId: number,
@@ -72,80 +72,84 @@ export class Cart {
 @Injectable()
 export class CartService {
 
-    constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+    ) { }
 
-    currentUser = Auth.currentUser;
-
+    currentUser = this.authService.getUserDetails()[0];
     rootURL = '/api';
 
     httpOptions = {
         headers: new HttpHeaders({
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.authService.getToken()}`
         })
     };
 
     getCartProducts() {
-        return this.http.get<[CartProduct]>(this.rootURL + '/cart-products/' + this.currentUser.userId,)
+
+        return this.http.get<[CartProduct]>(this.rootURL + '/cart-products/' + this.currentUser.member_id, this.httpOptions)
             .pipe(
                 catchError(this.handleError)
             );
     }
 
     getCart() {
-        return this.http.get<Cart>(this.rootURL + '/cart/' + this.currentUser.userId,)
+        return this.http.get<Cart>(this.rootURL + '/cart/' + this.currentUser.member_id, this.httpOptions)
         .pipe(
             catchError(this.handleError)
         );
     }
 
     getOrders() {
-        return this.http.get<[Cart]>(this.rootURL + '/order/' + this.currentUser.userId,)
+        return this.http.get<[Cart]>(this.rootURL + '/order/' + this.currentUser.member_id, this.httpOptions)
         .pipe(
             catchError(this.handleError)
         );
     }
 
     getMyOrders() {
-        return this.http.get<[Cart]>(this.rootURL + '/my-orders/' + this.currentUser.userId,)
+        return this.http.get<[Cart]>(this.rootURL + '/my-orders/' + this.currentUser.member_id, this.httpOptions)
         .pipe(
             catchError(this.handleError)
         );
     }
 
-    postCart(productId: number, userId: number = this.currentUser.userId) {
+    postCart(productId: number, userId: number = this.currentUser.member_id) {
         let cart = {
             "productId": productId,
             "userId": userId
         }
-        return this.http.post<object>(this.rootURL + '/post-cart', cart)
+        return this.http.post<object>(this.rootURL + '/post-cart', cart, this.httpOptions)
             .pipe(
                 catchError(error => this.handleError(error))
             );
     }
 
     sendCart(cart:Cart){
-        return this.http.put<object>(this.rootURL + '/put-cart', cart)
+        return this.http.put<object>(this.rootURL + '/put-cart', cart, this.httpOptions)
             .pipe(
                 catchError(error => this.handleError(error))
             );
     }
 
     updateCartProducts(cartProducts:CartProduct[]){
-        return this.http.put<object>(this.rootURL + '/update-cart-products', cartProducts)
+        return this.http.put<object>(this.rootURL + '/update-cart-products', cartProducts, this.httpOptions)
         .pipe(
             catchError(error => this.handleError(error))
         );
     }
 
     deleteCartProduct(id:number) {
-        return this.http.delete(this.rootURL + '/delete-cart/' + id)
+        return this.http.delete(this.rootURL + '/delete-cart/' + id, this.httpOptions)
             .pipe(
                 catchError(this.handleError)
             );
     }
 
-    deleteCartOrder(cartId:number, userId:number = this.currentUser.userId){
-        return this.http.delete(this.rootURL + '/delete-cart-order/' + cartId + "/" + userId)
+    deleteCartOrder(cartId:number, userId:number = this.currentUser.member_id){
+        return this.http.delete(this.rootURL + '/delete-cart-order/' + cartId + "/" + userId, this.httpOptions)
         .pipe(
             catchError(this.handleError)
         );

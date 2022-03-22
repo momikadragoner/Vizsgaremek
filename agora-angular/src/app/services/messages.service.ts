@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { catchError, throwError } from "rxjs";
-import { Auth } from "./auth";
+import { AuthService } from "../account-forms/services/auth.service";
 
 export class Message {
   /**
@@ -33,19 +33,29 @@ class Contact {
 @Injectable()
 export class MessageService {
 
-  constructor(private http: HttpClient) { }
-  currentUser = Auth.currentUser;
-  rootURL = '/api';
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) { }
 
-  getMessages(userId: number = this.currentUser.userId, contactId: number) {
-    return this.http.get<[Message]>(this.rootURL + '/messages/' + userId + '/' + contactId,)
+  currentUserId = this.authService.getUserDetails()[0].member_id;
+  rootURL = '/api';
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    })
+  };
+
+  getMessages(userId: number = this.currentUserId, contactId: number) {
+    return this.http.get<[Message]>(this.rootURL + '/messages/' + userId + '/' + contactId, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );
   }
 
   insertMessages(message: Message) {
-    return this.http.post<object>(this.rootURL + '/post-message', message)
+    return this.http.post<object>(this.rootURL + '/post-message', message, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );

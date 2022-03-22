@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { catchError, throwError } from "rxjs";
-import { Auth } from "./auth";
+import { AuthService } from "../account-forms/services/auth.service";
 
 export interface Notification {
     notificationId: number,
@@ -40,19 +40,29 @@ export class Notification {
 @Injectable()
 export class NotificationService {
 
-    constructor(private http: HttpClient) { }
-    currentUser = Auth.currentUser;
-    rootURL = '/api';
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) { }
 
-    getNotifications( userId: number = this.currentUser.userId) {
-        return this.http.get<[Notification]>(this.rootURL + '/notifications/' + userId,)
+  currentUserId = this.authService.getUserDetails()[0].member_id;
+  rootURL = '/api';
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    })
+  };
+
+    getNotifications( userId: number = this.currentUserId) {
+        return this.http.get<[Notification]>(this.rootURL + '/notifications/' + userId, this.httpOptions)
             .pipe(
                 catchError(this.handleError)
             );
     }
 
     updateNotification(notification:Notification){
-        return this.http.put<object>(this.rootURL + '/update-notification', notification)
+        return this.http.put<object>(this.rootURL + '/update-notification', notification, this.httpOptions)
         .pipe(
             catchError(this.handleError)
         );

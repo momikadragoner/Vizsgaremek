@@ -6,9 +6,9 @@ import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { asapScheduler, fromEventPattern } from 'rxjs';
 import { JsonPipe } from '@angular/common';
 import { ThrowStmt } from '@angular/compiler';
-import { Auth } from 'src/app/services/auth';
 import { ActivatedRoute } from '@angular/router';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { AuthService } from 'src/app/account-forms/services/auth.service';
 
 @Component({
   selector: 'app-product-form',
@@ -35,7 +35,7 @@ export class ProductFormComponent implements OnInit {
   //newProduct: Product = {productId: 0, name: '', sellerFirstName: '', sellerLastName: '', price: -1, inventory: -1, delivery: '', category: '', tags: [], materials: [], imgUrl: [], description: '', isPublic: true, rating: -1};
   tagsList = tags;
   categories = categories;
-  currentUser = Auth.currentUser;
+  currentUser = this.authService.getUserDetails()[0];
 
   faTruck = faTruck;
   faBoxes = faBoxes;
@@ -58,7 +58,8 @@ export class ProductFormComponent implements OnInit {
     private fb: FormBuilder,
     private productService: ProductService,
     library:FaIconLibrary,
-    activatedRoute: ActivatedRoute
+    activatedRoute: ActivatedRoute,
+    private authService: AuthService
   )
   {
     library.addIcons(faHandPaper, faTree, faBalanceScale, faExclamationCircle, faGem, faBoxOpen, faLeaf, faSeedling, faAppleAlt, faCarrot, faCheese, faCarrot, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt );
@@ -141,7 +142,7 @@ export class ProductFormComponent implements OnInit {
   }
 
   inputChange(){
-    this.newProduct = new ProductShort (0, this.productForm.value.name, this.currentUser.firstName, this.currentUser.lastName,
+    this.newProduct = new ProductShort (0, this.productForm.value.name, this.currentUser.first_name, this.currentUser.last_name,
       this.productForm.value.price, this.productForm.value.imgUrl, undefined, undefined,  this.productForm.value.discount
     );
   }
@@ -217,9 +218,9 @@ export class ProductFormComponent implements OnInit {
       inventory: form.inventory,
       delivery: form.delivery,
       category: form.category,
-      sellerFirstName: this.currentUser.firstName,
-      sellerLastName: this.currentUser.lastName,
-      sellerId: this.currentUser.userId,
+      sellerFirstName: this.currentUser.first_name,
+      sellerLastName: this.currentUser.last_name,
+      sellerId: this.currentUser.member_d,
       materials: form.materials,
       tags: form.tags,
       imgUrl: [form.pictureUrl],

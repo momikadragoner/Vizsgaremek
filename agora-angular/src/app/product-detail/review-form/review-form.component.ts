@@ -4,7 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome'
 import { faStar as farStar } from '@fortawesome/free-regular-svg-icons'
 import { faStar as fasStar } from '@fortawesome/free-solid-svg-icons'
-import { Auth } from 'src/app/services/auth';
+import { AuthService } from 'src/app/account-forms/services/auth.service';
 import { Review, ReviewService } from 'src/app/services/review.service';
 
 @Component({
@@ -36,12 +36,13 @@ export class ReviewFormComponent implements OnInit {
   @Input() productId: number = 0;
 
   rating: number = -1;
-  currentUser: Auth = Auth.currentUser;
+  currentUser = this.authService.getUserDetails()[0];
 
   constructor(
     library: FaIconLibrary,
     private fb: FormBuilder,
-    private reviewService: ReviewService
+    private reviewService: ReviewService,
+    private authService: AuthService
   ) {
     library.addIcons(fasStar, farStar);
   }
@@ -66,10 +67,10 @@ export class ReviewFormComponent implements OnInit {
     newReview.content = form.review;
     newReview.title = form.title;
     newReview.rating = (this.rating + 1);
-    newReview.userId = this.currentUser.userId;
+    newReview.userId = this.currentUser.member_id;
     newReview.productId = this.productId;
-    newReview.userFirstName = this.currentUser.firstName;
-    newReview.userLastName = this.currentUser.lastName;
+    newReview.userFirstName = this.currentUser.first_name;
+    newReview.userLastName = this.currentUser.last_name;
     newReview.points = 0;
     this.reviewService.postReview(newReview)
       .subscribe({

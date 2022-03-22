@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
-import { Auth } from 'src/app/services/auth';
+import { AuthService } from 'src/app/account-forms/services/auth.service';
 import { Message, MessageService } from '../../services/messages.service';
 
 @Component({
@@ -14,17 +14,18 @@ export class MessagesComponent implements OnInit {
   @Input() public messages: Message[] = [];
   @Input() public contactId: number = 22;
   message:string = '';
-  currentUser = Auth.currentUser;
+  currentUserId = this.authService.getUserDetails()[0].member_id;
 
   constructor(
-    private messageService: MessageService
+    private messageService: MessageService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {}
 
   send(){
     let message = new Message();
-    message.senderId = this.currentUser.userId;
+    message.senderId = this.currentUserId;
     message.reciverId = this.contactId;
     message.message = this.message;
     this.messageService.insertMessages(message).subscribe({
@@ -32,7 +33,7 @@ export class MessagesComponent implements OnInit {
         this.message = '';
         this.messageService.getMessages(undefined, this.contactId).subscribe({
           next: (data) => {
-            this.messages = [...data];        
+            this.messages = [...data];
           }
         })
       }

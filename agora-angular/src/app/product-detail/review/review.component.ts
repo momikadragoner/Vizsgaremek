@@ -55,7 +55,7 @@ export class ReviewComponent implements OnChanges {
     if (this.review.myVote == 'down') this.baseVotes++;
     this.vote.productId = this.productId;
     this.vote.reviewId = this.review.reviewId;
-    this.vote.userId = this.reviewService.currentUser.userId;
+    this.vote.userId = this.reviewService.currentUserId;
     this.vote.vote = this.review.myVote;
   }
 

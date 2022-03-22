@@ -5,7 +5,6 @@ import { faEnvelope, faLink, faLocationArrow, faCalendarAlt, faTrash, faHeart, f
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
-import { Auth } from '../services/auth';
 import { WishListProduct, WishListService } from '../services/wishlist.service';
 import { FollowService } from '../services/follow.service';
 
