@@ -96,7 +96,9 @@ export class UserService {
 
   getUserShort(id: number) {
     let url = this.isLoggedIn ? this.rootURL + '/user-short-log/' + id + "/" + this.currentUser.member_id : this.rootURL + '/user-short/' + id;
-    return this.http.get<UserShort>(url)
+    let token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
+    let headers = token ? new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }) : new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.get<UserShort>(url, { headers: headers })
       .pipe(
         catchError(this.handleError)
       );

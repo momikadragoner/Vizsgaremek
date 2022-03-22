@@ -71,42 +71,42 @@ export class AddressService {
     };
 
     getAddress() {
-        return this.http.get<[Address]>(this.rootURL + '/address/' + this.currentUser.userId,)
+        return this.http.get<[Address]>(this.rootURL + '/address/' + this.currentUser.userId, this.httpOptions)
             .pipe(
                 catchError(this.handleError)
             );
     }
 
     postAddress(address: Address) {
-        return this.http.post<object>(this.rootURL + '/post-address', address)
+        return this.http.post<object>(this.rootURL + '/post-address', address, this.httpOptions)
             .pipe(
                 catchError(error => this.handleError(error))
             );
     }
 
     postAddressToCart(address: Address) {
-        return this.http.post<object>(this.rootURL + '/post-address-to-cart', address)
+        return this.http.post<object>(this.rootURL + '/post-address-to-cart', address, this.httpOptions)
             .pipe(
                 catchError(error => this.handleError(error))
             );
     }
 
     deleteAddress(id: number) {
-        return this.http.delete(this.rootURL + '/delete-address/' + id)
+        return this.http.delete(this.rootURL + '/delete-address/' + id, this.httpOptions)
             .pipe(
                 catchError(this.handleError)
             );
     }
 
     updateAddress(address: Address) {
-        return this.http.put(this.rootURL + '/update-address', address)
+        return this.http.put(this.rootURL + '/update-address', address, this.httpOptions)
             .pipe(
                 catchError(this.handleError)
             );
     }
 
     getCityByPostalCode(postalCode: number) {
-        return this.http.get<City>(this.rootURL + '/city-by-code/' + postalCode)
+        return this.http.get<City>(this.rootURL + '/city-by-code/' + postalCode, this.httpOptions)
             .pipe(
                 catchError(this.handleError)
             );
