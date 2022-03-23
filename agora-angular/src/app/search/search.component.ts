@@ -40,7 +40,7 @@ export class SearchComponent implements OnInit {
     private library: FaIconLibrary,
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router, 
+    private router: Router,
     private serializer: UrlSerializer
   ) {
     library.addIcons(faHeart, faSpinner, faShoppingCart, faHandPaper, faTree, faBalanceScale, faExclamationCircle, faGem, faCarrot, faCheese, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt);
@@ -87,7 +87,7 @@ export class SearchComponent implements OnInit {
     this.categories[id].selected = !this.categories[id].selected;
   }
 
-  filter() {    
+  filter() {
     this.isLoading = true;
     let queryParams:{[k: string]: any} = {};
     this.categories.forEach( category => {
@@ -140,7 +140,9 @@ export class SearchComponent implements OnInit {
     { name: "Ital", selected: false },
     { name: "Ékszer", selected: false },
     { name: "Művészet", selected: false },
-    { name: "Divat", selected: false }
+    { name: "Divat", selected: false },
+    { name: "Kamra", selected: false },
+    { name: "Húsáru", selected: false }
   ]
 
 }

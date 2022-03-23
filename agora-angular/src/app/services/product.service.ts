@@ -223,7 +223,9 @@ export const categories = [
   "Ital",
   "Ékszer",
   "Művészet",
-  "Divat"
+  "Divat",
+  "Kamra",
+  "Húsáru"
 ]
 
 export const ratingToArray = function (rating: number): number[] {

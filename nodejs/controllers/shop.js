@@ -196,7 +196,9 @@ exports.searchProducts = (req, res, next) => {
     "Ital",
     "Ékszer",
     "Művészet",
-    "Divat"
+    "Divat",
+    "Kamra",
+    "Húsáru"
   ]
 
   const tags = [

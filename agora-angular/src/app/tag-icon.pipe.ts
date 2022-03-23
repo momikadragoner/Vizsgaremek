@@ -61,10 +61,16 @@ export class TagIconPipe implements PipeTransform {
         case "Divat":
           iconName = 'tshirt';
           return iconName;
+        case "Kamra":
+          iconName = 'cookie';
+          return iconName;
+        case "Húsáru":
+          iconName = 'drumstick-bite';
+          return iconName;
         default:
           break;
       }
-    } else if (type == 'notif'){
+    } else if (type == 'notif') {
       switch (value) {
         case "product":
           iconName = 'shopping-bag';

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, animate, transition, query, stagger } from '@angular/animations';
-import { faCarrot, faAppleAlt, faBreadSlice, faCheese, faBell, IconPrefix } from '@fortawesome/free-solid-svg-icons';
-import { faPalette, faGem, faTshirt, faGlassMartiniAlt, faShoppingCart, faBoxes } from '@fortawesome/free-solid-svg-icons';
+import { faCarrot, faAppleAlt, faBreadSlice, faCheese, faBell, IconPrefix, faDrumstickBite, faCookie } from '@fortawesome/free-solid-svg-icons';
+import { faPalette, faGem, faTshirt, faGlassMartiniAlt, faShoppingCart, faBoxes,  } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../account-forms/services/auth.service';
 import { Router } from '@angular/router';
 import { categories } from '../services/product.service';
@@ -47,7 +47,7 @@ export class NavComponent implements OnInit {
     private _router: Router,
     private authService: AuthService
   ) {
-    library.addIcons( faShoppingCart, faGem, faCarrot, faCheese, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt);
+    library.addIcons( faShoppingCart, faGem, faCarrot, faCheese, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt, faDrumstickBite, faCookie);
   }
 
   toggleCategory($event: any) {
