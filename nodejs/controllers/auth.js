@@ -18,8 +18,8 @@ exports.userSignup=(req,res,next)=>{
         const checkEmail =`select email from member where email=?`;
         conn.query(checkEmail,[email],(err,result, fields)=>{
             if(!result.length){
-                const sql =`insert into member (last_name, first_name, email, password) values(?,?,?,?)`
-                conn.query(sql,[lastName, firstName, email, hashed_password],(err,result, fields)=>{
+                const sql =`insert into member (last_name, first_name, email, password, profile_picture_link, header_picture_link, registered_at) values(?,?,?,?,?,?,?)`
+                conn.query(sql,[lastName, firstName, email, hashed_password, "assets/def-pfp1.png", "assets/default_assets/def-bg3.png", new Date()],(err,result, fields)=>{
                     if(err){
                         res.send({status:0, data:err});
                     } else{
