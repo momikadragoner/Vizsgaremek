@@ -1,12 +1,15 @@
 const express = require('express');
 const app = express();
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
 
 const userController = require('../controllers/user');
 
 const router = express.Router();
 
 router.get('/my-products/:id', userController.getMyProducts);
-router.post('/product', userController.postNewProduct);
+// router.post('/product', upload.array('imgUrl', 3), (req, res, next) => { console.log(req.file); next();} ,userController.postNewProduct);
+router.post('/product', upload.array('imgUrl', 3), (req, res, next) => { console.log(req.files, req.headers);});
 router.delete('/product/:id', userController.deleteProduct);
 router.put('/product/:id', userController.updateProduct);
 router.put('/change-visibility/:id', userController.changeProductVisibility);

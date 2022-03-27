@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require("body-parser");
-const db = require('../util/connect-db')
+const db = require('../util/connect-db');
 const connectDb = db.connectDb;
 
 exports.getMyProducts = (req, res, next) => {

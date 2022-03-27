@@ -9,6 +9,7 @@ import { ThrowStmt } from '@angular/compiler';
 import { ActivatedRoute } from '@angular/router';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AuthService } from 'src/app/account-forms/services/auth.service';
+import { PictureService } from 'src/app/services/picture.service';
 
 @Component({
   selector: 'app-product-form',
@@ -52,7 +53,10 @@ export class ProductFormComponent implements OnInit {
 
   tagOpen:boolean[] = [];
   tagsShown:string[] = [];
+  pictureLinks:string[] = [];
+  resourcePrefix = "http://localhost:3080/product_pictures/"
   modalOpen = false;
+  uploadOpen = false;
   success?:boolean = undefined;
   message:string = 'Betöltés...';
 
@@ -61,7 +65,8 @@ export class ProductFormComponent implements OnInit {
     private productService: ProductService,
     library:FaIconLibrary,
     activatedRoute: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    private pictureService: PictureService
   )
   {
     library.addIcons(faHandPaper, faTree, faBalanceScale, faExclamationCircle, faGem, faBoxOpen, faLeaf, faSeedling, faAppleAlt, faCarrot, faCheese, faCarrot, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt );
@@ -105,12 +110,16 @@ export class ProductFormComponent implements OnInit {
     inventory: [null],
     delivery: ['', Validators.required],
     category: ['', Validators.required],
-    pictureUrl: [''],
+    // pictureUrl: [''],
     tags: this.fb.array([
     ]),
     materials: this.fb.array([
     ]),
     description: ['']
+  });
+
+  pictureForm = this.fb.group({
+    pictures: [null],
   });
 
   newProduct = new ProductShort (0, this.productForm.value.name, '', '',
@@ -282,6 +291,29 @@ export class ProductFormComponent implements OnInit {
     if (!this.productForm.valid) return;
     this.putProduct(true);
     this.modalOpen = true;
+  }
+
+  pictureSelected($event:any){
+    let formData:FormData = new FormData();
+    console.log($event.target.files);
+    formData.append('pictures', $event.target.files[0]);
+    if ($event.target.files[1]) {
+      formData.append('pictures', $event.target.files[1]);
+    }
+    if ($event.target.files[2]) {
+      formData.append('pictures', $event.target.files[2]);
+    }
+    this.pictureService.addPicture(formData).subscribe({
+      next: (res) => {
+        this.pictureLinks = res.toString().split(',');
+      },
+      error: (err) =>{
+        console.log(err);
+      }
+    });
+  }
+
+  onUpload() {
   }
 
   ngOnInit(): void {

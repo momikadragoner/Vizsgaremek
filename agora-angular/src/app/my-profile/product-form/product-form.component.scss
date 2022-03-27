@@ -18,7 +18,7 @@ textarea.ng-untouched{
 textarea.ng-valid{
     border-bottom: #859C62 thin solid;
 }
-.form-control:focus {   
+.form-control:focus {
     color: #212529;
     background-color: #fff;
     border-color: #859C62;
@@ -55,4 +55,7 @@ textarea.ng-valid{
 }
 .large{
     font-size: 1.1rem;
+}
+.product-picture{
+  max-height: 10rem;
 }

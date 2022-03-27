@@ -61,6 +61,7 @@ import { StatePipe } from './state.pipe';
 import { NotificationService } from './services/notification.service';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { MessageService } from './services/messages.service';
+import { PictureService } from './services/picture.service';
 
 
 @NgModule({
@@ -117,7 +118,7 @@ import { MessageService } from './services/messages.service';
     ReactiveFormsModule,
     FormsModule,
     RouterModule,
-    
+
   ],
   exports: [
     FontAwesomeModule
@@ -133,7 +134,8 @@ import { MessageService } from './services/messages.service';
     FollowService,
     AddressService,
     NotificationService,
-    MessageService
+    MessageService,
+    PictureService
   ],
   bootstrap: [AppComponent]
 })

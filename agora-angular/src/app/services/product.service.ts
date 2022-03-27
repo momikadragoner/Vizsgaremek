@@ -59,6 +59,14 @@ export class ProductService {
     })
   };
 
+  httpOptionsFile = {
+    headers: new HttpHeaders({
+      // 'Content-Type': 'application/json',
+      // 'Content-Type': 'multipart/form-daa'
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    })
+  };
+
   currentUserId() {
     return this.authService.getUserDetails()[0].member_id
   }
@@ -95,7 +103,7 @@ export class ProductService {
   }
 
   addProduct(product: Product): Observable<Product> {
-    return this.http.post<Product>(this.rootURL + '/product', product, this.httpOptions)
+    return this.http.post<Product>(this.rootURL + '/product', product, this.httpOptionsFile)
       .pipe(
         catchError((error) => this.handleError(error))
       );

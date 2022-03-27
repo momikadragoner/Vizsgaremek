@@ -1,202 +1,274 @@
 <div class="container shadow rounded p-3">
-    <h2 *ngIf="params.edit == 'false'" class="text-center">Új termék felvétele</h2>
-    <h2 *ngIf="params.edit == 'true'" class="text-center">Termék szerkesztése</h2>
-    <div class="row">
-        <div class="col-12 col-md-7 p-3 ps-3">
-            <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
-                <div class="mb-3">
-                    <label for="name" class="form-label mb-1">Termék megnevezése</label>
-                    <input type="text" class="form-control" formControlName="name" id="name" (change)="inputChange()" (keyup)="inputChange()">
-                </div>
-                <div class="mb-3">
-                    <label for="price" class="form-label mb-1">Ár <small>(HUF)</small></label>
-                    <input type="number" class="form-control" formControlName="price" id="price" (change)="inputChange()" (keyup)="inputChange()" step="1" min="0">
-                </div>
-                <div class="mb-3">
-                    <label for="discount" class="form-label mb-1">Kedvezmény <small>(%) </small><a href="" (click)="$event.preventDefault(); toolTipOpen[0] = true"><fa-icon [icon]="faInfoCircle"></fa-icon></a>
-                        <div *ngIf="toolTipOpen[0]" class="menu-bg" (click)="toolTipOpen[0] = false"></div>
-                        <span [@visibilityChange] *ngIf="toolTipOpen[0]" class="shadow rounded p-2 px-3 info" (mouseleave)="toolTipOpen[0] = false">
-                        <small>
-                            Százalékban értendő, nem kötelező megadni. A beviteli mező a jelölő négyzet kipipálásával válik aktívvá.
-                            <a href="">További információ.</a>
-                        </small>
-                        </span>
-                    </label>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox"
-                            (change)="discountChange(); inputChange()" id="discountAvailable">
-                        <label class="form-check-label" for="discountAvailable">
-                            Kedvezmény elérhető
-                        </label>
-                    </div>
-                    <input type="number" class="form-control" formControlName="discount" id="discount" [attr.disabled]="discountAvailable ? null : true"
-                        (keyup)="inputChange()" (change)="inputChange()" step="1" max="99" min="0">
-                </div>
-                <div class="mb-3">
-                    <label for="delivery" class="form-label mb-1">Elérhetőség
-                        <a href="" (click)="$event.preventDefault(); toolTipOpen[3] = true"><fa-icon [icon]="faInfoCircle"></fa-icon></a>
-                            <div *ngIf="toolTipOpen[3]" class="menu-bg" (click)="toolTipOpen[3] = false"></div>
-                            <span [@visibilityChange] *ngIf="toolTipOpen[3]" class="shadow rounded p-2 px-3 info" (mouseleave)="toolTipOpen[3] = false">
-                            <small>
-                                Adja meg, hogy a termék előre elkészített vagy csak megrendelésre elérhető.
-                                A 'Raktáron' beviteli mező az 'előre elkészített termék' opció kiválasztása esetén lesz aktív.
-                                <a [routerLink]="['']">További információ.</a>
-                            </small>
-                            </span>
-                    </label>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" name="delivery" id="available" value="Azonnal szállítható" formControlName="delivery" (change)="deliveryChange()">
-                        <label class="form-check-label" for="available">Azonnal szállítható (késztermék)</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" name="delivery" id="order" value="Megrendelésre készül" formControlName="delivery" (change)="deliveryChange()">
-                        <label class="form-check-label" for="order">Megrendelésre készül</label>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="inventory" class="form-label mb-1">Raktáron <small>(db)</small></label>
-                    <input type="number" class="form-control" formControlName="inventory" id="inventory" [attr.disabled]="productForm.value.delivery == 'Azonnal szállítható' ? null : true">
-                </div>
-                <div class="mb-3">
-                    <label for="category" class="form-label mb-1">Kategória</label>
-                    <!-- <input type="text" class="form-control" formControlName="category" id="category" > -->
-                    <select class="form-select custom-select" aria-label="Default select example" formControlName="category" id="category" name="category">
-                        <option *ngFor="let option of categories" [value]="option">{{option}}</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <div formArrayName="tags">
-                        <label class="mb-2">Címkék <a href="" (click)="$event.preventDefault(); toolTipOpen[1] = true"><fa-icon [icon]="faInfoCircle"></fa-icon></a>
-                            <div *ngIf="toolTipOpen[1]" class="menu-bg" (click)="toolTipOpen[1] = false"></div>
-                            <span [@visibilityChange] *ngIf="toolTipOpen[1]" class="shadow rounded p-2 px-3 info" (mouseleave)="toolTipOpen[1] = false">
-                            <small>
-                                A cimkék a termékek keresésében és szűrésében segítenek, ezért ajánlott megadni őket.
-                                Kattintos a 'Címke hozzáadása' gombra, majd kezdjen el gépelni és válasszon a megjelenő opciók közül.
-                                <a [routerLink]="['']">További információ.</a>
-                            </small>
-                            </span>
-                        </label> <br>
-                        <div *ngIf="productForm.value.tags">
-                            <div *ngFor="let tag of tags.controls; let i=index">
-                                <div class="d-flex justify-content-between">
-                                    <input id="tag-{{ i }}" type="text" class="form-control mb-2" [formControlName]="i" (focus)="onTagFocusChange(i); searchTag(i)"
-                                        autocomplete="off" value="{{productForm.value.tags[i]}}" (keyup)="searchTag(i)" (keyup.enter)="autoFillTag(i,0)">
-                                    <a class="text-decoration-none text-center m-2" (click)="removeTag(i, $event)">
-                                        <fa-icon [icon]="faTrash"></fa-icon>
-                                    </a>
-                                </div>
-                                <div *ngIf="tagOpen[i] == true">
-                                    <div class="menu-bg" (click)="onTagFocusChange(i)"></div>
-                                    <div class="rounded shadow menu">
-                                        <ul *ngFor="let option of tagsShown; let j = index" class="list-unstyled mb-0">
-                                            <li (click)="autoFillTag(i,j)"><a class="dropdown-item">{{option}}</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <button (click)="addTag()" type="button" class="btn btn-primary">+ Címke hozzáadása</button>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <div formArrayName="materials">
-                        <label class="mb-2">Alapanyagok
-                            <a href="" (click)="$event.preventDefault(); toolTipOpen[2] = true"><fa-icon [icon]="faInfoCircle"></fa-icon></a>
-                            <div *ngIf="toolTipOpen[2]" class="menu-bg" (click)="toolTipOpen[2] = false"></div>
-                            <span [@visibilityChange] *ngIf="toolTipOpen[2]" class="shadow rounded p-2 px-3 info" (mouseleave)="toolTipOpen[2] = false">
-                            <small>
-                                Alapanyagok, hozzávalók listája, a cimkékhez hasonlóan adhatja meg. Kérjük az allergén vagy káros anyagokat mindenképp tüntesse fel!
-                                <a [routerLink]="['']">További információ.</a>
-                            </small>
-                            </span>
-                        </label> <br>
-                        <div *ngIf="productForm.value.materials">
-                            <div *ngFor="let material of materials.controls; let i=index" class="d-flex justify-content-between">
-                                <input id="material-{{ i }}" type="text" class="form-control mb-2" [formControlName]="i">
-                                <a class="text-decoration-none text-center m-2" (click)="removeMaterial(i, $event)">
-                                    <fa-icon [icon]="faTrash"></fa-icon>
-                                </a>
-                            </div>
-                        </div>
-                        <button (click)="addMaterial()" type="button" class="btn btn-primary">+ Alapanyag hozzáadása</button>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="picture" class="form-label mb-1">Kép</label>
-                    <input type="file" class="form-control" id="picture" formControlName="pictureUrl">
-                </div>
-                <div class="mb-3">
-                    <label for="description" class="form-label mb-1">Leírás</label>
-                    <textarea name="description" id="description" cols="30" rows="5" class="form-control" formControlName="description"></textarea>
-                </div>
-                <div *ngIf="params.edit == 'false'" class="mb-3">
-                    <a (click)="saveProduct()" class="btn btn-secondary p-2 m-2" [ngClass]="{'disabled':(!productForm.valid)}">Mentés</a>
-                    <button type="submit" class="btn btn-primary p-2 m-2" [disabled]="!productForm.valid">Közzététel</button>
-                </div>
-                <div *ngIf="params.edit == 'true'" class="mb-3">
-                    <a *ngIf="editingProduct ? !editingProduct.isPublic : false" (click)="saveProductChange()" class="btn btn-secondary p-2 m-2" [ngClass]="{'disabled':(!productForm.valid)}">Változtatások mentés</a>
-                    <a type="submit" (click)="publishProductChange()" class="btn btn-primary p-2 m-2" [ngClass]="{'disabled':(!productForm.valid)}">Változtatások közzététele</a>
-                </div>
-            </form>
+  <h2 *ngIf="params.edit == 'false'" class="text-center">Új termék felvétele</h2>
+  <h2 *ngIf="params.edit == 'true'" class="text-center">Termék szerkesztése</h2>
+  <div class="row">
+    <div class="col-12 col-md-7 p-3 ps-3">
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="name" class="form-label mb-1">Termék megnevezése</label>
+          <input type="text" class="form-control" formControlName="name" id="name" (change)="inputChange()"
+            (keyup)="inputChange()">
         </div>
-        <div class="col-12 col-md-5 p-3 border-start">
-            <h4 class="text-center">Előnézet</h4>
-            <!-- <div>{{productForm.value|json}}</div> -->
-            <div class="d-flex justify-content-center">
-                <product-card [product]="newProduct"></product-card>
-            </div>
-            <div [@visibilityChange] *ngIf="productForm.value.tags[0]" class="d-flex justify-content-center">
-                <div class="shadow rounded px-4 pt-3 pb-2 m-2 card-preview">
-                    <div *ngFor="let tag of productForm.value.tags" class="row mx-auto">
-                        <div class="col-2 text-center">
-                            <fa-icon [icon]="[iconPrefix, (tag|icon:'tag')]"></fa-icon>
-                        </div>
-                        <div class="ps-0 col-10">
-                            <p>{{tag}}</p>
-                        </div>
-                    </div>
-                    <div class="row mx-auto">
-                    </div>
-                </div>
-            </div>
-            <div [@visibilityChange] *ngIf="productForm.value.category != '' || productForm.value.materials != '' || productForm.value.delivery != ''" class="d-flex justify-content-center">
-                <div class="shadow rounded px-4 pt-3 pb-2 m-2 card-preview">
-                    <div class="row mx-auto">
-                        <div class="col-2 text-center" *ngIf="productForm.value.category != ''">
-                            <fa-icon [icon]="[iconPrefix, (productForm.value.category|icon:'category')]"></fa-icon>
-                        </div>
-                        <div class="ps-0 col-10" *ngIf="productForm.value.category != ''">
-                            <p>Kategória: {{productForm.value.category}}</p>
-                        </div>
-                        <div class="col-2 text-center" *ngIf="productForm.value.materials[0]">
-                            <fa-icon [icon]="faBoxes"></fa-icon>
-                        </div>
-                        <div class="ps-0 col-10" *ngIf="productForm.value.materials[0]">
-                            <p>Anyaga: {{getMaterials()}}</p>
-                        </div>
-                        <div class="col-2 text-center" *ngIf="productForm.value.delivery">
-                            <fa-icon [icon]="faTruck"></fa-icon>
-                        </div>
-                        <div class="ps-0 col-10" *ngIf="productForm.value.delivery">
-                            <p>{{productForm.value.delivery}}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="mb-3">
+          <label for="price" class="form-label mb-1">Ár <small>(HUF)</small></label>
+          <input type="number" class="form-control" formControlName="price" id="price" (change)="inputChange()"
+            (keyup)="inputChange()" step="1" min="0">
         </div>
+        <div class="mb-3">
+          <label for="discount" class="form-label mb-1">Kedvezmény <small>(%) </small><a href=""
+              (click)="$event.preventDefault(); toolTipOpen[0] = true">
+              <fa-icon [icon]="faInfoCircle"></fa-icon>
+            </a>
+            <div *ngIf="toolTipOpen[0]" class="menu-bg" (click)="toolTipOpen[0] = false"></div>
+            <span [@visibilityChange] *ngIf="toolTipOpen[0]" class="shadow rounded p-2 px-3 info"
+              (mouseleave)="toolTipOpen[0] = false">
+              <small>
+                Százalékban értendő, nem kötelező megadni. A beviteli mező a jelölő négyzet kipipálásával válik aktívvá.
+                <a href="">További információ.</a>
+              </small>
+            </span>
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" (change)="discountChange(); inputChange()"
+              id="discountAvailable">
+            <label class="form-check-label" for="discountAvailable">
+              Kedvezmény elérhető
+            </label>
+          </div>
+          <input type="number" class="form-control" formControlName="discount" id="discount"
+            [attr.disabled]="discountAvailable ? null : true" (keyup)="inputChange()" (change)="inputChange()" step="1"
+            max="99" min="0">
+        </div>
+        <div class="mb-3">
+          <label for="delivery" class="form-label mb-1">Elérhetőség
+            <a href="" (click)="$event.preventDefault(); toolTipOpen[3] = true">
+              <fa-icon [icon]="faInfoCircle"></fa-icon>
+            </a>
+            <div *ngIf="toolTipOpen[3]" class="menu-bg" (click)="toolTipOpen[3] = false"></div>
+            <span [@visibilityChange] *ngIf="toolTipOpen[3]" class="shadow rounded p-2 px-3 info"
+              (mouseleave)="toolTipOpen[3] = false">
+              <small>
+                Adja meg, hogy a termék előre elkészített vagy csak megrendelésre elérhető.
+                A 'Raktáron' beviteli mező az 'előre elkészített termék' opció kiválasztása esetén lesz aktív.
+                <a [routerLink]="['']">További információ.</a>
+              </small>
+            </span>
+          </label>
+          <div class="form-check">
+            <input type="radio" class="form-check-input" name="delivery" id="available" value="Azonnal szállítható"
+              formControlName="delivery" (change)="deliveryChange()">
+            <label class="form-check-label" for="available">Azonnal szállítható (késztermék)</label>
+          </div>
+          <div class="form-check">
+            <input type="radio" class="form-check-input" name="delivery" id="order" value="Megrendelésre készül"
+              formControlName="delivery" (change)="deliveryChange()">
+            <label class="form-check-label" for="order">Megrendelésre készül</label>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="inventory" class="form-label mb-1">Raktáron <small>(db)</small></label>
+          <input type="number" class="form-control" formControlName="inventory" id="inventory"
+            [attr.disabled]="productForm.value.delivery == 'Azonnal szállítható' ? null : true">
+        </div>
+        <div class="mb-3">
+          <label for="category" class="form-label mb-1">Kategória</label>
+          <!-- <input type="text" class="form-control" formControlName="category" id="category" > -->
+          <select class="form-select custom-select" aria-label="Default select example" formControlName="category"
+            id="category" name="category">
+            <option *ngFor="let option of categories" [value]="option">{{option}}</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <div formArrayName="tags">
+            <label class="mb-2">Címkék <a href="" (click)="$event.preventDefault(); toolTipOpen[1] = true">
+                <fa-icon [icon]="faInfoCircle"></fa-icon>
+              </a>
+              <div *ngIf="toolTipOpen[1]" class="menu-bg" (click)="toolTipOpen[1] = false"></div>
+              <span [@visibilityChange] *ngIf="toolTipOpen[1]" class="shadow rounded p-2 px-3 info"
+                (mouseleave)="toolTipOpen[1] = false">
+                <small>
+                  A cimkék a termékek keresésében és szűrésében segítenek, ezért ajánlott megadni őket.
+                  Kattintos a 'Címke hozzáadása' gombra, majd kezdjen el gépelni és válasszon a megjelenő opciók közül.
+                  <a [routerLink]="['']">További információ.</a>
+                </small>
+              </span>
+            </label> <br>
+            <div *ngIf="productForm.value.tags">
+              <div *ngFor="let tag of tags.controls; let i=index">
+                <div class="d-flex justify-content-between">
+                  <input id="tag-{{ i }}" type="text" class="form-control mb-2" [formControlName]="i"
+                    (focus)="onTagFocusChange(i); searchTag(i)" autocomplete="off" value="{{productForm.value.tags[i]}}"
+                    (keyup)="searchTag(i)" (keyup.enter)="autoFillTag(i,0)">
+                  <a class="text-decoration-none text-center m-2" (click)="removeTag(i, $event)">
+                    <fa-icon [icon]="faTrash"></fa-icon>
+                  </a>
+                </div>
+                <div *ngIf="tagOpen[i] == true">
+                  <div class="menu-bg" (click)="onTagFocusChange(i)"></div>
+                  <div class="rounded shadow menu">
+                    <ul *ngFor="let option of tagsShown; let j = index" class="list-unstyled mb-0">
+                      <li (click)="autoFillTag(i,j)"><a class="dropdown-item">{{option}}</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button (click)="addTag()" type="button" class="btn btn-primary">+ Címke hozzáadása</button>
+          </div>
+        </div>
+        <div class="mb-3">
+          <div formArrayName="materials">
+            <label class="mb-2">Alapanyagok
+              <a href="" (click)="$event.preventDefault(); toolTipOpen[2] = true">
+                <fa-icon [icon]="faInfoCircle"></fa-icon>
+              </a>
+              <div *ngIf="toolTipOpen[2]" class="menu-bg" (click)="toolTipOpen[2] = false"></div>
+              <span [@visibilityChange] *ngIf="toolTipOpen[2]" class="shadow rounded p-2 px-3 info"
+                (mouseleave)="toolTipOpen[2] = false">
+                <small>
+                  Alapanyagok, hozzávalók listája, a cimkékhez hasonlóan adhatja meg. Kérjük az allergén vagy káros
+                  anyagokat mindenképp tüntesse fel!
+                  <a [routerLink]="['']">További információ.</a>
+                </small>
+              </span>
+            </label> <br>
+            <div *ngIf="productForm.value.materials">
+              <div *ngFor="let material of materials.controls; let i=index" class="d-flex justify-content-between">
+                <input id="material-{{ i }}" type="text" class="form-control mb-2" [formControlName]="i">
+                <a class="text-decoration-none text-center m-2" (click)="removeMaterial(i, $event)">
+                  <fa-icon [icon]="faTrash"></fa-icon>
+                </a>
+              </div>
+            </div>
+            <button (click)="addMaterial()" type="button" class="btn btn-primary">+ Alapanyag hozzáadása</button>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="picture" class="form-label mb-1">Kép</label>
+          <br>
+          <a (click)="uploadOpen = true;" class="btn btn-primary">Feltöltés</a>
+          <!-- <input type="file" class="form-control" id="picture" formControlName="pictureUrl" name="imgUrl" multiple> -->
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label mb-1">Leírás</label>
+          <textarea name="description" id="description" cols="30" rows="5" class="form-control"
+            formControlName="description"></textarea>
+        </div>
+        <div *ngIf="params.edit == 'false'" class="mb-3">
+          <a (click)="saveProduct()" class="btn btn-secondary p-2 m-2"
+            [ngClass]="{'disabled':(!productForm.valid)}">Mentés</a>
+          <button type="submit" class="btn btn-primary p-2 m-2" [disabled]="!productForm.valid">Közzététel</button>
+        </div>
+        <div *ngIf="params.edit == 'true'" class="mb-3">
+          <a *ngIf="editingProduct ? !editingProduct.isPublic : false" (click)="saveProductChange()"
+            class="btn btn-secondary p-2 m-2" [ngClass]="{'disabled':(!productForm.valid)}">Változtatások mentés</a>
+          <a type="submit" (click)="publishProductChange()" class="btn btn-primary p-2 m-2"
+            [ngClass]="{'disabled':(!productForm.valid)}">Változtatások közzététele</a>
+        </div>
+      </form>
     </div>
+    <div class="col-12 col-md-5 p-3 border-start">
+      <h4 class="text-center">Előnézet</h4>
+      <!-- <div>{{productForm.value|json}}</div> -->
+      <div class="d-flex justify-content-center">
+        <product-card [product]="newProduct"></product-card>
+      </div>
+      <div [@visibilityChange] *ngIf="productForm.value.tags[0]" class="d-flex justify-content-center">
+        <div class="shadow rounded px-4 pt-3 pb-2 m-2 card-preview">
+          <div *ngFor="let tag of productForm.value.tags" class="row mx-auto">
+            <div class="col-2 text-center">
+              <fa-icon [icon]="[iconPrefix, (tag|icon:'tag')]"></fa-icon>
+            </div>
+            <div class="ps-0 col-10">
+              <p>{{tag}}</p>
+            </div>
+          </div>
+          <div class="row mx-auto">
+          </div>
+        </div>
+      </div>
+      <div [@visibilityChange]
+        *ngIf="productForm.value.category != '' || productForm.value.materials != '' || productForm.value.delivery != ''"
+        class="d-flex justify-content-center">
+        <div class="shadow rounded px-4 pt-3 pb-2 m-2 card-preview">
+          <div class="row mx-auto">
+            <div class="col-2 text-center" *ngIf="productForm.value.category != ''">
+              <fa-icon [icon]="[iconPrefix, (productForm.value.category|icon:'category')]"></fa-icon>
+            </div>
+            <div class="ps-0 col-10" *ngIf="productForm.value.category != ''">
+              <p>Kategória: {{productForm.value.category}}</p>
+            </div>
+            <div class="col-2 text-center" *ngIf="productForm.value.materials[0]">
+              <fa-icon [icon]="faBoxes"></fa-icon>
+            </div>
+            <div class="ps-0 col-10" *ngIf="productForm.value.materials[0]">
+              <p>Anyaga: {{getMaterials()}}</p>
+            </div>
+            <div class="col-2 text-center" *ngIf="productForm.value.delivery">
+              <fa-icon [icon]="faTruck"></fa-icon>
+            </div>
+            <div class="ps-0 col-10" *ngIf="productForm.value.delivery">
+              <p>{{productForm.value.delivery}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <modal-window [(modalVisible)]="modalOpen" [allowClose]="false" [title]="'Üzenet'">
-    <div>
-        <div class="text-center p-3 border-top mt-2">
-            <p class="large">
-              <fa-icon *ngIf="success == undefined" [icon]="faSpinner" [spin]="true"></fa-icon>
-              {{message}}
-            </p>
-            <!-- <p class="mb-0 pb-0">Ezt a műveletet nem lehet visszavonni.</p> -->
-        </div>
-        <div class="d-flex justify-content-end border-top pt-2">
-            <a [routerLink]="['/my-profile']" class="btn btn-primary mx-1" [ngClass]="{'disabled':(success == null)}">Tovább</a>
-        </div>
+  <div>
+    <div class="text-center p-3 border-top mt-2">
+      <p class="large">
+        <fa-icon *ngIf="success == undefined" [icon]="faSpinner" [spin]="true"></fa-icon>
+        {{message}}
+      </p>
+      <!-- <p class="mb-0 pb-0">Ezt a műveletet nem lehet visszavonni.</p> -->
     </div>
+    <div class="d-flex justify-content-end border-top pt-2">
+      <a [routerLink]="['/my-profile']" class="btn btn-primary mx-1"
+        [ngClass]="{'disabled':(success == null)}">Tovább</a>
+    </div>
+  </div>
+</modal-window>
+<modal-window [(modalVisible)]="uploadOpen" title="Képek feltöltése">
+  <div>
+    <!-- <h3 class="text-center fw-bold">Képek feltöltése</h3> -->
+    <form [formGroup]="pictureForm" enctype="multipart/form-data">
+      <div class="my-3">
+        <label for="picture" class="form-label mb-1">Tallózás</label>
+        <input type="file" class="form-control" id="pictures" name="pictures" formControlName="pictures" multiple
+          (change)="pictureSelected($event)">
+      </div>
+    </form>
+    <div class="mx-1">
+      <small class="">
+        <p class="mb-0">
+          Maximum 3 darab, 1MB-nál nem nagyobb, 1:1 képarányú .png vagy .jpeg kiterjesztésű fájlt lehet feltölteni.
+        </p>
+        <p>
+          A képek jobb srkában megjelenő rádió gombokkal választhatja ki, melyik fotó jelenjen meg a termék kártyán.
+        </p>
+      </small>
+    </div>
+    <div *ngIf="pictureLinks[0]">
+      <h5 class="fw-bold">Feltöltött elemek</h5>
+      <div class="d-flex justify-content-center">
+        <div class="my-3 row">
+          <div *ngFor="let link of pictureLinks; let i = index;" class="col-auto">
+            <div class="form-check d-flex justify-content-center">
+              <label for="{{i}}" class="form-check-label">
+                <img src="{{resourcePrefix}}{{link}}" class="rounded mx-1 product-picture">
+              </label>
+              <input type="radio" id="{{i}}" name="thumbnail" value="{{i}}" class="form-check-input">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-between">
+      <a (click)="uploadOpen = false" href="#" class="btn btn-secondary">Mégse</a>
+      <button (click)="onUpload()" type="submit" class="btn btn-primary">Kész</button>
+    </div>
+  </div>
 </modal-window>

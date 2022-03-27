@@ -18,7 +18,7 @@ module.exports = (req, res, next) => {
             if (err) {
                 res.json({ 'message': "Query " + err })
             } else {
-                console.log(token);
+                // console.log(token);
                 if (!result.length) {
                     res.status(401);
                     return res.json({ 'message': 'Authentication failed' });
