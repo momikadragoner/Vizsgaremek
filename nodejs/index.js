@@ -85,7 +85,7 @@ const path = require('path');
 const cors = require('cors');
 const isAuth = require('./util/is-auth');
 
-app.use( bodyParser.urlencoded({ extended: true }));
+app.use( express.urlencoded({ extended: true }));
 
 // app.use(express.json())
 
@@ -106,6 +106,6 @@ app.use('/user', authRoutes);
 
 app.use('/api', shopRoutes);
 app.use('/api', isAuth, userRoutes);
-app.use('/api', isAuth, pictureRoutes);
+app.use('/api/picture/', isAuth, pictureRoutes);
 
 app.listen(3080);

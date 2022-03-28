@@ -1,7 +1,7 @@
 import { Component, OnInit, ɵCompiler_compileModuleAndAllComponentsSync__POST_R3__ } from '@angular/core';
 import { Product, tags, ProductShort, categories, ProductService } from '../../services/product.service';
 import { FormGroup, FormArray, FormBuilder, Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
-import { faTruck, faBoxes, IconPrefix, faTree, faHandPaper, faBalanceScale, faExclamationCircle, faGem, faBoxOpen, faLeaf, faSeedling, faAppleAlt, faCarrot, faCheese, faTrash, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt, faInfoCircle, faSpinner} from '@fortawesome/free-solid-svg-icons';
+import { faTruck, faBoxes, IconPrefix, faTree, faHandPaper, faBalanceScale, faExclamationCircle, faGem, faBoxOpen, faLeaf, faSeedling, faAppleAlt, faCarrot, faCheese, faTrash, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt, faInfoCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { asapScheduler, fromEventPattern } from 'rxjs';
 import { JsonPipe } from '@angular/common';
@@ -16,16 +16,16 @@ import { PictureService } from 'src/app/services/picture.service';
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.scss'],
   animations: [
-    trigger('visibilityChange',[
+    trigger('visibilityChange', [
       transition(':leave', [
-        style({ opacity: 1}),
+        style({ opacity: 1 }),
         animate('0.2s',
-          style({ opacity: 0,}))
+          style({ opacity: 0, }))
       ]),
       transition(':enter', [
-        style({ opacity: 0}),
+        style({ opacity: 0 }),
         animate('0.2s',
-          style({ opacity: 1,}))
+          style({ opacity: 1, }))
       ])
     ])
   ]
@@ -47,59 +47,58 @@ export class ProductFormComponent implements OnInit {
   faSpinner = faSpinner;
 
   discountAvailable = false;
-  toolTipOpen:boolean[] = [];
-  editingProduct?:Product;
-  params:any;
+  toolTipOpen: boolean[] = [];
+  editingProduct?: Product;
+  params: any;
 
-  tagOpen:boolean[] = [];
-  tagsShown:string[] = [];
-  pictureLinks:string[] = [];
+  tagOpen: boolean[] = [];
+  tagsShown: string[] = [];
+  pictureLinks: string[] = [''];
   resourcePrefix = "http://localhost:3080/product_pictures/"
   modalOpen = false;
   uploadOpen = false;
-  success?:boolean = undefined;
-  message:string = 'Betöltés...';
+  success?: boolean = undefined;
+  message: string = 'Betöltés...';
 
   constructor(
     private fb: FormBuilder,
     private productService: ProductService,
-    library:FaIconLibrary,
+    library: FaIconLibrary,
     activatedRoute: ActivatedRoute,
     private authService: AuthService,
     private pictureService: PictureService
-  )
-  {
-    library.addIcons(faHandPaper, faTree, faBalanceScale, faExclamationCircle, faGem, faBoxOpen, faLeaf, faSeedling, faAppleAlt, faCarrot, faCheese, faCarrot, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt );
+  ) {
+    library.addIcons(faHandPaper, faTree, faBalanceScale, faExclamationCircle, faGem, faBoxOpen, faLeaf, faSeedling, faAppleAlt, faCarrot, faCheese, faCarrot, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt);
     activatedRoute.queryParams.subscribe(param => this.params = { ...param['keys'], ...param });
-    if(this.params.edit == 'true'){
+    if (this.params.edit == 'true') {
       let id = Number(this.params.id);
       let form = this.productForm.value;
-      let product:Product = { productId: 0, name: '', sellerFirstName: '', sellerLastName: '', price: -1, inventory: -1, delivery: '', category: '', tags: [], materials: [], imgUrl: [], description: '', isPublic: true, rating: -1, reviews: [] };;
+      let product: Product = { productId: 0, name: '', sellerFirstName: '', sellerLastName: '', price: -1, inventory: -1, delivery: '', category: '', tags: [], materials: [], imgUrl: [], description: '', isPublic: true, rating: -1, reviews: [] };;
       productService.getProduct(id)
-      .subscribe({
-        next: (data: Product) => {
-          product = { ... data}
-          form.name = product.name;
-          form.price = product.price;
-          form.discount = product.discount;
-          form.inventory = product.inventory;
-          form.delivery = product.delivery;
-          form.category = product.category;
-          form.description = product.description;
-          this.editingProduct = product;
-          //form.pictureUrl = product.imgUrl[0];
-          this.productForm.setValue(form);
-          product.tags.forEach( tag => {
-            this.tags.push(this.fb.control(tag));
-          })
-          product.materials.forEach( material => {
-            this.materials.push(this.fb.control(material));
-          })
-          this.inputChange();
-          //console.log(this.productPublic);
-        },
-        error: error => console.log(error)
-      });
+        .subscribe({
+          next: (data: Product) => {
+            product = { ...data }
+            form.name = product.name;
+            form.price = product.price;
+            form.discount = product.discount;
+            form.inventory = product.inventory;
+            form.delivery = product.delivery;
+            form.category = product.category;
+            form.description = product.description;
+            this.editingProduct = product;
+            //form.pictureUrl = product.imgUrl[0];
+            this.productForm.setValue(form);
+            product.tags.forEach(tag => {
+              this.tags.push(this.fb.control(tag));
+            })
+            product.materials.forEach(material => {
+              this.materials.push(this.fb.control(material));
+            })
+            this.inputChange();
+            //console.log(this.productPublic);
+          },
+          error: error => console.log(error)
+        });
     }
   }
 
@@ -122,7 +121,7 @@ export class ProductFormComponent implements OnInit {
     pictures: [null],
   });
 
-  newProduct = new ProductShort (0, this.productForm.value.name, '', '',
+  newProduct = new ProductShort(0, this.productForm.value.name, '', '',
     this.productForm.value.price, this.productForm.value.imgUrl, undefined, undefined, this.productForm.value.discount
   );
 
@@ -130,7 +129,7 @@ export class ProductFormComponent implements OnInit {
     this.tags.push(this.fb.control(''));
   }
 
-  removeTag(id:any, $event:any){
+  removeTag(id: any, $event: any) {
     $event.preventDefault();
     this.tags.removeAt(id);
   }
@@ -139,7 +138,7 @@ export class ProductFormComponent implements OnInit {
     this.materials.push(this.fb.control(''));
   }
 
-  removeMaterial(id:any, $event:any){
+  removeMaterial(id: any, $event: any) {
     $event.preventDefault();
     this.materials.removeAt(id);
   }
@@ -152,29 +151,29 @@ export class ProductFormComponent implements OnInit {
     return this.productForm.get('materials') as FormArray;
   }
 
-  inputChange(){
-    this.newProduct = new ProductShort (0, this.productForm.value.name, this.currentUser().first_name, this.currentUser().last_name,
-      this.productForm.value.price, this.productForm.value.imgUrl, undefined, undefined,  this.productForm.value.discount
+  inputChange() {
+    this.newProduct = new ProductShort(0, this.productForm.value.name, this.currentUser().first_name, this.currentUser().last_name,
+      this.productForm.value.price, this.pictureLinks[0], undefined, undefined, this.productForm.value.discount
     );
   }
 
-  getMaterials(){
-    let materialLabel:string = "";
+  getMaterials() {
+    let materialLabel: string = "";
     this.productForm.value.materials.forEach((material: string) => {
       materialLabel += material;
-      if(this.productForm.value.materials[this.productForm.value.materials.length - 1] != material) materialLabel += ", ";
+      if (this.productForm.value.materials[this.productForm.value.materials.length - 1] != material) materialLabel += ", ";
     });
     return materialLabel;
   }
 
-  discountChange(){
+  discountChange() {
     this.discountAvailable = !this.discountAvailable;
     let update = this.productForm.value;
     update.discount = null;
     this.productForm.setValue(update);
   }
 
-  tagOptions:string[] = [
+  tagOptions: string[] = [
     "Környezetbarát",
     "Kézzel készült",
     "Etikusan beszerzett alapanyagok",
@@ -185,10 +184,10 @@ export class ProductFormComponent implements OnInit {
     "Bio"
   ];
 
-  searchTag(id:number){
-    if(this.productForm.value.tags[id] == "") this.tagsShown = [...this.tagOptions];
+  searchTag(id: number) {
+    if (this.productForm.value.tags[id] == "") this.tagsShown = [...this.tagOptions];
     let result: string[] = [];
-    this.tagOptions.forEach((option)=>{
+    this.tagOptions.forEach((option) => {
       let regex = new RegExp(this.productForm.value.tags[id].trim(), "i");
       // let regex = new RegExp(/this.productForm.value.tags[id]/);
       if (option.match(regex)) {
@@ -199,18 +198,18 @@ export class ProductFormComponent implements OnInit {
     this.tagsShown = result;
   }
 
-  autoFillTag(id:number, option:number){
+  autoFillTag(id: number, option: number) {
     let update = this.productForm.value;
     update.tags[id] = this.tagsShown[option];
     this.productForm.setValue(update);
     this.onTagFocusChange(id);
   }
 
-  onTagFocusChange(id:number){
+  onTagFocusChange(id: number) {
     this.tagOpen[id] = !this.tagOpen[id];
   }
 
-  deliveryChange(){
+  deliveryChange() {
     if (this.productForm.value.delivery == "Megrendelésre készül") {
       let update = this.productForm.value;
       update.inventory = null;
@@ -218,9 +217,9 @@ export class ProductFormComponent implements OnInit {
     }
   }
 
-  loadProduct(isPublic:boolean):Product{
+  loadProduct(isPublic: boolean): Product {
     let form = this.productForm.value;
-    let newProduct:Product =
+    let newProduct: Product =
     {
       productId: 0,
       name: form.name,
@@ -234,13 +233,13 @@ export class ProductFormComponent implements OnInit {
       sellerId: this.currentUser().member_id,
       materials: form.materials,
       tags: form.tags,
-      imgUrl: [form.pictureUrl],
+      imgUrl: this.pictureLinks,
       description: form.description,
       isPublic: isPublic,
       publishedAt: (this.editingProduct ? this.editingProduct.publishedAt : undefined),
       reviews: []
     }
-    if (this.editingProduct?.isPublic !=  newProduct.isPublic){
+    if (this.editingProduct?.isPublic != newProduct.isPublic) {
       newProduct.publishedAt = new Date();
     }
     if (newProduct.imgUrl[0] == '') {
@@ -250,7 +249,7 @@ export class ProductFormComponent implements OnInit {
     return newProduct;
   }
 
-  postProduct(isPublic:boolean){
+  postProduct(isPublic: boolean) {
     let newProduct = this.loadProduct(isPublic);
     this.productService
       .addProduct(newProduct)
@@ -260,7 +259,7 @@ export class ProductFormComponent implements OnInit {
       });
   }
 
-  putProduct(isPublic:boolean){
+  putProduct(isPublic: boolean) {
     let updatedProduct = this.loadProduct(isPublic);
     this.productService
       .updateProduct(updatedProduct, this.params.id)
@@ -275,13 +274,13 @@ export class ProductFormComponent implements OnInit {
     this.postProduct(true);
   }
 
-  saveProduct(){
+  saveProduct() {
     if (!this.productForm.valid) return;
     this.postProduct(false);
     this.modalOpen = true;
   }
 
-  saveProductChange(){
+  saveProductChange() {
     if (!this.productForm.valid) return;
     this.putProduct(false);
     this.modalOpen = true;
@@ -293,8 +292,8 @@ export class ProductFormComponent implements OnInit {
     this.modalOpen = true;
   }
 
-  pictureSelected($event:any){
-    let formData:FormData = new FormData();
+  pictureSelected($event: any) {
+    let formData: FormData = new FormData();
     console.log($event.target.files);
     formData.append('pictures', $event.target.files[0]);
     if ($event.target.files[1]) {
@@ -305,15 +304,22 @@ export class ProductFormComponent implements OnInit {
     }
     this.pictureService.addPicture(formData).subscribe({
       next: (res) => {
-        this.pictureLinks = res.toString().split(',');
+        let data:string[]= res.toString().split(',');
+        this.pictureLinks = [];
+        data.forEach(link => {
+          this.pictureLinks.push(this.resourcePrefix + link);
+        })
+
       },
-      error: (err) =>{
+      error: (err) => {
         console.log(err);
       }
     });
   }
 
   onUpload() {
+    this.newProduct.imgUrl = this.pictureLinks[0];
+    this.uploadOpen = false;
   }
 
   ngOnInit(): void {

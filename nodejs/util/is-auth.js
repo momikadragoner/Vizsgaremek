@@ -15,10 +15,10 @@ module.exports = (req, res, next) => {
     conn = connectDb();
     conn.query('SELECT `member_id`, `logged_in_at` FROM `session` WHERE jwt = ?',
         [token], function (err, result, fields) {
+            //console.log(token);
             if (err) {
                 res.json({ 'message': "Query " + err })
             } else {
-                // console.log(token);
                 if (!result.length) {
                     res.status(401);
                     return res.json({ 'message': 'Authentication failed' });

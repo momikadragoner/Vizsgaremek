@@ -82,6 +82,7 @@ exports.postNewProduct = (req, res, next) => {
   let matString = stringifyArray(product.materials);
   let tagString = stringifyArray(product.tags);
   let picString = stringifyArray(product.imgUrl);
+  console.log(tagString, product.imgUrl.length);
 
   var sql = 'CALL insertProduct(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )';
   conn = connectDb()

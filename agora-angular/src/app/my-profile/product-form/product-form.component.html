@@ -247,7 +247,7 @@
           Maximum 3 darab, 1MB-nál nem nagyobb, 1:1 képarányú .png vagy .jpeg kiterjesztésű fájlt lehet feltölteni.
         </p>
         <p>
-          A képek jobb srkában megjelenő rádió gombokkal választhatja ki, melyik fotó jelenjen meg a termék kártyán.
+          A képek jobb sarkában lévő rádió gombokkal választhatja ki, melyik fotó jelenjen meg a termék kártyán.
         </p>
       </small>
     </div>
@@ -258,7 +258,7 @@
           <div *ngFor="let link of pictureLinks; let i = index;" class="col-auto">
             <div class="form-check d-flex justify-content-center">
               <label for="{{i}}" class="form-check-label">
-                <img src="{{resourcePrefix}}{{link}}" class="rounded mx-1 product-picture">
+                <img src="{{link}}" class="rounded mx-1 product-picture">
               </label>
               <input type="radio" id="{{i}}" name="thumbnail" value="{{i}}" class="form-check-input">
             </div>

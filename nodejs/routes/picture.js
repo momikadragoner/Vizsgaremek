@@ -23,7 +23,7 @@ const multerFilter = (req, file, cb) => {
 
 const upload = multer({ storage: storage, fileFilter: multerFilter });
 
-router.post('/picture/product', (req, res, next) => { console.log(req.body); next(); }, upload.array('pictures', 3), async (req, res, next) => {
+router.post('/product-picture', upload.array('pictures', 3), async (req, res, next) => {
     try {
         let links = [];
         req.files.forEach( file => {

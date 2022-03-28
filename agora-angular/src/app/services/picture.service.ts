@@ -28,7 +28,7 @@ export class PictureService {
   }
 
   addPicture(picture:FormData) {
-    return this.http.post<FormData>(this.rootURL + '/picture/product', picture, this.httpOptions)
+    return this.http.post<FormData>(this.rootURL + '/picture/product-picture', picture, this.httpOptions)
       .pipe(
         catchError((error) => this.handleError(error))
       );
