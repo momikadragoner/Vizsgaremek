@@ -24,7 +24,7 @@
               (mouseleave)="toolTipOpen[0] = false">
               <small>
                 Százalékban értendő, nem kötelező megadni. A beviteli mező a jelölő négyzet kipipálásával válik aktívvá.
-                <a href="">További információ.</a>
+                <a [routerLink]="['/guide']">További információ.</a>
               </small>
             </span>
           </label>
@@ -50,7 +50,7 @@
               <small>
                 Adja meg, hogy a termék előre elkészített vagy csak megrendelésre elérhető.
                 A 'Raktáron' beviteli mező az 'előre elkészített termék' opció kiválasztása esetén lesz aktív.
-                <a [routerLink]="['']">További információ.</a>
+                <a [routerLink]="['/guide']">További információ.</a>
               </small>
             </span>
           </label>
@@ -89,7 +89,7 @@
                 <small>
                   A cimkék a termékek keresésében és szűrésében segítenek, ezért ajánlott megadni őket.
                   Kattintos a 'Címke hozzáadása' gombra, majd kezdjen el gépelni és válasszon a megjelenő opciók közül.
-                  <a [routerLink]="['']">További információ.</a>
+                  <a [routerLink]="['/guide']">További információ.</a>
                 </small>
               </span>
             </label> <br>
@@ -128,7 +128,7 @@
                 <small>
                   Alapanyagok, hozzávalók listája, a cimkékhez hasonlóan adhatja meg. Kérjük az allergén vagy káros
                   anyagokat mindenképp tüntesse fel!
-                  <a [routerLink]="['']">További információ.</a>
+                  <a [routerLink]="['/guide']">További információ.</a>
                 </small>
               </span>
             </label> <br>
@@ -260,7 +260,7 @@
               <label for="{{i}}" class="form-check-label">
                 <img src="{{link}}" class="rounded mx-1 product-picture">
               </label>
-              <input type="radio" id="{{i}}" name="thumbnail" value="{{i}}" class="form-check-input">
+              <input type="radio" id="{{i}}" name="thumbnail" value="{{i}}" class="form-check-input" [(ngModel)]="thumbnailIndex">
             </div>
           </div>
         </div>

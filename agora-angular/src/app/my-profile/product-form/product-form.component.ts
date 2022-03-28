@@ -57,6 +57,7 @@ export class ProductFormComponent implements OnInit {
   resourcePrefix = "http://localhost:3080/product_pictures/"
   modalOpen = false;
   uploadOpen = false;
+  thumbnailIndex = "0";
   success?: boolean = undefined;
   message: string = 'Betöltés...';
 
@@ -318,7 +319,11 @@ export class ProductFormComponent implements OnInit {
   }
 
   onUpload() {
-    this.newProduct.imgUrl = this.pictureLinks[0];
+    let selected:string = this.pictureLinks[Number(this.thumbnailIndex)];
+    this.newProduct.imgUrl = selected;
+    let tmp:string = this.pictureLinks[0];
+    this.pictureLinks[0] = selected;
+    this.pictureLinks[Number(this.thumbnailIndex)] = tmp;
     this.uploadOpen = false;
   }
 

@@ -12,8 +12,10 @@
 .header{
     position: absolute;
     height: 10rem;
+    width: 100%;
     background-position: center;
-    z-index: -2;
+    z-index: -3;
+    margin-left: -1.5rem;
 }
 .bg-white{
     background-color: #fbf7f5;
@@ -46,7 +48,7 @@ textarea.ng-untouched{
 textarea.ng-valid{
     border-bottom: #859C62 thin solid;
 }
-.form-control:focus {   
+.form-control:focus {
     color: #212529;
     background-color: #fff;
     border-color: #859C62;

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angu
 import { FormBuilder, Validators } from '@angular/forms';
 import { faEnvelope, faLink, faLocationArrow, faCalendarAlt, faCamera, faSave, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { from } from 'rxjs';
+import { PictureService } from 'src/app/services/picture.service';
 import { User, seller, UserService } from "../../services/user.service";
 
 @Component({
@@ -24,10 +25,12 @@ export class EditProfileComponent implements OnChanges {
   @Output() modalState = new EventEmitter<boolean>();
   @Output() userChange = new EventEmitter<User>();
   isLoading:boolean = false;
+  uploadOpen:boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private userService:UserService,
+    private pictureService:PictureService
   ) { }
 
   userForm = this.fb.group({
@@ -77,6 +80,24 @@ export class EditProfileComponent implements OnChanges {
     form.about = this.user.about;
     form.takesCustomOrders = this.user.takesCustomOrders ? this.user.takesCustomOrders : '';
     this.userForm.setValue(form);
+  }
+
+  pictureSelected($event: any) {
+    let formData: FormData = new FormData();
+    console.log($event.target.files);
+    formData.append('pictures', $event.target.files[0]);
+    this.pictureService.addPicture(formData).subscribe({
+      next: (res) => {
+        let pfpLink= "http://localhost:3080/product_pictures/" + res.toString().split(',');
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
+
+  onUpload(){
+
   }
 
 }

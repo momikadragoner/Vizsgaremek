@@ -62,6 +62,7 @@ import { NotificationService } from './services/notification.service';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { MessageService } from './services/messages.service';
 import { PictureService } from './services/picture.service';
+import { GuideComponent } from './guide/guide.component';
 
 
 @NgModule({
@@ -107,7 +108,8 @@ import { PictureService } from './services/picture.service';
     AddressFormComponent,
     OrderTrackingComponent,
     StatePipe,
-    NotificationsComponent
+    NotificationsComponent,
+    GuideComponent
   ],
   imports: [
     BrowserModule,
