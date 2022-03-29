@@ -23,8 +23,13 @@ exports.getProduct = (req, res, next) => {
   conn = connectDb()
   conn.query(sql,
     [id], (err, rows, fields) => {
-      if (err) return res.json({ "Error": "Query" + err });
-      else if (!rows[4][0]) {
+      if (err) {
+        if (err.code = 'ECONNREFUSED') {
+          res.status(503);
+          return res.json({ 'message': 'Connection refused by database server.' })
+        }
+        return res.json({ 'message': err })
+      } else if (!rows[4][0]) {
         res.status(400);
         return res.json({ 'message': "Product with given ID doesn't exist." });
       }
@@ -60,8 +65,13 @@ exports.getReviewById = (req, res, next) => {
 
   conn.query('CALL selectReview(?, ?)',
     [id, 0], (err, rows, fields) => {
-      if (err) res.json("Query error: " + err)
-      else {
+      if (err) {
+        if (err.code = 'ECONNREFUSED') {
+          res.status(503);
+          return res.json({ 'message': 'Connection refused by database server.' })
+        }
+        return res.json({ 'message': err })
+      } else {
         res.json(rows[0]);
       }
     }
@@ -73,8 +83,13 @@ exports.getAllProducts = (req, res, next) => {
 
   conn.query('SELECT product.product_id AS productId, product.name, product.price, product.vendor_id AS sellerId, product.discount, product.is_published AS isPublic, member.first_name AS sellerFirstName, member.last_name AS sellerLastName, ( SELECT product_picture.resource_link FROM product_picture WHERE product_picture.is_thumbnail = TRUE AND product.product_id = product_picture.product_id LIMIT 1 ) AS imgUrl FROM product INNER JOIN member ON member.member_id = product.vendor_id WHERE product.is_published = TRUE;',
     (err, rows, fields) => {
-      if (err) res.json("Query error: " + err)
-      else {
+      if (err) {
+        if (err.code = 'ECONNREFUSED') {
+          res.status(503);
+          return res.json({ 'message': 'Connection refused by database server.' })
+        }
+        return res.json({ 'message': err })
+      } else {
         res.json(rows);
       }
     }
@@ -124,9 +139,14 @@ exports.getProductsBySeller = (req, res, next) => {
   }
   conn.query(sql,
     [id, "ORDER BY product.price DESC"], (err, rows, fields) => {
-      if (err) res.json("Query error: " + err)
-      else {
-        res.json(rows);
+      if (err) {
+        if (err.code = 'ECONNREFUSED') {
+          res.status(503);
+          return res.json({ 'message': 'Connection refused by database server.' })
+        }
+        return res.json({ 'message': err })
+      } else {
+        return res.json(rows);
       }
     }
   );
@@ -142,8 +162,13 @@ exports.getUserShort = (req, res, next) => {
   conn = connectDb()
   conn.query(sql,
     [id, 0], (err, rows, fields) => {
-      if (err) res.json("Query error: " + err)
-      else {
+      if (err) {
+        if (err.code = 'ECONNREFUSED') {
+          res.status(503);
+          return res.json({ 'message': 'Connection refused by database server.' })
+        }
+        return res.json({ 'message': err })
+      } else {
         res.json(rows[0][0]);
       }
     }
@@ -159,8 +184,13 @@ exports.getUser = (req, res, next) => {
   conn = connectDb();
   conn.query(sql,
     [id, 0], (err, rows, fields) => {
-      if (err) console.log("Query " + err)
-      else {
+      if (err) {
+        if (err.code = 'ECONNREFUSED') {
+          res.status(503);
+          return res.json({ 'message': 'Connection refused by database server.' })
+        }
+        return res.json({ 'message': err })
+      } else {
         res.status(200);
         res.json(rows[0][0]);
       }
@@ -176,8 +206,13 @@ exports.getWishList = (req, res, next) => {
   conn = connectDb();
   conn.query(sql,
     [id], (err, rows, fields) => {
-      if (err) console.log("Query " + err)
-      else {
+      if (err) {
+        if (err.code = 'ECONNREFUSED') {
+          res.status(503);
+          return res.json({ 'message': 'Connection refused by database server.' })
+        }
+        return res.json({ 'message': err })
+      } else {
         res.status(200);
         res.json(rows[0]);
       }
@@ -281,8 +316,13 @@ exports.searchProducts = (req, res, next) => {
   conn = connectDb();
   conn.query(sql,
     [], (err, rows, fields) => {
-      if (err) console.log("Query " + err)
-      else {
+      if (err) {
+        if (err.code = 'ECONNREFUSED') {
+          res.status(503);
+          return res.json({ 'message': 'Connection refused by database server.' })
+        }
+        return res.json({ 'message': err })
+      } else {
         res.status(200);
         res.json(rows);
       }

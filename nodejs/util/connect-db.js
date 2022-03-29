@@ -6,8 +6,7 @@ exports.connectDb = () => {
         user: 'root',
         password: '',
         database: 'agora-webshop'
-    })
-
-    connection.connect()
+    });
+    connection.connect();
     return connection;
 }
