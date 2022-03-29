@@ -72,7 +72,7 @@ function stringifyArray(array) {
   return strArray;
 };
 exports.postNewProduct = (req, res, next) => {
-  if (!(req.body.name && req.body.price && req.category && req.sellerId && req.imgUrl && req.isPublic)) {
+  if (!(req.body.name && req.body.price && req.body.category && req.body.sellerId && req.body.imgUrl && req.body.isPublic)) {
     res.status(400);
     return res.json({ 'message': 'Required fields were left empty.' });
   }
@@ -82,7 +82,6 @@ exports.postNewProduct = (req, res, next) => {
   let matString = stringifyArray(product.materials);
   let tagString = stringifyArray(product.tags);
   let picString = stringifyArray(product.imgUrl);
-  console.log(tagString, product.imgUrl.length);
 
   var sql = 'CALL insertProduct(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )';
   conn = connectDb(res)
@@ -106,11 +105,25 @@ exports.postNewProduct = (req, res, next) => {
       picString,
       product.imgUrl.length,
       1
-    ], (err, results, fields) => {
+    ], (err, rows, fields) => {
       if (err) console.log("Query " + err)
       else {
+        let materials = [];
+        let tags = [];
+        let imgUrl = [];
+        let reviews = [];
+        let result = [];
+        rows[0].forEach((rows) => { materials.push(rows.material_name) });
+        rows[1].forEach((rows) => { tags.push(rows.tag_name) });
+        rows[2].forEach((rows) => { imgUrl.push(rows.resource_link) });
+        rows[3].forEach((rows) => { reviews.push(rows) });
+        result = rows[4];
+        result[0].materials = materials;
+        result[0].tags = tags;
+        result[0].imgUrl = imgUrl;
+        result[0].reviews = reviews;
         res.status(201);
-        res.json(product);
+        res.json(result[0]);
       }
     }
   )
@@ -121,7 +134,7 @@ exports.deleteProduct = (req, res, next) => {
 };
 exports.updateProduct = (req, res, next) => {
   product = req.body;
-  if (!Number(req.params.id)) return res.json({ 'Error': 'This product does not exist.' });
+  if (!Number(req.params.id)) return res.status(400).json({ 'Error': 'ID must be a number' });
   let id = Number(req.params.id);
   let sql = 'CALL updateProduct(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
   conn = connectDb()
@@ -145,11 +158,25 @@ exports.updateProduct = (req, res, next) => {
       stringifyArray(product.imgUrl),
       product.imgUrl.length,
       1
-    ], (err, results, fields) => {
+    ], (err, rows, fields) => {
       if (err) console.log("Query " + err)
       else {
+        let materials = [];
+        let tags = [];
+        let imgUrl = [];
+        let reviews = [];
+        let result = [];
+        rows[0].forEach((rows) => { materials.push(rows.material_name) });
+        rows[1].forEach((rows) => { tags.push(rows.tag_name) });
+        rows[2].forEach((rows) => { imgUrl.push(rows.resource_link) });
+        rows[3].forEach((rows) => { reviews.push(rows) });
+        result = rows[4];
+        result[0].materials = materials;
+        result[0].tags = tags;
+        result[0].imgUrl = imgUrl;
+        result[0].reviews = reviews;
         res.status(200);
-        res.json(product);
+        res.json(result[0]);
       }
     }
   )
@@ -179,7 +206,7 @@ exports.postWishList = (req, res, next) => {
       if (err) console.log("Query " + err)
       else {
         res.status(201);
-        res.json();
+        res.json({'wishListId': results[0][0].wish_list_id});
       }
     })
 }
@@ -265,7 +292,7 @@ exports.deleteAddress = (req, res, next) => {
   deleteFromDatabase('CALL deleteAddress(?)', req, res)
 }
 function deleteFromDatabase(sql, req, res) {
-  if (!Number(req.params.id)) return res.json({ 'Error': 'ID must be a number' });
+  if (!Number(req.params.id)) return res.status(400).json({ 'Error': 'ID must be a number' });
   let id = Number(req.params.id);
   conn = connectDb();
   conn.query(sql, [id],
@@ -273,7 +300,7 @@ function deleteFromDatabase(sql, req, res) {
       if (err) console.log("Query " + err)
       else {
         res.status(200);
-        res.json();
+        res.json({ 'message': 'Item with ID ' + id + ' was deleted.' });
       }
     })
   conn.end();
@@ -296,9 +323,9 @@ exports.postFollow = (req, res, next) => {
   conn.end();
 }
 exports.deleteFollow = (req, res, next) => {
-  if (!Number(req.params.follower)) return res.json({ 'Error': 'ID must be a number' });
+  if (!Number(req.params.follower)) return res.status(400).json({ 'Error': 'ID must be a number' });
   let follower = Number(req.params.follower);
-  if (!Number(req.params.following)) return res.json({ 'Error': 'ID must be a number' });
+  if (!Number(req.params.following)) return res.status(400).json({ 'Error': 'ID must be a number' });
   let following = Number(req.params.following);
 
   let sql = 'CALL deleteFollow(?, ?)'
@@ -316,9 +343,9 @@ exports.deleteFollow = (req, res, next) => {
   conn.end();
 }
 exports.getUserShortLog = (req, res, next) => {
-  if (!Number(req.params.user)) return res.json({ 'Error': 'ID must be a number' });
+  if (!Number(req.params.user)) return res.status(400).json({ 'Error': 'ID must be a number' });
   let user = Number(req.params.user);
-  if (!Number(req.params.log)) return res.json({ 'Error': 'ID must be a number' });
+  if (!Number(req.params.log)) return res.status(400).json({ 'Error': 'ID must be a number' });
   let log = Number(req.params.log);
 
   let sql = 'CALL selectUserShort(?, ?)'
@@ -338,9 +365,9 @@ exports.getUserShortLog = (req, res, next) => {
 
 exports.getUserLog = (req, res, next) => {
 
-  if (!Number(req.params.user)) return res.json({ 'Error': 'ID must be a number' });
+  if (!Number(req.params.user)) return res.status(400).json({ 'Error': 'ID must be a number' });
   let user = Number(req.params.user);
-  if (!Number(req.params.log)) return res.json({ 'Error': 'ID must be a number' });
+  if (!Number(req.params.log)) return res.status(400).json({ 'Error': 'ID must be a number' });
   let log = Number(req.params.log);
 
   let sql = 'CALL selectUser(?, ?)';
@@ -358,7 +385,7 @@ exports.getUserLog = (req, res, next) => {
   conn.end();
 };
 exports.getCityByPostalCode = (req, res, next) => {
-  if (!Number(req.params.id)) return res.json({ 'Error': 'ID must be a number' });
+  if (!Number(req.params.id)) return res.status(400).json({ 'Error': 'ID must be a number' });
   let id = Number(req.params.id);
   conn = connectDb();
   let sql = 'CALL selectCity(?)'
@@ -373,7 +400,7 @@ exports.getCityByPostalCode = (req, res, next) => {
   conn.end();
 }
 exports.getAddress = (req, res, next) => {
-  if (!Number(req.params.id)) return res.json({ 'Error': 'ID must be a number' });
+  if (!Number(req.params.id)) return res.status(400).json({ 'Error': 'ID must be a number' });
   let id = Number(req.params.id);
   conn = connectDb();
   let sql = 'CALL selectAddress(?)'
@@ -461,7 +488,7 @@ exports.updateCart = (req, res, next) => {
   conn.end();
 }
 exports.getOrder = (req, res, next) => {
-  if (!Number(req.params.id)) return res.json({ 'Error': 'ID must be a number' });
+  if (!Number(req.params.id)) return res.status(400).json({ 'Error': 'ID must be a number' });
   let id = Number(req.params.id);
   conn = connectDb();
   let sql = 'CALL selectOrder(?)'
@@ -581,9 +608,9 @@ exports.updateAddress = (req, res, next) => {
   conn.end();
 }
 exports.deleteCartOrder = (req, res, next) => {
-  if (!Number(req.params.cartId)) return res.json({ 'Error': 'ID must be a number' });
+  if (!Number(req.params.cartId)) return res.status(400).json({ 'Error': 'ID must be a number' });
   let cartId = Number(req.params.cartId);
-  if (!Number(req.params.userId)) return res.json({ 'Error': 'ID must be a number' });
+  if (!Number(req.params.userId)) return res.status(400).json({ 'Error': 'ID must be a number' });
   let userId = Number(req.params.userId);
 
   let sql = 'CALL deleteCartOrder(?, ?)'
@@ -601,7 +628,7 @@ exports.deleteCartOrder = (req, res, next) => {
   conn.end();
 }
 exports.getMyOrders = (req, res, next) => {
-  if (!Number(req.params.id)) return res.json({ 'Error': 'ID must be a number' });
+  if (!Number(req.params.id)) return res.status(400).json({ 'Error': 'ID must be a number' });
   let id = Number(req.params.id);
   conn = connectDb();
   let sql = 'CALL selectMyOrders(?)'
@@ -637,9 +664,9 @@ exports.getMyOrders = (req, res, next) => {
 }
 exports.getReviewLog = (req, res, next) => {
 
-  if (!Number(req.params.review)) return res.json({ 'Error': 'ID must be a number' });
+  if (!Number(req.params.review)) return res.status(400).json({ 'Error': 'ID must be a number' });
   let review = Number(req.params.review);
-  if (!Number(req.params.log)) return res.json({ 'Error': 'ID must be a number' });
+  if (!Number(req.params.log)) return res.status(400).json({ 'Error': 'ID must be a number' });
   let log = Number(req.params.log);
 
   let sql = 'CALL selectReview(?, ?)';
@@ -678,9 +705,9 @@ exports.postReviewVote = (req, res, next) => {
   conn.end();
 }
 exports.deleteReviewVote = (req, res, next) => {
-  if (!Number(req.params.reviewId)) return res.json({ 'Error': 'ID must be a number' });
+  if (!Number(req.params.reviewId)) return res.status(400).json({ 'Error': 'ID must be a number' });
   let reviewId = Number(req.params.reviewId);
-  if (!Number(req.params.userId)) return res.json({ 'Error': 'ID must be a number' });
+  if (!Number(req.params.userId)) return res.status(400).json({ 'Error': 'ID must be a number' });
   let userId = Number(req.params.userId);
 
   let sql = 'CALL deleteReviewVote(?, ?)'
@@ -698,7 +725,7 @@ exports.deleteReviewVote = (req, res, next) => {
   conn.end();
 }
 exports.getNotifications = (req, res, next) => {
-  if (!Number(req.params.id)) return res.json({ 'Error': 'ID must be a number' });
+  if (!Number(req.params.id)) return res.status(400).json({ 'Error': 'ID must be a number' });
   let id = Number(req.params.id);
   conn = connectDb();
   let sql = 'CALL selectNotifications(?)'
@@ -747,9 +774,9 @@ exports.postMessage = (req, res, next) => {
 }
 exports.getMessages = (req, res, next) => {
 
-  if (!Number(req.params.userId)) return res.json({ 'Error': 'ID must be a number' });
+  if (!Number(req.params.userId)) return res.status(400).json({ 'Error': 'ID must be a number' });
   let userId = Number(req.params.userId);
-  if (!Number(req.params.contactId)) return res.json({ 'Error': 'ID must be a number' });
+  if (!Number(req.params.contactId)) return res.status(400).json({ 'Error': 'ID must be a number' });
   let contactId = Number(req.params.contactId);
 
   let sql = 'CALL selectMessages(?, ?)';
