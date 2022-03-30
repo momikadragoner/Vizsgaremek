@@ -22,7 +22,7 @@ module.exports = (req, res, next) => {
                     res.status(503);
                     return res.json({ 'message': 'Connection refused by database server.' })
                 }
-                res.json({ 'message': err })
+                return res.json({ 'message': err })
             } else {
                 if (!result.length) {
                     res.status(401);

@@ -48,7 +48,7 @@ exports.userLogin=(req,res,next)=>{
                 res.send({status:1, data:result, token:token})
                 conn.query('CALL beginSession(?, ?)', 
                 [userEmail, token], function(err, result,fields){
-                    if (err) res.json({'message':"Query " + err})
+                    if (err) console.log("Query " + err)
                 })
             }
         })

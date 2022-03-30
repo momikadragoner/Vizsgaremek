@@ -257,6 +257,11 @@ exports.getCart = (req, res, next) => {
   conn.end();
 }
 exports.postReview = (req, res, next) => {
+  if (!(req.body.userId && req.body.productId && req.body.title && req.body.content && req.body.rating)) {
+    res.status(400);
+    return res.json({ 'message': 'Required fields were left empty.' });
+  }
+
   let review = req.body;
   let sql = 'CALL insertReview(?, ?, ?, ?, ?, ?)';
 
@@ -274,7 +279,7 @@ exports.postReview = (req, res, next) => {
       if (err) console.log("Query " + err)
       else {
         res.status(201);
-        res.json();
+        res.json(results[0][0]);
       }
     })
   conn.end();
@@ -552,6 +557,11 @@ exports.updateCartProduct = (req, res, next) => {
   conn.end();
 }
 exports.updateUser = (req, res, next) => {
+  if (!(req.body.userId && req.body.firstName && req.body.lastName && req.body.headerImgUrl && req.body.profileImgUrl)) {
+    res.status(400);
+    return res.json({ 'message': 'Required fields were left empty.' });
+  }
+  if (!Number(req.body.userId)) return res.status(400).json({ 'Error': 'ID must be a number' });
   let sql = 'CALL updateUser(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
   let user = req.body;
   conn = connectDb();
@@ -573,8 +583,8 @@ exports.updateUser = (req, res, next) => {
     (err, results, fields) => {
       if (err) console.log("Query " + err)
       else {
-        res.status(201);
-        res.json();
+        res.status(200);
+        res.json(results[0][0]);
       }
     })
   conn.end();
@@ -699,7 +709,7 @@ exports.postReviewVote = (req, res, next) => {
       if (err) console.log("Query " + err)
       else {
         res.status(201);
-        res.json();
+        res.json({'reviewVoteId': results[0][0].vote});
       }
     })
   conn.end();
@@ -718,7 +728,7 @@ exports.deleteReviewVote = (req, res, next) => {
       if (err) res.json("Query error: " + err)
       else {
         res.status(200);
-        res.json();
+        res.json({ 'message': 'Item with ID ' + rows[0][0].review_vote_id + ' was deleted.' });
       }
     }
   );
