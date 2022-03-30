@@ -15,6 +15,7 @@ export class SignupCustomerComponent implements OnInit {
 
   errorMessage = ""
   isChecked:Boolean=false
+  apiUrl:String=""
 
   constructor(
     private _api: ApiService,
@@ -36,36 +37,25 @@ export class SignupCustomerComponent implements OnInit {
 
   onSubmit() {
     if(this.isChecked==true){
-      this._api.postTypeRequest('user/signupasvendor', this.signupForm.value).subscribe({
-        next: (res: any) => {
-          if (res.status) {
-            this._auth.setDataInLocalStorage('userData', JSON.stringify(res.data));
-            this._auth.setDataInLocalStorage('token', res.token);
-            this._router.navigate(['login']);
-          } else {
-            alert(res.msg)
-          }
-        },
-        error: err => {
-          this.errorMessage = err['error'].message;
-        }
-      });
+      this.apiUrl='user/signupasvendor'
+      
     } else{
-      this._api.postTypeRequest('user/signup', this.signupForm.value).subscribe({
-        next: (res: any) => {
-          if (res.status) {
-            this._auth.setDataInLocalStorage('userData', JSON.stringify(res.data));
-            this._auth.setDataInLocalStorage('token', res.token);
-            this._router.navigate(['login']);
-          } else {
-            alert(res.msg)
-          }
-        },
-        error: err => {
-          this.errorMessage = err['error'].message;
-        }
-      });
+      this.apiUrl='user/signup'
     }
+    this._api.postTypeRequest(this.apiUrl, this.signupForm.value).subscribe({
+      next: (res: any) => {
+        if (res.status) {
+          this._auth.setDataInLocalStorage('userData', JSON.stringify(res.data));
+          this._auth.setDataInLocalStorage('token', res.token);
+          this._router.navigate(['login']);
+        } else {
+          alert(res.msg)
+        }
+      },
+      error: err => {
+        this.errorMessage = err['error'].message;
+      }
+    });
   }
 
   onCheckboxChange(e:any){
