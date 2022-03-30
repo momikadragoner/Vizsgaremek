@@ -4,6 +4,7 @@ import { NgForm } from '@angular/forms';
 import { ApiService } from '../services/api.service';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-signup-customer',
@@ -13,6 +14,7 @@ import { Router } from '@angular/router';
 export class SignupCustomerComponent implements OnInit {
 
   errorMessage = ""
+  isChecked:Boolean=false
 
   constructor(
     private _api: ApiService,
@@ -33,19 +35,43 @@ export class SignupCustomerComponent implements OnInit {
   }
 
   onSubmit() {
-    this._api.postTypeRequest('user/signup', this.signupForm.value).subscribe({
-      next: (res: any) => {
-        if (res.status) {
-          this._auth.setDataInLocalStorage('userData', JSON.stringify(res.data));
-          this._auth.setDataInLocalStorage('token', res.token);
-          this._router.navigate(['login']);
-        } else {
-          alert(res.msg)
+    if(this.isChecked==true){
+      this._api.postTypeRequest('user/signupasvendor', this.signupForm.value).subscribe({
+        next: (res: any) => {
+          if (res.status) {
+            this._auth.setDataInLocalStorage('userData', JSON.stringify(res.data));
+            this._auth.setDataInLocalStorage('token', res.token);
+            this._router.navigate(['login']);
+          } else {
+            alert(res.msg)
+          }
+        },
+        error: err => {
+          this.errorMessage = err['error'].message;
         }
-      },
-      error: err => {
-        this.errorMessage = err['error'].message;
-      }
-    });
+      });
+    } else{
+      this._api.postTypeRequest('user/signup', this.signupForm.value).subscribe({
+        next: (res: any) => {
+          if (res.status) {
+            this._auth.setDataInLocalStorage('userData', JSON.stringify(res.data));
+            this._auth.setDataInLocalStorage('token', res.token);
+            this._router.navigate(['login']);
+          } else {
+            alert(res.msg)
+          }
+        },
+        error: err => {
+          this.errorMessage = err['error'].message;
+        }
+      });
+    }
+  }
+
+  onCheckboxChange(e:any){
+    if(e.target.checked){
+      return this.isChecked=true;
+    }
+    return this.isChecked=false;
   }
 }
