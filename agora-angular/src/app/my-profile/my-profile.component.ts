@@ -93,6 +93,7 @@ export class MyProfileComponent implements OnInit {
     this.ShowUser();
     this.ShowProducts(this.searchForm.value.order, this.searchForm.value.searchTerm);
     this.ShowWishList();
+    
   }
 
   currentUserId() {
@@ -137,6 +138,7 @@ export class MyProfileComponent implements OnInit {
         next: (data: User) => this.user = { ...data },
         error: error => this.error = error
       });
+      
   }
 
   ShowWishList() {
