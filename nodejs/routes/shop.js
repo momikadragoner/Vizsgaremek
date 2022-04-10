@@ -11,6 +11,8 @@ router.get('/review/:id', shopController.getReviewById);
 
 router.get('/products', shopController.getAllProducts);
 
+router.get('/top-products/:type', shopController.getProducts);
+
 router.get('/products/seller/:id', shopController.getProductsBySeller);
 
 router.get('/user/:id/short', shopController.getUserShort);

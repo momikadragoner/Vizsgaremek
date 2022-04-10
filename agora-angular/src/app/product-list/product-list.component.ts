@@ -12,6 +12,7 @@ export class ProductListComponent implements OnInit {
   @Input() public products: Product[] = [];
   @Input() public wide: boolean = true;
   @Input() public sideScrollable: boolean = false;
+  @Input() public headerCard: boolean = false;
 
   faShoppingCart = faShoppingCart;
 

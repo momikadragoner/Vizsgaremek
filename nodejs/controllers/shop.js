@@ -330,3 +330,37 @@ exports.searchProducts = (req, res, next) => {
   );
   conn.end();
 };
+
+exports.getProducts = (req, res, next) => {
+  let type = req.params.type;
+  let sql = 'SELECT product.product_id AS productId, product.name, product.price, product.vendor_id AS sellerId, product.discount, product.is_published AS isPublic, member.first_name AS sellerFirstName, member.last_name AS sellerLastName, ( SELECT product_picture.resource_link FROM product_picture WHERE product_picture.is_thumbnail = TRUE AND product.product_id = product_picture.product_id LIMIT 1 ) AS imgUrl FROM product INNER JOIN member ON member.member_id = product.vendor_id WHERE product.is_published = TRUE ';
+  switch (type) {
+    case 'editors-picks':
+      sql += 'ORDER BY RAND() LIMIT 6;';
+      break;
+    case 'best':
+      sql += 'ORDER BY product.rating DESC;';
+      break;
+    case 'now':
+      sql += 'ORDER BY product.published_at DESC;';
+      break;
+    default:
+      break;
+  }
+  conn = connectDb();
+  conn.query(sql,
+    [], (err, rows, fields) => {
+      if (err) {
+        if (err.code = 'ECONNREFUSED') {
+          res.status(503);
+          return res.json({ 'message': 'Connection refused by database server.' })
+        }
+        return res.json({ 'message': err })
+      } else {
+        res.status(200);
+        res.json(rows);
+      }
+    }
+  );
+  conn.end();
+};

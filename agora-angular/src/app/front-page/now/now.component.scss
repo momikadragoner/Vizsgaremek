@@ -1,0 +1,55 @@
+.slogen{
+  font-family: 'Bellota', cursive;
+  font-weight: bold;
+}
+.container-front{
+  // background-image: url("./../../assets/salad.jpg");
+  // height:  23rem;
+  background-image: url("../../../assets/now-bg1.jpg");
+  background-position: center;
+  background-attachment: fixed;
+}
+.search{
+  background: inherit;
+  border-left: none;
+  border-width: .15rem;
+  border-color: #342A2B;
+}
+::placeholder{
+  color: #342A2B;
+}
+.search-btn{
+  border-right: none;
+  border-width: .15rem;
+  border-color: #342A2B;
+}
+h2.main-header{
+  font-variant: small-caps;
+  font-family: 'IM Fell English', serif;
+}
+a.frosted-glass:hover{
+  border: none;
+background-color: rgba(255, 255, 255, .25);
+backdrop-filter: blur(10px);
+}
+.logo-text{
+  color: #342A2B;
+  font-family: 'IM Fell English', serif;
+}
+.now{
+  font-size: 1.8rem;
+  border: #342A2B .2rem solid;
+  border-radius: .6rem;
+}
+.card-now{
+  max-height: 15rem;
+}
+.card-now-body{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  //border-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+  width: 100%;
+}

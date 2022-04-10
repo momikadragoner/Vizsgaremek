@@ -1,0 +1,20 @@
+<div class="container">
+  <h1 class="text-center">A szezon legjobbjai</h1>
+  <app-product-list [headerCard]="headerCard" [products]="pickedProducts">
+    <div class="card text-white mt-3 fill">
+      <img src="/assets/best-bg.jpg" class="header-card" alt="...">
+      <div class="card-img-overlay">
+        <h1 class="card-title">Szerkesztői válogatás</h1>
+      </div>
+    </div>
+  </app-product-list>
+  <app-product-list [headerCard]="headerCard" [products]="bestProducts">
+    <div class="card text-white mt-3 fill">
+      <img src="/assets/best-bg2.jpg" class="header-card" alt="...">
+      <div class="card-img-overlay d-flex align-items-end justify-content-end">
+        <h1 class="card-title fw-bold">Vásálók kedvencei</h1>
+      </div>
+    </div>
+  </app-product-list>
+</div>
+<page-footer></page-footer>

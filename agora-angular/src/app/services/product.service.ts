@@ -82,6 +82,13 @@ export class ProductService {
     return this.http.get<[ProductShort]>(this.rootURL + '/products');
   }
 
+  getProducts(type:string) {
+    return this.http.get<[ProductShort]>(this.rootURL + '/top-products/' + type)
+    .pipe(
+      catchError((error) => this.handleError(error))
+    );
+  }
+
   getProductsBySeller(id: any, order?: string, term?: string) {
     let params = new HttpParams();
 

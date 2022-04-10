@@ -44,7 +44,7 @@ export class NavComponent implements OnInit {
   constructor(
     private library: FaIconLibrary,
     private _auth: AuthService,
-    private _router: Router,
+    public _router: Router,
     private authService: AuthService
   ) {
     library.addIcons( faShoppingCart, faGem, faCarrot, faCheese, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt, faDrumstickBite, faCookie);
@@ -54,26 +54,6 @@ export class NavComponent implements OnInit {
     $event.preventDefault();
     if (this.openView != "category") {
       this.openView = "category";
-    }
-    else {
-      this.openView = "";
-    }
-  }
-
-  toggleNowView($event: any) {
-    $event.preventDefault();
-    if (this.openView != "now") {
-      this.openView = "now";
-    }
-    else {
-      this.openView = "";
-    }
-  }
-
-  toggleBestView($event: any) {
-    $event.preventDefault();
-    if (this.openView != "best") {
-      this.openView = "best";
     }
     else {
       this.openView = "";

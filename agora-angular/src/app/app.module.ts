@@ -63,6 +63,8 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { MessageService } from './services/messages.service';
 import { PictureService } from './services/picture.service';
 import { GuideComponent } from './guide/guide.component';
+import { NowComponent } from './front-page/now/now.component';
+import { BestComponent } from './front-page/best/best.component';
 
 
 @NgModule({
@@ -109,7 +111,9 @@ import { GuideComponent } from './guide/guide.component';
     OrderTrackingComponent,
     StatePipe,
     NotificationsComponent,
-    GuideComponent
+    GuideComponent,
+    NowComponent,
+    BestComponent
   ],
   imports: [
     BrowserModule,

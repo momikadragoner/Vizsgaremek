@@ -22,6 +22,8 @@ import { AddressComponent } from './settings/address/address.component';
 import { OrderTrackingComponent } from './order-tracking/order-tracking.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { GuideComponent } from './guide/guide.component';
+import { NowComponent } from './front-page/now/now.component';
+import { BestComponent } from './front-page/best/best.component';
 
 const routes: Routes = [
   { path: '', component: FrontPageComponent, canActivate: [AuthGuardService] },
@@ -44,6 +46,8 @@ const routes: Routes = [
   { path: 'settings/profile-settings', component: ProfileSettingsComponent },
   { path: 'settings/address', component: AddressComponent },
   { path: 'guide', component: GuideComponent },
+  { path: 'now', component: NowComponent },
+  { path: 'best', component: BestComponent },
   { path: '**', component: FrontPageComponent },
 ];
 
