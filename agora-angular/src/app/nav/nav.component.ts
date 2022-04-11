@@ -6,6 +6,8 @@ import { AuthService } from '../account-forms/services/auth.service';
 import { Router } from '@angular/router';
 import { categories } from '../services/product.service';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { CartProduct, CartService } from '../services/cart.service';
+import { NotificationService, Notification } from '../services/notification.service';
 
 
 @Component({
@@ -40,14 +42,28 @@ export class NavComponent implements OnInit {
   public openView = "";
   menuOpen = false;
   categories = categories;
+  cartProducts:CartProduct[] = [];
+  notifications: Notification[] = [];
 
   constructor(
     private library: FaIconLibrary,
     private _auth: AuthService,
     public _router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private cartService: CartService,
+    private notificationService: NotificationService
   ) {
     library.addIcons( faShoppingCart, faGem, faCarrot, faCheese, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt, faDrumstickBite, faCookie);
+    cartService.getCartProducts().subscribe({
+      next: data => { 
+        this.cartProducts = [...data];
+      }
+    });
+    notificationService.getNotifications().subscribe({
+      next: data=> {
+        this.notifications = [...data];
+      }
+    })
   }
 
   toggleCategory($event: any) {
@@ -86,6 +102,23 @@ export class NavComponent implements OnInit {
 
   currentUser() {
     return this.authService.getUserDetails()[0];
+  }
+
+  unreadNotifCount() {
+    let notifCount:number = this.notifications.filter(x => x.seen == false).length;
+    if (notifCount > 9) {
+      return '9+';
+    }
+    return notifCount.toString();
+  }
+
+  cartItemCount() {
+    let cartItems:number = 0;
+    this.cartProducts.forEach(x => cartItems += x.amount);
+    if (cartItems > 9) {
+      return '9+';
+    }
+    return cartItems.toString();
   }
 
 }
