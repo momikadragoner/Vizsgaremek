@@ -56,7 +56,7 @@ export class NavComponent implements OnInit {
     private router: Router
   ) {
     library.addIcons( faShoppingCart, faGem, faCarrot, faCheese, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt, faDrumstickBite, faCookie);
-    // this.showNavNotifications();
+    this.showNavNotifications();
     this.currentRoute = "";
     this.router.events.subscribe((event: any) => {
       if (event instanceof NavigationEnd) {
@@ -105,7 +105,6 @@ export class NavComponent implements OnInit {
   }
 
   isLoggedIn() {
-    // console.log(this._auth.getUserDetails())
     if (this._auth.getUserDetails() != null) {
       return true;
     }
