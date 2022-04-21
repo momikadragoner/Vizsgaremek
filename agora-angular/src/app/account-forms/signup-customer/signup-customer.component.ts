@@ -4,6 +4,7 @@ import { NgForm } from '@angular/forms';
 import { ApiService } from '../services/api.service';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-signup-customer',
@@ -13,6 +14,8 @@ import { Router } from '@angular/router';
 export class SignupCustomerComponent implements OnInit {
 
   errorMessage = ""
+  isChecked:Boolean=false
+  apiUrl:String=""
 
   constructor(
     private _api: ApiService,
@@ -33,7 +36,13 @@ export class SignupCustomerComponent implements OnInit {
   }
 
   onSubmit() {
-    this._api.postTypeRequest('user/signup', this.signupForm.value).subscribe({
+    if(this.isChecked==true){
+      this.apiUrl='user/signupasvendor'
+      
+    } else{
+      this.apiUrl='user/signup'
+    }
+    this._api.postTypeRequest(this.apiUrl, this.signupForm.value).subscribe({
       next: (res: any) => {
         if (res.status) {
           this._auth.setDataInLocalStorage('userData', JSON.stringify(res.data));
@@ -47,5 +56,12 @@ export class SignupCustomerComponent implements OnInit {
         this.errorMessage = err['error'].message;
       }
     });
+  }
+
+  onCheckboxChange(e:any){
+    if(e.target.checked){
+      return this.isChecked=true;
+    }
+    return this.isChecked=false;
   }
 }
