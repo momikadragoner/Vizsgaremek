@@ -56,6 +56,7 @@ export class ProfilePageComponent implements OnInit {
   user: User = new User();
   wishList: WishListProduct[] = [new WishListProduct()];
   id: any;
+  notImplementedOpen:boolean = false;
 
   order?: any;
   searchTerm?: string;

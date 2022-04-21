@@ -13,7 +13,7 @@
                     <div class="d-grid gap-1 d-flex justify-content-end mb-2">
                         <div class="btn-group">
                             <a href="#" (click)="follow($event, user.userId)" class="btn btn-primary my-2 px-2" [ngClass]="{'btn-primary':(!user.iFollow),'btn-secondary':(user.iFollow)}" [innerHTML]="user.iFollow ? 'Követve' : 'Követés'">Követés</a>
-                            <a href="/messages" class="btn my-2 pe-3" [ngClass]="{'btn-primary':(user.iFollow),'btn-secondary':(!user.iFollow)}">
+                            <a (click)="notImplementedOpen = true" class="btn my-2 pe-3" [ngClass]="{'btn-primary':(user.iFollow),'btn-secondary':(!user.iFollow)}">
                                 <fa-icon [icon]="faEnvelope"></fa-icon>
                             </a>
                         </div>
@@ -50,7 +50,7 @@
             <div *ngIf="user.takesCustomOrders" class="row">
                 <hr>
                 <p>Egyedi rendeléseket is vállal.
-                    <a href="#" class="text-decoration-none">Tudj meg többet.</a>
+                    <a (click)="notImplementedOpen = true" class="text-decoration-none">Tudj meg többet.</a>
                 </p>
             </div>
         </div>
@@ -120,3 +120,15 @@
     </div>
 </div>
 <page-footer></page-footer>
+<modal-window [(modalVisible)]="notImplementedOpen" [title]="'Üzenet'">
+    <div>
+        <div class="text-center p-3 border-top mt-2">
+            <p class="large">
+                Ez a funkció sajnos még nem elérhető!
+            </p>
+        </div>
+        <div class="d-flex justify-content-end border-top pt-2">
+            <a (click)="notImplementedOpen = false" class="btn btn-primary mx-1">Ok</a>
+        </div>
+    </div>
+</modal-window>

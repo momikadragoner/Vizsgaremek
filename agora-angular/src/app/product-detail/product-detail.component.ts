@@ -1,10 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap, NavigationStart, NavigationEnd, NavigationError } from '@angular/router';
 import { faHandPaper, faEdit, faBalanceScale, faTree, faEnvelope, faShoppingCart, faHeart, faTruck, faGem, faBoxes, faStar, IconPrefix, faSpinner, IconName, faChevronLeft, faChevronRight, faExclamationCircle, faBoxOpen, faLeaf, faSeedling, faAppleAlt, faCarrot, faCheese, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
-// import { faStar } from '@fortawesome/free-regular-svg-icons'
 import { Icon, library } from '@fortawesome/fontawesome-svg-core';
 import { Form } from '@angular/forms';
-//import { productDetailed, productListShort, Product } from "../model/product";
 import { User as u, seller } from "../services/user.service";
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { HttpClient } from '@angular/common/http';
@@ -30,6 +28,7 @@ export class ProductDetailComponent implements OnInit {
   toCartSpin: boolean = false;
   toWishListIcon: IconName = 'heart';
   toWishListSpin: boolean = false;
+  notImplementedOpen:boolean = false;
   faHandPaper = faHandPaper;
   faBalanceScale = faBalanceScale;
   faTree = faTree;
@@ -73,23 +72,10 @@ export class ProductDetailComponent implements OnInit {
     library.addIcons(faHeart, faSpinner, faShoppingCart, faHandPaper, faTree, faBalanceScale, faExclamationCircle, faGem, faBoxOpen, faLeaf, faSeedling, faCarrot, faCheese, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt);
     this.currentRoute = "";
     this.router.events.subscribe((event: any) => {
-      if (event instanceof NavigationStart) {
-        // Show progress spinner or progress bar
-        console.log('Route change detected');
-      }
-
       if (event instanceof NavigationEnd) {
-        // Hide progress spinner or progress bar
         this.currentRoute = event.url;
         this.ngOnInit();
         console.log(event);
-      }
-
-      if (event instanceof NavigationError) {
-        // Hide progress spinner or progress bar
-
-        // Present error to user
-        console.log(event.error);
       }
     });
   }

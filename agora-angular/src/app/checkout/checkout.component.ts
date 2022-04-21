@@ -17,6 +17,7 @@ export class CheckoutComponent implements OnInit {
 
   cart: Cart = new Cart();
   address: Address = new Address();
+  modalOpen: boolean = false;
 
   constructor(
     private cartService: CartService,
@@ -49,7 +50,7 @@ export class CheckoutComponent implements OnInit {
       this.cartService.sendCart(this.cart)
       .subscribe({
         next: data => {
-          this.router.navigate(['/']);
+          this.modalOpen = true;
         }
       });
     }

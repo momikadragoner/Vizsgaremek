@@ -3,7 +3,7 @@ import { trigger, state, style, animate, transition, query, stagger } from '@ang
 import { faCarrot, faAppleAlt, faBreadSlice, faCheese, faBell, IconPrefix, faDrumstickBite, faCookie } from '@fortawesome/free-solid-svg-icons';
 import { faPalette, faGem, faTshirt, faGlassMartiniAlt, faShoppingCart, faBoxes,  } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../account-forms/services/auth.service';
-import { Router } from '@angular/router';
+import { NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
 import { categories } from '../services/product.service';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { CartProduct, CartService } from '../services/cart.service';
@@ -44,22 +44,36 @@ export class NavComponent implements OnInit {
   categories = categories;
   cartProducts:CartProduct[] = [];
   notifications: Notification[] = [];
-
+  currentRoute: string;
+  
   constructor(
     private library: FaIconLibrary,
     private _auth: AuthService,
     public _router: Router,
     private authService: AuthService,
     private cartService: CartService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private router: Router
   ) {
     library.addIcons( faShoppingCart, faGem, faCarrot, faCheese, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt, faDrumstickBite, faCookie);
-    cartService.getCartProducts().subscribe({
+    // this.showNavNotifications();
+    this.currentRoute = "";
+    this.router.events.subscribe((event: any) => {
+      if (event instanceof NavigationEnd) {
+        this.currentRoute = event.url;
+        this.showNavNotifications();
+        console.log(event);
+      }
+    });
+  }
+
+  showNavNotifications(){
+    this.cartService.getCartProducts().subscribe({
       next: data => { 
         this.cartProducts = [...data];
       }
     });
-    notificationService.getNotifications().subscribe({
+    this.notificationService.getNotifications().subscribe({
       next: data=> {
         this.notifications = [...data];
       }
