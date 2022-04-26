@@ -24,7 +24,10 @@ export class FrontPageComponent implements OnInit {
 
   ShowProductList() {
     this.productService.getAllProducts()
-    .subscribe((data: [Product]) => this.products = [...data], error => this.error = error);
+    .subscribe({
+      next: (data: [Product]) => {this.products = [...data]},
+      error: error => this.error = error
+    });
   }
 
 }
