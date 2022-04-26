@@ -31,7 +31,6 @@ router.post('/product-picture', upload.array('pictures', 3), async (req, res, ne
         })
         res.status(200);
         res.json(links);
-        // res.json({ 'message': 'File created successfully!' });
     } catch (error) {
         res.status(300);
         res.json({ error });

@@ -147,7 +147,6 @@
           <label for="picture" class="form-label mb-1">Kép</label>
           <br>
           <a (click)="uploadOpen = true;" class="btn btn-primary">Feltöltés</a>
-          <!-- <input type="file" class="form-control" id="picture" formControlName="pictureUrl" name="imgUrl" multiple> -->
         </div>
         <div class="mb-3">
           <label for="description" class="form-label mb-1">Leírás</label>
@@ -169,7 +168,6 @@
     </div>
     <div class="col-12 col-md-5 p-3 border-start">
       <h4 class="text-center">Előnézet</h4>
-      <!-- <div>{{productForm.value|json}}</div> -->
       <div class="d-flex justify-content-center">
         <product-card [product]="newProduct"></product-card>
       </div>
@@ -223,7 +221,6 @@
         <fa-icon *ngIf="success == undefined" [icon]="faSpinner" [spin]="true"></fa-icon>
         {{message}}
       </p>
-      <!-- <p class="mb-0 pb-0">Ezt a műveletet nem lehet visszavonni.</p> -->
     </div>
     <div class="d-flex justify-content-end border-top pt-2">
       <a [routerLink]="['/my-profile']" class="btn btn-primary mx-1"
@@ -233,7 +230,6 @@
 </modal-window>
 <modal-window [(modalVisible)]="uploadOpen" title="Képek feltöltése">
   <div>
-    <!-- <h3 class="text-center fw-bold">Képek feltöltése</h3> -->
     <form [formGroup]="pictureForm" enctype="multipart/form-data">
       <div class="my-3">
         <label for="picture" class="form-label mb-1">Tallózás</label>

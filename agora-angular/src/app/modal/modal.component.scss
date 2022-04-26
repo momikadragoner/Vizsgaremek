@@ -1,8 +1,5 @@
 .modal-body{
     z-index: 10;
-    // position: fixed;
-    // top: 0;
-    // left: 0;
     background-color: #fffff4;
     min-width: 18rem;
     max-width: 85%;
@@ -21,24 +18,17 @@
 .title{
   font-size: 1.2rem;
 }
-/* width */
 ::-webkit-scrollbar {
-    height: .6rem;
-    width: .6rem;
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: .3rem;
-  }
-  
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
+  height: .6rem;
+  width: .6rem;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: .3rem;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
