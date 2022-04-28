@@ -34,6 +34,5 @@ app.use(function(req, res, next) {
 });
 
 app.use(express.static(__dirname + '/agora-angular'));
-// app.get('*', (req, res) => res.sendFile(path.join(__dirname)));
 
 app.listen(3080);
