@@ -39,7 +39,7 @@
                         <h1 *ngIf="product.discount" class="fw-bold" [ngClass]="{'placeholder col-8':product.price == -1}">{{product.price * (1-(product.discount / 100)) |price}}
                         </h1>
                         <h1 *ngIf="!product.discount" class="fw-bold" [ngClass]="{'placeholder col-8':product.price == -1}">{{product.price |price}}</h1>
-                        <p class="m-2" [ngClass]="{'placeholder col-5':product.inventory == -1}">Elérhető: {{product.inventory}}db</p>
+                        <p *ngIf="product.delivery == 'Azonnal szállítható'" class="m-2" [ngClass]="{'placeholder col-5':product.inventory == -1}">Elérhető: {{product.inventory}}db</p>
                     </div>
                     <div class="col-12 col-lg-6 my-2">
                         <a (click)="addToCart($event, product.productId)" href="#" class="btn btn-primary m-2 py-3 w-50 shadow-sm">

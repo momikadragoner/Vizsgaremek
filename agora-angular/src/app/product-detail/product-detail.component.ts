@@ -3,7 +3,6 @@ import { Router, ActivatedRoute, ParamMap, NavigationStart, NavigationEnd, Navig
 import { faHandPaper, faEdit, faBalanceScale, faTree, faEnvelope, faShoppingCart, faHeart, faTruck, faGem, faBoxes, faStar, IconPrefix, faSpinner, IconName, faChevronLeft, faChevronRight, faExclamationCircle, faBoxOpen, faLeaf, faSeedling, faAppleAlt, faCarrot, faCheese, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 import { Icon, library } from '@fortawesome/fontawesome-svg-core';
 import { Form } from '@angular/forms';
-import { User as u, seller } from "../services/user.service";
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { HttpClient } from '@angular/common/http';
 import { ProductService, Product, ProductShort, ratingToArray } from '../services/product.service';
@@ -75,7 +74,6 @@ export class ProductDetailComponent implements OnInit {
       if (event instanceof NavigationEnd) {
         this.currentRoute = event.url;
         this.ngOnInit();
-        console.log(event);
       }
     });
   }
@@ -130,7 +128,6 @@ export class ProductDetailComponent implements OnInit {
     $event.preventDefault();
     this.review = new Review();
     this.modalVisible = true;
-    //console.log(id);
     this.ShowReview(id[0]);
   }
 

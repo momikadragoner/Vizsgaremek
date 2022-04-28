@@ -33,7 +33,6 @@ import { PictureService } from 'src/app/services/picture.service';
 export class ProductFormComponent implements OnInit {
 
   iconPrefix: IconPrefix = 'fas';
-  //newProduct: Product = {productId: 0, name: '', sellerFirstName: '', sellerLastName: '', price: -1, inventory: -1, delivery: '', category: '', tags: [], materials: [], imgUrl: [], description: '', isPublic: true, rating: -1};
   tagsList = tags;
   categories = categories;
   currentUser() {
@@ -87,7 +86,6 @@ export class ProductFormComponent implements OnInit {
             form.category = product.category;
             form.description = product.description;
             this.editingProduct = product;
-            //form.pictureUrl = product.imgUrl[0];
             this.productForm.setValue(form);
             product.tags.forEach(tag => {
               this.tags.push(this.fb.control(tag));
@@ -96,7 +94,6 @@ export class ProductFormComponent implements OnInit {
               this.materials.push(this.fb.control(material));
             })
             this.inputChange();
-            //console.log(this.productPublic);
           },
           error: error => console.log(error)
         });
@@ -110,7 +107,6 @@ export class ProductFormComponent implements OnInit {
     inventory: [null],
     delivery: ['', Validators.required],
     category: ['', Validators.required],
-    // pictureUrl: [''],
     tags: this.fb.array([
     ]),
     materials: this.fb.array([
@@ -190,12 +186,10 @@ export class ProductFormComponent implements OnInit {
     let result: string[] = [];
     this.tagOptions.forEach((option) => {
       let regex = new RegExp(this.productForm.value.tags[id].trim(), "i");
-      // let regex = new RegExp(/this.productForm.value.tags[id]/);
       if (option.match(regex)) {
         result.push(option);
       }
     })
-    //console.log(result);
     this.tagsShown = result;
   }
 

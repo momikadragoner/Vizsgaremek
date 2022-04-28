@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { faEnvelope, faLink, faLocationArrow, faCalendarAlt, faCamera, faSave, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { from } from 'rxjs';
 import { PictureService } from 'src/app/services/picture.service';
-import { User, seller, UserService } from "../../services/user.service";
+import { User, UserService } from "../../services/user.service";
 
 @Component({
   selector: 'edit-profile',

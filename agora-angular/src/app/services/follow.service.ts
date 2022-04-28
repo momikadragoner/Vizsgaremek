@@ -15,26 +15,20 @@ export class FollowService {
     return this.authService.getUserDetails()[0].member_id
   }
   rootURL = '/api';
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.authService.getToken()}`
-    })
-  };
 
   postFollow(userId: number) {
     let follow = {
       "follower": this.currentUserId(),
       "following": userId
     }
-    return this.http.post<object>(this.rootURL + '/follow', follow, this.httpOptions)
+    return this.http.post<object>(this.rootURL + '/follow', follow, { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.authService.getToken()}` })})
       .pipe(
         catchError(error => this.handleError(error))
       );
   }
 
   deleteFollow(followingId: number) {
-    return this.http.delete(this.rootURL + '/follow/' + this.currentUserId() + '/' + followingId, this.httpOptions)
+    return this.http.delete(this.rootURL + '/follow/' + this.currentUserId() + '/' + followingId, { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.authService.getToken()}` })})
       .pipe(
         catchError(this.handleError)
       );
@@ -42,15 +36,11 @@ export class FollowService {
 
   private handleError(error: HttpErrorResponse) {
     if (error.status === 0) {
-      // A client-side or network error occurred. Handle it accordingly.
       console.error('An error occurred:', error.error);
     } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong.
       console.error(
         `Backend returned code ${error.status}, body was: `, error.error);
     }
-    // Return an observable with a user-facing error message.
     return throwError(() =>
       'Something bad happened; please try again later.');
   }

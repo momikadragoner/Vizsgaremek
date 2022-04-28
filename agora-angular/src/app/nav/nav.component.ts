@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, animate, transition, query, stagger } from '@angular/animations';
 import { faCarrot, faAppleAlt, faBreadSlice, faCheese, faBell, IconPrefix, faDrumstickBite, faCookie } from '@fortawesome/free-solid-svg-icons';
-import { faPalette, faGem, faTshirt, faGlassMartiniAlt, faShoppingCart, faBoxes,  } from '@fortawesome/free-solid-svg-icons';
+import { faPalette, faGem, faTshirt, faGlassMartiniAlt, faShoppingCart, faBoxes, } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../account-forms/services/auth.service';
 import { NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
 import { categories } from '../services/product.service';
@@ -42,10 +42,10 @@ export class NavComponent implements OnInit {
   public openView = "";
   menuOpen = false;
   categories = categories;
-  cartProducts:CartProduct[] = [];
+  cartProducts: CartProduct[] = [];
   notifications: Notification[] = [];
   currentRoute: string;
-  
+
   constructor(
     private library: FaIconLibrary,
     private _auth: AuthService,
@@ -55,7 +55,7 @@ export class NavComponent implements OnInit {
     private notificationService: NotificationService,
     private router: Router
   ) {
-    library.addIcons( faShoppingCart, faGem, faCarrot, faCheese, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt, faDrumstickBite, faCookie);
+    library.addIcons(faShoppingCart, faGem, faCarrot, faCheese, faAppleAlt, faBreadSlice, faGlassMartiniAlt, faPalette, faTshirt, faDrumstickBite, faCookie);
     if (this.isLoggedIn()) {
       this.showNavNotifications();
     }
@@ -63,22 +63,21 @@ export class NavComponent implements OnInit {
     this.router.events.subscribe((event: any) => {
       if (event instanceof NavigationEnd) {
         this.currentRoute = event.url;
-      if (this.isLoggedIn()) {
-      this.showNavNotifications();
-      }
-        console.log(event);
+        if (this.isLoggedIn()) {
+          this.showNavNotifications();
+        }
       }
     });
   }
 
-  showNavNotifications(){
+  showNavNotifications() {
     this.cartService.getCartProducts().subscribe({
-      next: data => { 
+      next: data => {
         this.cartProducts = [...data];
       }
     });
     this.notificationService.getNotifications().subscribe({
-      next: data=> {
+      next: data => {
         this.notifications = [...data];
       }
     })
@@ -112,7 +111,7 @@ export class NavComponent implements OnInit {
     if (this._auth.getUserDetails() != null) {
       return true;
     }
-    else{
+    else {
       return false;
     }
   }
@@ -122,7 +121,7 @@ export class NavComponent implements OnInit {
   }
 
   unreadNotifCount() {
-    let notifCount:number = this.notifications.filter(x => x.seen == false).length;
+    let notifCount: number = this.notifications.filter(x => x.seen == false).length;
     if (notifCount > 9) {
       return '9+';
     }
@@ -130,7 +129,7 @@ export class NavComponent implements OnInit {
   }
 
   cartItemCount() {
-    let cartItems:number = 0;
+    let cartItems: number = 0;
     this.cartProducts.forEach(x => cartItems += x.amount);
     if (cartItems > 9) {
       return '9+';

@@ -82,7 +82,6 @@ exports.postNewProduct = (req, res, next) => {
   let matString = stringifyArray(product.materials);
   let tagString = stringifyArray(product.tags);
   let picString = stringifyArray(product.imgUrl);
-
   var sql = 'CALL insertProduct(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )';
   conn = connectDb(res)
   conn.query(sql,
@@ -208,7 +207,8 @@ exports.postWishList = (req, res, next) => {
         res.status(201);
         res.json({'wishListId': results[0][0].wish_list_id});
       }
-    })
+    });
+  conn.end();
 }
 exports.postCart = (req, res, next) => {
   let cart = req.body;

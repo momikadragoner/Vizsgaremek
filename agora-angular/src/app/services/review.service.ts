@@ -71,23 +71,27 @@ export class ReviewService {
     }
   }
   rootURL = '/api';
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.authService.getToken()}`
-    })
-  };
 
   getReview(id: number): Observable<Review> {
     let url = this.isLoggedIn() ? this.rootURL + '/review/' + id + "/auth/" + this.currentUserId() : this.rootURL + '/review/' + id;
-    return this.http.get<Review>(url, this.httpOptions)
+    return this.http.get<Review>(url, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.authService.getToken()}`
+      })
+    })
       .pipe(
         catchError(error => this.handleError(error))
       );
   }
 
   postReview(review: Review) {
-    return this.http.post<object>(this.rootURL + '/review', review, this.httpOptions)
+    return this.http.post<object>(this.rootURL + '/review', review, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.authService.getToken()}`
+      })
+    })
       .pipe(
         catchError(error => this.handleError(error))
       );
@@ -101,14 +105,24 @@ export class ReviewService {
   }
 
   postReviewVote(reviewVote:ReviewVote) {
-    return this.http.post<object>(this.rootURL + '/review-vote', reviewVote, this.httpOptions)
+    return this.http.post<object>(this.rootURL + '/review-vote', reviewVote, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.authService.getToken()}`
+      })
+    })
       .pipe(
         catchError(error => this.handleError(error))
       );
   }
 
   deleteReviewVote(reviewId: number, userId:number = this.currentUserId()) {
-    return this.http.delete(this.rootURL + '/review-vote/' + reviewId + '/' + userId, this.httpOptions)
+    return this.http.delete(this.rootURL + '/review-vote/' + reviewId + '/' + userId, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.authService.getToken()}`
+      })
+    })
       .pipe(
         catchError(this.handleError)
       );
@@ -116,15 +130,11 @@ export class ReviewService {
 
   private handleError(error: HttpErrorResponse) {
     if (error.status === 0) {
-      // A client-side or network error occurred. Handle it accordingly.
       console.error('An error occurred:', error.error);
     } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong.
       console.error(
         `Backend returned code ${error.status}, body was: `, error.error);
     }
-    // Return an observable with a user-facing error message.
     return throwError(() =>
       'Something bad happened; please try again later.');
   }

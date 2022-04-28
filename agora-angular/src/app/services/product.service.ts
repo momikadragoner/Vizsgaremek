@@ -52,21 +52,6 @@ export class ProductService {
 
   rootURL = '/api';
 
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.authService.getToken()}`
-    })
-  };
-
-  httpOptionsFile = {
-    headers: new HttpHeaders({
-      // 'Content-Type': 'application/json',
-      // 'Content-Type': 'multipart/form-daa'
-      'Authorization': `Bearer ${this.authService.getToken()}`
-    })
-  };
-
   currentUserId() {
     return this.authService.getUserDetails()[0].member_id
   }
@@ -110,7 +95,7 @@ export class ProductService {
   }
 
   addProduct(product: Product): Observable<Product> {
-    return this.http.post<Product>(this.rootURL + '/product', product, this.httpOptionsFile)
+    return this.http.post<Product>(this.rootURL + '/product', product, { headers: new HttpHeaders({ 'Authorization': `Bearer ${this.authService.getToken()}` }) })
       .pipe(
         catchError((error) => this.handleError(error))
       );
@@ -118,14 +103,24 @@ export class ProductService {
 
   deleteProduct(id: number): Observable<unknown> {
     const url = this.rootURL + '/product/' + id;
-    return this.http.delete(url, this.httpOptions)
+    return this.http.delete(url, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.authService.getToken()}`
+      })
+    })
       .pipe(
         catchError(error => this.handleError(error))
       );
   }
 
   updateProduct(product: Product, id: number): Observable<Product> {
-    return this.http.put<Product>(this.rootURL + '/product/' + id, product, this.httpOptions)
+    return this.http.put<Product>(this.rootURL + '/product/' + id, product, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.authService.getToken()}`
+      })
+    })
       .pipe(
         catchError(error => this.handleError(error))
       );
@@ -133,7 +128,12 @@ export class ProductService {
 
   changeVisibility(isPublic: boolean, id: number) {
     let visibility = { "isPublic": isPublic };
-    return this.http.put<object>(this.rootURL + '/change-visibility/' + id, visibility, this.httpOptions)
+    return this.http.put<object>(this.rootURL + '/change-visibility/' + id, visibility, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.authService.getToken()}`
+      })
+    })
       .pipe(
         catchError(error => this.handleError(error))
       );
@@ -147,15 +147,11 @@ export class ProductService {
 
   private handleError(error: HttpErrorResponse) {
     if (error.status === 0) {
-      // A client-side or network error occurred. Handle it accordingly.
       console.error('An error occurred:', error.error);
     } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong.
       console.error(
         `Backend returned code ${error.status}, body was: `, error.error);
     }
-    // Return an observable with a user-facing error message.
     return throwError(() =>
       'Something bad happened; please try again later.');
   }

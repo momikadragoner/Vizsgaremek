@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductShort as Product, ProductService, ProductShort } from '../services/product.service';
-import { User, seller, UserService } from "../services/user.service";
+import { User, UserService } from "../services/user.service";
 import { faEnvelope, faLink, faLocationArrow, faCalendarAlt, faTrash, faHeart, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder } from '@angular/forms';

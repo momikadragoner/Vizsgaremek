@@ -96,12 +96,6 @@ export class UserService {
     }
   }
   rootURL = '/api';
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.authService.getToken()}`
-    })
-  };
 
   getUserShort(id: number) {
     let url = this.isLoggedIn() ? this.rootURL + '/user/' + id + "/short/auth/" + this.currentUserId() : this.rootURL + '/user/' + id + '/short';
@@ -124,14 +118,24 @@ export class UserService {
   }
 
   updateUser(user: User) {
-    return this.http.put<object>(this.rootURL + '/user', user, this.httpOptions)
+    return this.http.put<object>(this.rootURL + '/user', user, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.authService.getToken()}`
+      })
+    })
       .pipe(
         catchError(this.handleError)
       );
   }
 
   getContacts(id: number = this.currentUserId()) {
-    return this.http.get<[UserShort]>(this.rootURL + '/contacts/' + id, this.httpOptions)
+    return this.http.get<[UserShort]>(this.rootURL + '/contacts/' + id, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.authService.getToken()}`
+      })
+    })
       .pipe(
         catchError(this.handleError)
       );
@@ -139,35 +143,13 @@ export class UserService {
 
   private handleError(error: HttpErrorResponse) {
     if (error.status === 0) {
-      // A client-side or network error occurred. Handle it accordingly.
       console.error('An error occurred:', error.error);
     } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong.
       console.error(
         `Backend returned code ${error.status}, body was: `, error.error);
     }
-    // Return an observable with a user-facing error message.
     return throwError(() =>
       'Something bad happened; please try again later.');
   }
 
 }
-
-export const seller = new User(
-  1,
-  "Nagy", "Erzsébet",
-  16, 54,
-  "erzsi.nagy@mail.hu",
-  "301234567",
-  "Sziasztok, Aranyoskák! Erzsi néni vagyok. Szabadidőmben szeretek ékszereket és egyéb apróságokat készíteni. ✨💎",
-  "assets/profilepic.jpg",
-  "assets/header2.jpg",
-  new Date(2021, 11, 2),
-  true,
-  false,
-  undefined,
-  "Nagybajcs",
-  "erzsiekszer.hu",
-  true
-)
