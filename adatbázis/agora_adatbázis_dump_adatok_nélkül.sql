@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 28, 2022 at 08:31 AM
+-- Generation Time: Apr 28, 2022 at 08:40 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -312,9 +312,13 @@ INSERT INTO `product`(`name`, `price`, `description`, `inventory`, `delivery`, `
 
 SET @productId = (SELECT LAST_INSERT_ID());
 
-CALL insertMaterials(mats, matsL, @productId);
+IF matsL > 0 THEN
+	CALL insertMaterials(mats, matsL, @productId);
+END IF;
 
-CALL insertTags(tags, tagsL, @productId);
+IF tagsL > 0 THEN
+	CALL insertTags(tags, tagsL, @productId);
+END IF;
 
 CALL insertPictures(pics, picsL, @productId, thumId);
 
@@ -4493,6 +4497,24 @@ CREATE TABLE `material` (
   `material_name` varchar(50) COLLATE utf8mb4_hungarian_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
+--
+-- Dumping data for table `material`
+--
+
+INSERT INTO `material` (`material_id`, `material_name`) VALUES
+(1, 'arany'),
+(2, 'ezüst'),
+(3, 'ásvány'),
+(4, 'nemesfém'),
+(5, 'drágakő'),
+(6, 'tehéntej'),
+(7, 'kecsketej'),
+(8, 'liszt'),
+(9, 'barack'),
+(10, 'cukor'),
+(11, 'kakaó'),
+(12, 'élesztő');
+
 -- --------------------------------------------------------
 
 --
@@ -4941,7 +4963,7 @@ ALTER TABLE `city`
 -- AUTO_INCREMENT for table `material`
 --
 ALTER TABLE `material`
-  MODIFY `material_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `material_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `member`
