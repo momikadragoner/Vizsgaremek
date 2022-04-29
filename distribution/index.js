@@ -35,4 +35,6 @@ app.use(function(req, res, next) {
 
 app.use(express.static(__dirname + '/agora-angular'));
 
-app.listen(3080);
+app.listen(3080, 'localhost', () => {
+  console.log(`Server running at http://localhost:3080/`);
+});

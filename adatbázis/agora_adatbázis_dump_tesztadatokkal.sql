@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.1.3
 -- https://www.phpmyadmin.net/
 --
--- Gép: 127.0.0.1
--- Létrehozás ideje: 2022. Már 30. 11:39
--- Kiszolgáló verziója: 10.4.21-MariaDB
--- PHP verzió: 8.0.10
+-- Host: 127.0.0.1
+-- Generation Time: Apr 29, 2022 at 09:17 AM
+-- Server version: 10.4.24-MariaDB
+-- PHP Version: 7.4.29
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,27 +18,16 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Adatbázis: `agora-webshop`
+-- Database: `agora-webshop`
 --
 CREATE DATABASE IF NOT EXISTS `agora-webshop` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci;
 USE `agora-webshop`;
 
 DELIMITER $$
 --
--- Eljárások
+-- Procedures
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertVendor` (IN `lastName` VARCHAR(50), IN `firstName` VARCHAR(50), IN `userEmail` VARCHAR(100), IN `userPassword` VARCHAR(50), IN `profilePicture` VARCHAR(50), IN `headerPicture` VARCHAR(50), IN `registered` DATE, IN `isVendor` TINYINT)  BEGIN
-	
-	insert into member (last_name, first_name, email, password, profile_picture_link, header_picture_link, registered_at, is_vendor) values(lastName,firstName,userEmail,userPassword,profilePicture,headerPicture,registered,isVendor);
-    
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `signUp` (IN `lastName` VARCHAR(50), IN `firstName` VARCHAR(50), IN `userEmail` VARCHAR(100), IN `userPassword` VARCHAR(50), IN `profilePicture` VARCHAR(50), IN `headerPicture` VARCHAR(50), IN `registered` DATE)  BEGIN
-	insert into `member` (`last_name`, `first_name`, `email`, `password`, `profile_picture_link`, `header_picture_link`, `registered_at`) values(lastName,firstName,userEmail,userPassword,profilePicture,headerPicture,registered);
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `beginSession` (IN `mail` VARCHAR(320), IN `token` VARCHAR(1000))  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `beginSession` (IN `mail` VARCHAR(320), IN `token` VARCHAR(1000))  NO SQL BEGIN
 
 	SET @userId = (SELECT member.member_id FROM member WHERE member.email = mail);
 
@@ -48,8 +37,7 @@ BEGIN
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `changeProductVisibility` (IN `isPub` TINYINT, IN `lstUp` DATETIME, IN `prodId` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `changeProductVisibility` (IN `isPub` TINYINT, IN `lstUp` DATETIME, IN `prodId` INT)  NO SQL BEGIN
 
 	UPDATE `product` SET `is_published`=isPub, `last_updated_at`=lstUp WHERE product_id = prodId;
 
@@ -61,14 +49,13 @@ BEGIN
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAddress` (IN `addressId` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAddress` (IN `addressId` INT)  NO SQL BEGIN
 
 	DELETE FROM `shipping_address` WHERE shipping_address_id = addressId;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCart` (IN `cartProdId` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCart` (IN `cartProdId` INT)   BEGIN
 
 	SET @prodId = (SELECT cart_product.product_id FROM cart_product WHERE cart_product.cart_product_id = cartProdId);
 
@@ -86,8 +73,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCart` (IN `cartProdId` INT)  
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCartOrder` (IN `userId` INT, IN `cartId` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCartOrder` (IN `userId` INT, IN `cartId` INT)  NO SQL BEGIN
 
 	DELETE FROM cart_product
 
@@ -99,15 +85,13 @@ WHERE product.vendor_id = userId AND cart_product.cart_id = cartId);
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteFollow` (IN `followerId` INT, IN `followingId` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteFollow` (IN `followerId` INT, IN `followingId` INT)  NO SQL BEGIN
 
 	DELETE FROM follower_relations WHERE follower_relations.follower_id = followerId AND follower_relations.following_id = followingId;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteProduct` (IN `prodId` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteProduct` (IN `prodId` INT)  NO SQL BEGIN
 
 	DELETE FROM `product_material` WHERE product_id = prodId;
 
@@ -119,15 +103,14 @@ BEGIN
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteReview` (IN `revId` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteReview` (IN `revId` INT)  NO SQL BEGIN
 
 	DELETE FROM `review` WHERE review_id = revId;
     CALL selectReview(revId,0);
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteReviewVote` (IN `reviewId` INT, IN `userId` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteReviewVote` (IN `reviewId` INT, IN `userId` INT)   BEGIN
 	SELECT review_vote.review_vote_id FROM review_vote WHERE review_vote.review_id = reviewId AND review_vote.member_id = userId;
 	DELETE FROM `review_vote` WHERE review_vote.review_id = reviewId AND review_vote.member_id = userId;
 
@@ -135,22 +118,19 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteReviewVote` (IN `reviewId` IN
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteWishList` (IN `wishId` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteWishList` (IN `wishId` INT)  NO SQL BEGIN
 
 	DELETE FROM `wish_list` WHERE wish_list.wish_list_id = wishId;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `endSession` (IN `userId` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `endSession` (IN `userId` INT)  NO SQL BEGIN
 
 	DELETE FROM `session` WHERE `session`.`member_id` = userId;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertAddress` (IN `userId` INT, IN `nm` VARCHAR(50), IN `phn` VARCHAR(50), IN `frstNm` VARCHAR(50), IN `lstNm` VARCHAR(50), IN `mail` VARCHAR(100), IN `cntry` VARCHAR(50), IN `rgn` VARCHAR(50), IN `cty` VARCHAR(50), IN `strtAd` VARCHAR(50), IN `postCode` VARCHAR(50))  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertAddress` (IN `userId` INT, IN `nm` VARCHAR(50), IN `phn` VARCHAR(50), IN `frstNm` VARCHAR(50), IN `lstNm` VARCHAR(50), IN `mail` VARCHAR(100), IN `cntry` VARCHAR(50), IN `rgn` VARCHAR(50), IN `cty` VARCHAR(50), IN `strtAd` VARCHAR(50), IN `postCode` VARCHAR(50))  NO SQL BEGIN
 
 	IF nm = '' THEN
 
@@ -164,8 +144,7 @@ BEGIN
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertAddressToCart` (IN `addId` INT, IN `userId` INT, IN `nm` VARCHAR(50), IN `phn` VARCHAR(50), IN `frstNm` VARCHAR(50), IN `lstNm` VARCHAR(50), IN `mail` VARCHAR(100), IN `cntry` VARCHAR(50), IN `rgn` VARCHAR(50), IN `cty` VARCHAR(50), IN `strtAd` VARCHAR(50), IN `postCode` VARCHAR(50))  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertAddressToCart` (IN `addId` INT, IN `userId` INT, IN `nm` VARCHAR(50), IN `phn` VARCHAR(50), IN `frstNm` VARCHAR(50), IN `lstNm` VARCHAR(50), IN `mail` VARCHAR(100), IN `cntry` VARCHAR(50), IN `rgn` VARCHAR(50), IN `cty` VARCHAR(50), IN `strtAd` VARCHAR(50), IN `postCode` VARCHAR(50))  NO SQL BEGIN
 
 	IF addId = 0 THEN
 
@@ -181,8 +160,7 @@ BEGIN
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCart` (IN `userId` INT, IN `prodId` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCart` (IN `userId` INT, IN `prodId` INT)  NO SQL BEGIN
 
 	IF (FALSE = (SELECT EXISTS( SELECT * FROM cart WHERE cart.member_id = userId AND cart.status = 'Not Sent'))) THEN
 
@@ -216,15 +194,13 @@ BEGIN
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertFollow` (IN `flwerId` INT, IN `flwingId` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertFollow` (IN `flwerId` INT, IN `flwingId` INT)  NO SQL BEGIN
 
 	INSERT INTO `follower_relations`(`follower_id`, `following_id`) VALUES (flwerId, flwingId);
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertMaterials` (IN `mats` VARCHAR(255), IN `length` INT, IN `prodId` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertMaterials` (IN `mats` VARCHAR(255), IN `length` INT, IN `prodId` INT)  NO SQL BEGIN
 
 	DECLARE x INT DEFAULT 1;
 
@@ -260,13 +236,13 @@ BEGIN
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertMessage` (IN `senderId` INT, IN `reciverId` INT, IN `msg` VARCHAR(255), IN `sentAt` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertMessage` (IN `senderId` INT, IN `reciverId` INT, IN `msg` VARCHAR(255), IN `sentAt` INT)   BEGIN
 
 	INSERT INTO `message`(`sender_id`, `reciver_id`, `message`, `sent_at`) VALUES (senderId, reciverId, msg, sentAt);
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertNotification` (IN `senderId` INT, IN `reciverId` INT, IN `typ` VARCHAR(50), IN `itemId` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertNotification` (IN `senderId` INT, IN `reciverId` INT, IN `typ` VARCHAR(50), IN `itemId` INT)   BEGIN
 
 	SET @lnk = '';
 
@@ -296,8 +272,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertNotification` (IN `senderId` 
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertPictures` (IN `pics` VARCHAR(65535), IN `length` INT, IN `prodId` INT, IN `thId` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertPictures` (IN `pics` VARCHAR(65535), IN `length` INT, IN `prodId` INT, IN `thId` INT)  NO SQL BEGIN
 
 	DECLARE x INT DEFAULT 1;
 
@@ -331,16 +306,19 @@ BEGIN
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertProduct` (IN `nm` VARCHAR(50), IN `prc` INT, IN `dsc` TEXT, IN `inv` INT, IN `del` VARCHAR(50), IN `cat` VARCHAR(50), IN `venId` INT, IN `disc` INT, IN `isPub` TINYINT, IN `crAt` DATETIME, IN `pbAt` DATETIME, IN `tags` VARCHAR(255), IN `tagsL` INT, IN `mats` VARCHAR(255), IN `matsL` INT, IN `pics` VARCHAR(65535), IN `picsL` INT, IN `thumId` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertProduct` (IN `nm` VARCHAR(50), IN `prc` INT, IN `dsc` TEXT, IN `inv` INT, IN `del` VARCHAR(50), IN `cat` VARCHAR(50), IN `venId` INT, IN `disc` INT, IN `isPub` TINYINT, IN `crAt` DATETIME, IN `pbAt` DATETIME, IN `tags` VARCHAR(255), IN `tagsL` INT, IN `mats` VARCHAR(255), IN `matsL` INT, IN `pics` VARCHAR(65535), IN `picsL` INT, IN `thumId` INT)  NO SQL BEGIN
 
 INSERT INTO `product`(`name`, `price`, `description`, `inventory`, `delivery`, `category`, `vendor_id`, `discount`, `is_published`, `created_at`, `published_at`) VALUES (nm, prc, dsc, inv, del, cat, venId, disc, isPub, crAt, pbAt);
 
 SET @productId = (SELECT LAST_INSERT_ID());
 
-CALL insertMaterials(mats, matsL, @productId);
+IF matsL > 0 THEN
+	CALL insertMaterials(mats, matsL, @productId);
+END IF;
 
-CALL insertTags(tags, tagsL, @productId);
+IF tagsL > 0 THEN
+	CALL insertTags(tags, tagsL, @productId);
+END IF;
 
 CALL insertPictures(pics, picsL, @productId, thumId);
 
@@ -354,7 +332,7 @@ CALL selectProduct(@productId);
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertProductNotifs` (IN `userId` INT, IN `prodId` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertProductNotifs` (IN `userId` INT, IN `prodId` INT)   BEGIN
 
 DECLARE n INT DEFAULT 0;
 
@@ -372,7 +350,7 @@ END WHILE;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertReview` (IN `userId` INT, IN `prodId` INT, IN `titl` VARCHAR(50), IN `cont` TEXT, IN `pubAt` DATETIME, IN `rat` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertReview` (IN `userId` INT, IN `prodId` INT, IN `titl` VARCHAR(50), IN `cont` TEXT, IN `pubAt` DATETIME, IN `rat` INT)   BEGIN
 
 	INSERT INTO `review`(`product_id`, `member_id`, `rating`, `points`, `title`, `content`, `published_at`) VALUES (prodId, userId, rat, 0, titl, cont, pubAt);
 	SET @reviewId = (SELECT LAST_INSERT_ID());
@@ -382,7 +360,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertReview` (IN `userId` INT, IN 
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertReviewVote` (IN `prodId` INT, IN `reviewId` INT, IN `userId` INT, IN `vt` VARCHAR(10), IN `vtAt` DATETIME)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertReviewVote` (IN `prodId` INT, IN `reviewId` INT, IN `userId` INT, IN `vt` VARCHAR(10), IN `vtAt` DATETIME)   BEGIN
 
 	IF (EXISTS(SELECT * FROM review_vote WHERE review_vote.review_id = reviewId AND review_vote.member_id = userId)) THEN
 
@@ -396,8 +374,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertReviewVote` (IN `prodId` INT,
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertTags` (IN `tgs` VARCHAR(255), IN `length` INT, IN `prodId` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertTags` (IN `tgs` VARCHAR(255), IN `length` INT, IN `prodId` INT)  NO SQL BEGIN
 
 	DECLARE x INT DEFAULT 1;
 
@@ -433,8 +410,13 @@ BEGIN
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertWishList` (IN `prodId` INT, IN `userId` INT, IN `addAt` DATETIME)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertVendor` (IN `lastName` VARCHAR(50), IN `firstName` VARCHAR(50), IN `userEmail` VARCHAR(100), IN `userPassword` VARCHAR(50), IN `profilePicture` VARCHAR(50), IN `headerPicture` VARCHAR(50), IN `registered` DATE, IN `isVendor` TINYINT)   BEGIN
+	
+	insert into member (last_name, first_name, email, password, profile_picture_link, header_picture_link, registered_at, is_vendor) values(lastName,firstName,userEmail,userPassword,profilePicture,headerPicture,registered,isVendor);
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertWishList` (IN `prodId` INT, IN `userId` INT, IN `addAt` DATETIME)  NO SQL BEGIN
 
 	IF (SELECT EXISTS ( SELECT * FROM wish_list WHERE product_id = prodId AND member_id = userId)) THEN
 
@@ -450,7 +432,7 @@ BEGIN
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `selectAddress` (IN `userId` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `selectAddress` (IN `userId` INT)   BEGIN
 
 	SELECT shipping_address_id AS addressId, shipping_address.member_id as userId, member.first_name AS userFirstName, member.last_name AS userLastName, shipping_address.phone, shipping_address.email, shipping_address.name AS addressName, shipping_address.country, shipping_address.postal_code AS postalCode, shipping_address.region, shipping_address.city, shipping_address.street_adress AS streetAddress 
 
@@ -462,7 +444,7 @@ WHERE shipping_address.member_id = userId;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `selectCart` (IN `userId` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `selectCart` (IN `userId` INT)   BEGIN
 
 	SELECT `cart_id` AS cartId, `member_id` AS userId, `shipping_address_id` AS shippingId, `sum_price` AS sumPrice, `status` FROM `cart` WHERE cart.member_id = userId AND cart.status = 'Not Sent';
 
@@ -470,8 +452,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `selectCart` (IN `userId` INT)  BEGI
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `selectCartProducts` (IN `userId` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `selectCartProducts` (IN `userId` INT)  NO SQL BEGIN
 
 	SELECT product.product_id AS productId, product.name, product.price, product.vendor_id AS sellerId, product.discount, product.is_published AS isPublic, member.first_name AS sellerFirstName, member.last_name AS sellerLastName, ( SELECT product_picture.resource_link FROM product_picture WHERE product_picture.is_thumbnail = TRUE AND product.product_id = product_picture.product_id LIMIT 1 ) AS imgUrl, cart_product.amount, cart_product.status, cart_product.cart_product_id AS cartProductId
 
@@ -487,8 +468,7 @@ WHERE cart.member_id = userId AND cart.status = 'Not Sent';
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `selectCity` (IN `postalCode` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `selectCity` (IN `postalCode` INT)  NO SQL BEGIN
 
 	SELECT city_name AS city, region_name AS region FROM city 
 
@@ -498,7 +478,7 @@ WHERE city.postal_code = postalCode;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `selectContacts` (IN `userId` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `selectContacts` (IN `userId` INT)   BEGIN
 
 	SELECT member.member_id AS userId, member.first_name AS firstName, member.last_name AS lastName, member.about, member.profile_picture_link AS profileImgUrl, vendor_detail.takes_custom_orders AS takesCustomOrders FROM member INNER JOIN vendor_detail ON vendor_detail.member_id = member.member_id WHERE member.member_id IN (SELECT message.sender_id
 
@@ -508,7 +488,7 @@ WHERE message.reciver_id = userId);
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `selectMessages` (IN `userId` INT, IN `contactId` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `selectMessages` (IN `userId` INT, IN `contactId` INT)   BEGIN
 
 	SELECT message.message_id AS messageId, message.sender_id AS senderId, reciver_id AS reciverId, message.message, message.sent_at AS sentAt, (SELECT member.first_name FROM member WHERE member.member_id = contactId) AS contactFirstName, (SELECT member.last_name FROM member WHERE member.member_id = contactId) AS contactLastName, message.sent_at AS sentAt, (SELECT message.reciver_id = userId) AS recived
 
@@ -518,8 +498,7 @@ WHERE message.reciver_id = userId OR message.sender_id = userId;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `selectMyOrders` (IN `userId` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `selectMyOrders` (IN `userId` INT)  NO SQL BEGIN
 
 	SELECT DISTINCT cart.cart_id AS cartId, cart.member_id AS userId, cart.shipping_address_id AS shippingId, cart.sum_price AS sumPrice, cart.status
 
@@ -553,7 +532,7 @@ WHERE cart.member_id = userId;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `selectNotifications` (IN `userId` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `selectNotifications` (IN `userId` INT)   BEGIN
 
 	SELECT notification.notification_id AS notificationId, notification.sender_id AS senderId, notification.reciver_id AS reciverId, notification.content, notification.type, notification.item_id AS itemId, notification.link, notification.seen, notification.sent_at AS sentAt, member.first_name AS senderFirstName, member.last_name AS senderLastName 
 
@@ -567,7 +546,7 @@ ORDER BY notification.sent_at DESC;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `selectOrder` (IN `userId` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `selectOrder` (IN `userId` INT)   BEGIN
 
 	SELECT DISTINCT cart.cart_id AS cartId, cart.member_id AS userId, cart.shipping_address_id AS shippingId, cart.sum_price AS sumPrice, cart.status
 
@@ -611,8 +590,7 @@ WHERE product.vendor_id = userId;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `selectProduct` (IN `prodId` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `selectProduct` (IN `prodId` INT)  NO SQL BEGIN
 
 	SELECT material_name FROM material INNER JOIN product_material ON material.material_id = product_material.material_id WHERE product_material.product_id = prodId;
 
@@ -626,7 +604,7 @@ BEGIN
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `selectReview` (IN `reviewId` INT, IN `userId` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `selectReview` (IN `reviewId` INT, IN `userId` INT)   BEGIN
 
 	IF (userId = 0) THEN
 
@@ -658,7 +636,7 @@ WHERE review_id = reviewId AND member_id = userId) AS myVote
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `selectUser` (IN `userId` INT, IN `myUserId` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `selectUser` (IN `userId` INT, IN `myUserId` INT)   BEGIN
 
 	IF myUserId = 0 THEN
 
@@ -720,8 +698,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `selectUser` (IN `userId` INT, IN `m
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `selectUserShort` (IN `userId` INT, IN `myUserId` TINYINT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `selectUserShort` (IN `userId` INT, IN `myUserId` TINYINT)  NO SQL BEGIN
 
 	IF myUserId != 0 THEN
 
@@ -735,8 +712,7 @@ BEGIN
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `selectWishList` (IN `userId` INT)  NO SQL
-SELECT product.product_id AS productId, product.name, product.price, product.vendor_id AS sellerId, product.discount, product.is_published AS isPublic, member.first_name AS sellerFirstName, member.last_name AS sellerLastName, ( SELECT product_picture.resource_link FROM product_picture WHERE product_picture.is_thumbnail = TRUE AND product.product_id = product_picture.product_id LIMIT 1 ) AS imgUrl, wish_list.wish_list_id AS wishListId, wish_list.added_at AS addedAt
+CREATE DEFINER=`root`@`localhost` PROCEDURE `selectWishList` (IN `userId` INT)  NO SQL SELECT product.product_id AS productId, product.name, product.price, product.vendor_id AS sellerId, product.discount, product.is_published AS isPublic, member.first_name AS sellerFirstName, member.last_name AS sellerLastName, ( SELECT product_picture.resource_link FROM product_picture WHERE product_picture.is_thumbnail = TRUE AND product.product_id = product_picture.product_id LIMIT 1 ) AS imgUrl, wish_list.wish_list_id AS wishListId, wish_list.added_at AS addedAt
 
 FROM wish_list
 
@@ -748,8 +724,11 @@ WHERE wish_list.member_id = userId AND product.is_published = TRUE
 
 ORDER BY wish_list.added_at DESC$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAddress` (IN `userId` INT, IN `nm` VARCHAR(50), IN `phn` VARCHAR(50), IN `frstNm` VARCHAR(50), IN `lstNm` VARCHAR(50), IN `mail` VARCHAR(100), IN `cntry` VARCHAR(50), IN `rgn` VARCHAR(50), IN `cty` VARCHAR(50), IN `strtAd` VARCHAR(50), IN `postCode` VARCHAR(50), IN `saId` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `signUp` (IN `lastName` VARCHAR(50), IN `firstName` VARCHAR(50), IN `userEmail` VARCHAR(100), IN `userPassword` VARCHAR(50), IN `profilePicture` VARCHAR(50), IN `headerPicture` VARCHAR(50), IN `registered` DATE)   BEGIN
+	insert into `member` (`last_name`, `first_name`, `email`, `password`, `profile_picture_link`, `header_picture_link`, `registered_at`) values(lastName,firstName,userEmail,userPassword,profilePicture,headerPicture,registered);
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAddress` (IN `userId` INT, IN `nm` VARCHAR(50), IN `phn` VARCHAR(50), IN `frstNm` VARCHAR(50), IN `lstNm` VARCHAR(50), IN `mail` VARCHAR(100), IN `cntry` VARCHAR(50), IN `rgn` VARCHAR(50), IN `cty` VARCHAR(50), IN `strtAd` VARCHAR(50), IN `postCode` VARCHAR(50), IN `saId` INT)  NO SQL BEGIN
 
 	IF nm = '' THEN
 
@@ -763,8 +742,7 @@ BEGIN
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCartProducts` (IN `sts` VARCHAR(255), IN `length` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCartProducts` (IN `sts` VARCHAR(255), IN `length` INT)  NO SQL BEGIN
 
 	DECLARE x INT DEFAULT 1;
 
@@ -802,8 +780,7 @@ BEGIN
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateMaterials` (IN `mats` VARCHAR(255), IN `length` INT, IN `prodId` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateMaterials` (IN `mats` VARCHAR(255), IN `length` INT, IN `prodId` INT)  NO SQL BEGIN
 
 	DELETE FROM product_material WHERE product_id = prodId;
 
@@ -811,13 +788,13 @@ BEGIN
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateNotifSeen` (IN `notifId` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateNotifSeen` (IN `notifId` INT)   BEGIN
 
 	UPDATE notification SET notification.seen= TRUE WHERE notification.notification_id = notifId;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOrderCart` (IN `cartId` INT, IN `st` VARCHAR(50))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOrderCart` (IN `cartId` INT, IN `st` VARCHAR(50))   BEGIN
 
 	UPDATE `cart` SET `status`=st WHERE cart.cart_id = cartId;
 
@@ -825,8 +802,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOrderCart` (IN `cartId` INT, 
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePictures` (IN `pics` VARCHAR(255), IN `length` INT, IN `prodId` INT, IN `thId` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePictures` (IN `pics` VARCHAR(255), IN `length` INT, IN `prodId` INT, IN `thId` INT)  NO SQL BEGIN
 
 	DELETE FROM product_picture WHERE product_id = prodId;
 
@@ -834,8 +810,7 @@ BEGIN
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateProduct` (IN `nm` VARCHAR(50), IN `prc` INT, IN `dsc` TEXT, IN `inv` INT, IN `del` VARCHAR(50), IN `cat` VARCHAR(50), IN `disc` INT, IN `isPub` TINYINT, IN `lstUp` DATETIME, IN `pubAt` DATETIME, IN `prodId` INT, IN `tags` VARCHAR(255), IN `tagsL` INT, IN `mats` VARCHAR(255), IN `matsL` INT, IN `pics` VARCHAR(255), IN `picsL` INT, IN `thumId` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateProduct` (IN `nm` VARCHAR(50), IN `prc` INT, IN `dsc` TEXT, IN `inv` INT, IN `del` VARCHAR(50), IN `cat` VARCHAR(50), IN `disc` INT, IN `isPub` TINYINT, IN `lstUp` DATETIME, IN `pubAt` DATETIME, IN `prodId` INT, IN `tags` VARCHAR(255), IN `tagsL` INT, IN `mats` VARCHAR(255), IN `matsL` INT, IN `pics` VARCHAR(255), IN `picsL` INT, IN `thumId` INT)  NO SQL BEGIN
 
 	UPDATE `product` SET `name`=nm,`price`=prc,`description`=dsc,`inventory`=inv,`delivery`=del, `category`=cat,`discount`=disc,`is_published`=isPub,`last_updated_at`=lstUp, `published_at`=pubAt WHERE product_id = prodId;
 
@@ -849,8 +824,7 @@ BEGIN
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateTags` (IN `tgs` VARCHAR(255), IN `length` INT, IN `prodId` INT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateTags` (IN `tgs` VARCHAR(255), IN `length` INT, IN `prodId` INT)  NO SQL BEGIN
 
 	DELETE FROM product_tag WHERE product_id = prodId;
 
@@ -860,8 +834,7 @@ BEGIN
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUser` (IN `userId` INT, IN `frstNm` VARCHAR(50), IN `lstNm` VARCHAR(50), IN `phn` VARCHAR(15), IN `abt` TEXT, IN `pfpUrl` VARCHAR(200), IN `headerUrl` VARCHAR(200), IN `isVndor` TINYINT, IN `cNm` VARCHAR(50), IN `siteL` VARCHAR(50), IN `wbst` VARCHAR(50), IN `cstOrder` TINYINT)  NO SQL
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUser` (IN `userId` INT, IN `frstNm` VARCHAR(50), IN `lstNm` VARCHAR(50), IN `phn` VARCHAR(15), IN `abt` TEXT, IN `pfpUrl` VARCHAR(200), IN `headerUrl` VARCHAR(200), IN `isVndor` TINYINT, IN `cNm` VARCHAR(50), IN `siteL` VARCHAR(50), IN `wbst` VARCHAR(50), IN `cstOrder` TINYINT)  NO SQL BEGIN
 
 	UPDATE `member` SET `first_name`= frstNm ,`last_name`= lstNm, `phone`=phn,`about`=abt,`profile_picture_link`= pfpUrl,`header_picture_link`= headerUrl, `is_vendor`= isVndor WHERE member.member_id = userId;
 
@@ -878,7 +851,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `cart`
+-- Table structure for table `cart`
 --
 
 CREATE TABLE `cart` (
@@ -890,23 +863,18 @@ CREATE TABLE `cart` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `cart`
+-- Dumping data for table `cart`
 --
 
 INSERT INTO `cart` (`cart_id`, `member_id`, `shipping_address_id`, `sum_price`, `status`) VALUES
-(9, 21, 9, 12210, 'Ordered'),
-(10, 21, 9, 8720, 'Ordered'),
-(13, 21, 8, 2580, 'Ordered'),
-(14, 21, 9, 30560, 'Ordered'),
-(15, 21, 8, 1500, 'Ordered'),
-(16, 21, NULL, 10600, 'Not Sent'),
-(17, 26, 13, 29950, 'Ordered'),
-(18, 26, 13, 34950, 'Ordered');
+(1, 8, 1, 15620, 'Ordered'),
+(2, 8, 2, 9430, 'Ordered'),
+(3, 1, 3, 48120, 'Ordered');
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `cart_product`
+-- Table structure for table `cart_product`
 --
 
 CREATE TABLE `cart_product` (
@@ -918,32 +886,22 @@ CREATE TABLE `cart_product` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `cart_product`
+-- Dumping data for table `cart_product`
 --
 
 INSERT INTO `cart_product` (`cart_product_id`, `cart_id`, `product_id`, `amount`, `status`) VALUES
-(34, 9, 2, 1, 'Arrived'),
-(36, 10, 5, 2, 'Arrived'),
-(37, 10, 14, 1, 'Arrived'),
-(43, 13, 17, 1, 'Arrived'),
-(44, 13, 14, 1, 'Arrived'),
-(45, 14, 2, 1, 'Arrived'),
-(46, 14, 11, 1, 'Arrived'),
-(47, 14, 12, 1, 'Arrived'),
-(48, 15, 18, 1, 'Arrived'),
-(49, 15, 17, 1, 'Packaging'),
-(50, 16, 5, 1, 'In Cart'),
-(51, 17, 2, 1, 'Ordered'),
-(52, 17, 12, 1, 'Ordered'),
-(54, 18, 11, 2, 'Ordered'),
-(55, 18, 15, 1, 'Ordered'),
-(56, 18, 13, 2, 'Ordered'),
-(57, 16, 1, 1, 'In Cart');
+(1, 1, 26, 1, 'Arrived'),
+(2, 1, 31, 1, 'Delivery in progress'),
+(3, 1, 14, 1, 'Packaging'),
+(4, 2, 25, 1, 'Delivery in progress'),
+(5, 3, 3, 1, 'Ordered'),
+(6, 3, 6, 1, 'Ordered'),
+(7, 3, 16, 1, 'Ordered');
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `city`
+-- Table structure for table `city`
 --
 
 CREATE TABLE `city` (
@@ -954,7 +912,7 @@ CREATE TABLE `city` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `city`
+-- Dumping data for table `city`
 --
 
 INSERT INTO `city` (`city_id`, `city_name`, `postal_code`, `region_id`) VALUES
@@ -4542,7 +4500,7 @@ INSERT INTO `city` (`city_id`, `city_name`, `postal_code`, `region_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `follower_relations`
+-- Table structure for table `follower_relations`
 --
 
 CREATE TABLE `follower_relations` (
@@ -4551,22 +4509,217 @@ CREATE TABLE `follower_relations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `follower_relations`
+-- Dumping data for table `follower_relations`
 --
 
 INSERT INTO `follower_relations` (`follower_id`, `following_id`) VALUES
-(17, 21),
-(18, 21),
-(21, 22),
-(21, 25),
-(22, 25),
-(26, 21),
-(26, 25);
+(1, 10),
+(1, 12),
+(1, 15),
+(1, 17),
+(2, 3),
+(2, 6),
+(2, 7),
+(2, 12),
+(2, 16),
+(2, 18),
+(3, 5),
+(3, 8),
+(3, 16),
+(3, 20),
+(4, 1),
+(4, 5),
+(4, 10),
+(4, 15),
+(4, 16),
+(4, 17),
+(5, 6),
+(5, 7),
+(5, 10),
+(5, 13),
+(5, 15),
+(5, 19),
+(6, 7),
+(6, 14),
+(6, 16),
+(6, 18),
+(7, 1),
+(7, 11),
+(7, 14),
+(7, 15),
+(8, 1),
+(8, 7),
+(8, 11),
+(8, 14),
+(9, 1),
+(9, 13),
+(9, 20),
+(10, 1),
+(10, 5),
+(10, 7),
+(10, 9),
+(10, 14),
+(10, 17),
+(11, 9),
+(11, 12),
+(11, 13),
+(11, 15),
+(12, 1),
+(12, 5),
+(12, 10),
+(12, 18),
+(13, 1),
+(13, 5),
+(13, 10),
+(13, 16),
+(13, 17),
+(14, 2),
+(14, 3),
+(14, 5),
+(14, 6),
+(14, 8),
+(14, 10),
+(14, 11),
+(14, 12),
+(15, 9),
+(15, 11),
+(15, 18),
+(16, 3),
+(16, 7),
+(16, 8),
+(16, 13),
+(17, 5),
+(17, 9),
+(17, 10),
+(17, 19),
+(18, 3),
+(18, 6),
+(18, 9),
+(18, 10),
+(18, 16),
+(18, 19),
+(19, 1),
+(19, 5),
+(19, 7),
+(19, 9),
+(19, 12),
+(19, 16),
+(19, 20),
+(20, 1),
+(20, 4),
+(20, 11),
+(20, 13),
+(20, 17),
+(21, 4),
+(21, 5),
+(21, 13),
+(21, 16),
+(21, 19),
+(22, 3),
+(22, 4),
+(22, 5),
+(22, 9),
+(22, 10),
+(22, 13),
+(22, 16),
+(23, 1),
+(23, 2),
+(23, 9),
+(23, 10),
+(23, 11),
+(23, 14),
+(24, 7),
+(24, 9),
+(24, 12),
+(24, 13),
+(24, 17),
+(25, 7),
+(25, 12),
+(25, 16),
+(25, 19),
+(26, 11),
+(26, 12),
+(26, 18),
+(27, 2),
+(27, 7),
+(27, 11),
+(27, 15),
+(28, 1),
+(28, 4),
+(28, 5),
+(28, 11),
+(28, 16),
+(29, 4),
+(29, 11),
+(29, 13),
+(29, 15),
+(29, 16),
+(29, 17),
+(29, 18),
+(30, 2),
+(30, 3),
+(30, 7),
+(30, 12),
+(30, 14),
+(30, 19),
+(31, 4),
+(31, 7),
+(31, 11),
+(31, 12),
+(31, 13),
+(31, 20),
+(32, 1),
+(32, 2),
+(32, 4),
+(32, 11),
+(32, 12),
+(33, 1),
+(33, 5),
+(33, 14),
+(33, 18),
+(33, 20),
+(34, 1),
+(34, 4),
+(34, 11),
+(34, 19),
+(35, 5),
+(35, 6),
+(35, 9),
+(35, 16),
+(35, 18),
+(35, 19),
+(36, 2),
+(36, 3),
+(36, 5),
+(36, 6),
+(36, 8),
+(36, 10),
+(36, 12),
+(36, 19),
+(37, 4),
+(37, 6),
+(37, 9),
+(37, 13),
+(38, 1),
+(38, 4),
+(38, 7),
+(38, 9),
+(38, 10),
+(38, 13),
+(38, 15),
+(39, 1),
+(39, 6),
+(39, 19),
+(39, 20),
+(40, 1),
+(40, 3),
+(40, 4),
+(40, 5);
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `material`
+-- Table structure for table `material`
 --
 
 CREATE TABLE `material` (
@@ -4575,7 +4728,7 @@ CREATE TABLE `material` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `material`
+-- Dumping data for table `material`
 --
 
 INSERT INTO `material` (`material_id`, `material_name`) VALUES
@@ -4595,7 +4748,7 @@ INSERT INTO `material` (`material_id`, `material_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `member`
+-- Table structure for table `member`
 --
 
 CREATE TABLE `member` (
@@ -4615,42 +4768,55 @@ CREATE TABLE `member` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `member`
+-- Dumping data for table `member`
 --
 
 INSERT INTO `member` (`member_id`, `first_name`, `last_name`, `email`, `password`, `phone`, `about`, `profile_picture_link`, `header_picture_link`, `registered_at`, `last_login`, `is_vendor`, `is_admin`) VALUES
-(1, 'Zita', 'Boros', 'zitaboros893@mail.com', '', '+36 30 533 6688', 'Aliquam quis arcu vitae purus imperdiet auctor vel sed dolor.', 'assets/def-pfp1.png', NULL, '2022-01-11 19:39:17', NULL, 1, 0),
-(2, 'Aranka', 'Németh', 'arankanemeth59@mail.com', '', '+36 10 362 3553', 'Sziasztok, Aranyoskák! Erzsi néni vagyok. Szabadidőmben szeretek ékszereket és egyéb apróságokat készíteni. ✨💎 ', 'assets\\profilepic.jpg', NULL, '2022-01-11 19:39:17', NULL, 1, 0),
-(3, 'Valéria', 'Lakatos', 'valerialakatos827@mail.com', '', '+36 20 115 3159', 'Aliquam quis arcu vitae purus imperdiet auctor vel sed dolor.', 'assets/def-pfp2.png', NULL, '2022-01-11 19:39:17', NULL, 1, 0),
-(4, 'Csilla', 'Takács', 'csillatakacs193@mail.com', '', '+36 10 684 5456', 'Aliquam quis arcu vitae purus imperdiet auctor vel sed dolor.', NULL, NULL, '2022-01-11 19:39:17', NULL, 1, 0),
-(5, 'Levente', 'Szücs', 'leventeszucs128@mail.com', '', '+36 40 216 4237', 'Aliquam quis arcu vitae purus imperdiet auctor vel sed dolor.', NULL, NULL, '2022-01-11 19:39:17', NULL, 0, 0),
-(6, 'Gabriella', 'Kiss', 'gabriellakiss91@mail.com', '', '+36 40 322 2473', 'Aliquam quis arcu vitae purus imperdiet auctor vel sed dolor.', NULL, NULL, '2022-01-11 19:39:17', NULL, 0, 0),
-(7, 'Melinda', 'László', 'melindalaszlo179@mail.com', '', '+36 80 394 8928', 'Aliquam quis arcu vitae purus imperdiet auctor vel sed dolor.', NULL, NULL, '2022-01-11 19:39:17', NULL, 0, 0),
-(8, 'Antal', 'Kelemen', 'antalkelemen705@mail.com', '', '+36 10 794 7746', 'Aliquam quis arcu vitae purus imperdiet auctor vel sed dolor.', NULL, NULL, '2022-01-11 19:39:17', NULL, 0, 0),
-(9, 'László', 'Papp', 'laszlopapp782@mail.com', '', '+36 90 363 3328', 'Aliquam quis arcu vitae purus imperdiet auctor vel sed dolor.', NULL, NULL, '2022-01-11 19:39:17', NULL, 0, 0),
-(10, 'Tamás', 'Bakos', 'tamasbakos765@mail.com', '', '+36 20 386 1345', 'Aliquam quis arcu vitae purus imperdiet auctor vel sed dolor.', NULL, NULL, '2022-01-11 19:39:17', NULL, 0, 0),
-(11, 'Veronika', 'Bakos', 'veronikabakos199@mail.com', '', '+36 70 253 7718', 'Aliquam quis arcu vitae purus imperdiet auctor vel sed dolor.', NULL, NULL, '2022-01-11 19:39:17', NULL, 0, 0),
-(12, 'Dezső', 'Major', 'dezsomajor431@mail.com', '', '+36 10 378 6696', 'Aliquam quis arcu vitae purus imperdiet auctor vel sed dolor.', NULL, NULL, '2022-01-11 19:39:17', NULL, 0, 0),
-(13, 'Szilárd', 'Halász', 'szilardhalasz54@mail.com', '', '+36 30 566 1723', 'Aliquam quis arcu vitae purus imperdiet auctor vel sed dolor.', NULL, NULL, '2022-01-11 19:39:17', NULL, 0, 0),
-(14, 'Bertalan', 'Székely', 'bertalanszekely127@mail.com', '', '+36 80 548 1557', 'Aliquam quis arcu vitae purus imperdiet auctor vel sed dolor.', NULL, NULL, '2022-01-11 19:39:17', NULL, 0, 0),
-(15, 'Antal', 'Virág', 'antalvirag904@mail.com', '', '+36 70 269 2786', 'Aliquam quis arcu vitae purus imperdiet auctor vel sed dolor.', NULL, NULL, '2022-01-11 19:39:17', NULL, 0, 0),
-(16, 'Antal', 'Papp', 'antalpapp937@mail.com', '', '+36 60 897 2647', 'Aliquam quis arcu vitae purus imperdiet auctor vel sed dolor.', NULL, NULL, '2022-01-11 19:39:17', NULL, 0, 0),
-(17, 'Péter', 'Kelemen', 'peterkelemen36@mail.com', '', '+36 90 524 8641', 'Aliquam quis arcu vitae purus imperdiet auctor vel sed dolor.', NULL, NULL, '2022-01-11 19:39:17', NULL, 0, 0),
-(18, 'Krisztina', 'Jakab', 'krisztinajakab258@mail.com', '', '+36 40 841 2554', 'Aliquam quis arcu vitae purus imperdiet auctor vel sed dolor.', NULL, NULL, '2022-01-11 19:39:17', NULL, 0, 0),
-(19, 'Hajnalka', 'Sándor', 'hajnalkasandor393@mail.com', '', '+36 80 858 3484', 'Aliquam quis arcu vitae purus imperdiet auctor vel sed dolor.', NULL, NULL, '2022-01-11 19:39:17', NULL, 0, 0),
-(20, 'Ildikó', 'Biró', 'ildikobiro1@mail.com', '', '+36 70 327 8823', 'Aliquam quis arcu vitae purus imperdiet auctor vel sed dolor.', NULL, NULL, '2022-01-11 19:39:17', NULL, 0, 0),
-(21, 'Erzsébet', 'Nagy', 'evanagy784@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 10 767 3558', 'könnyebb tehát keresztül Nagyon inkább italért. eljön. vagyok? tehát utolsó eddiga', 'assets/def-pfp2.png', 'assets/default_assets/def-bg3.png', '2022-01-11 00:00:00', NULL, 1, 0),
-(22, 'Rozália', 'Jakab', 'rozaliajakab753@mail.com', '', '+36 10 926 7715', 'legjobb szeret. szükségem, ezzel következő szálljon tudom ezzel Nem érdekében kopog, sokkal tudom', 'assets/def-pfp2.png', NULL, '2022-01-10 00:00:00', NULL, 1, 0),
-(23, 'Eszter', 'Takács', 'esztertakacs270@mail.com', 'secret', '+36 40 481 6394', 'ezek őket Hat Nem következő szálljon még egyikük tehát erre alszom, tehát és van szájba', 'assets/def-pfp2.png', NULL, '2022-01-07 00:00:00', NULL, 1, 0),
-(24, 'Rozália', 'Papp', 'rozaliapapp670@mail.com', '', '+36 60 129 8813', 'Mindenkinek neki Isten építsen néhány akár bumról, működik. fene akár évente. le Féltékeny', 'assets/def-pfp1.png', NULL, '2022-01-22 00:00:00', NULL, 1, 0),
-(25, 'Béla', 'Horváth', 'belahorvath812@mail.com', '', '+36 80 349 5696', 'néhány darabig szájba működik. csukott áll az a olyan éves itt éves amelyek', 'assets/def-pfp1.png', NULL, '2022-01-30 00:00:00', NULL, 1, 0),
-(26, 'Erzsébet', 'Nagy', 'nagyerzsi@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', NULL, 'Szeretem a cicákat és a kutyikákat is.', 'assets/def-pfp1.png', 'assets/default_assets/def-bg3.png', '2022-03-16 17:59:20', NULL, 0, 0),
-(27, 'Máté', 'Molnár', 'mate@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', 'm', '(っ◔◡◔)っ ♥ Hello World! ♥', 'assets/def-pfp1.png', 'assets/default_assets/def-bg2.png', '2022-03-15 17:59:27', NULL, 0, 0);
+(1, 'Zita', 'Gáspár', 'zitagaspar430@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 10 167 4965', 'világban italért. három világban őket amelyek tovább eljön. kell építsen Féltékeny kell azt lehetőség fizetek hobbijaim csinálni. legjobb Féltékeny hogy', 'assets/def-pfp1.png', 'assets/default_assets/def-bg2.png', '2022-02-06 04:35:22', NULL, 1, 0),
+(2, 'Gyöngyi', 'Gáspár', 'gyöngyigaspar725@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 20 415 7414', 'kerültem azon olyan egyikük eljön. Annyira nagyobb Nem terve, inkább akár tudom legtöbb és legyen nekem életforma. kicsit. utolsó azt ebben világban Szia,', 'assets/def-pfp1.png', 'assets/default_assets/def-bg2.png', '2022-04-20 04:37:38', NULL, 1, 0),
+(3, 'Erika', 'Király', 'erikakiraly261@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 80 875 6383', 'jól jog felé egyetlen kerül Úgy idő terve, különböző tudom nekem itt kerültem például során', 'assets/def-pfp2.png', 'assets/default_assets/def-bg2.png', '2022-01-07 03:06:33', NULL, 1, 0),
+(4, 'Judit', 'Papp', 'juditpapp334@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 60 124 8972', 'ember hobbijaim itt mondanom, meg van felé inkább együtt mely Két darabig ezek látni,', 'assets/def-pfp2.png', 'assets/default_assets/def-bg3.png', '2022-01-04 21:51:55', NULL, 1, 0),
+(5, 'László', 'Máté', 'laszlomate549@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 90 266 1681', 'terve, világban áll ide? És kopog, hónap egyetlen vacsora. tudom össze Hogy reggeli,', 'assets/def-pfp2.png', 'assets/default_assets/def-bg.png', '2022-03-23 11:52:49', NULL, 1, 0),
+(6, 'Miklós', 'Bakos', 'miklosbakos992@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 30 131 9784', 'szemmel meg kell építsen egy most legtöbb tartoznak kopog, lesz eljön. ...', 'assets/def-pfp2.png', 'assets/default_assets/def-bg2.png', '2022-01-28 20:42:36', NULL, 1, 0),
+(7, 'Györgyi', 'Tóth', 'györgyitoth345@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 40 884 6718', 'csukott értem, egyikük nem adott van Hat Féltékeny a idő Nem mikor az', 'assets/def-pfp1.png', 'assets/default_assets/def-bg.png', '2022-01-28 23:24:48', NULL, 1, 0),
+(8, 'Bertalan', 'Balog', 'bertalanbalog227@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 50 519 8123', 'Mindenkinek hiszem, Két Hogy jog egy van azt a szemben következő', 'assets/def-pfp2.png', 'assets/default_assets/def-bg3.png', '2022-04-10 15:26:52', NULL, 1, 0),
+(9, 'Györgyi', 'Virág', 'györgyivirag696@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 40 641 6361', 'össze övék. fene idő tovább ezek azon Ha érdekében', 'assets/def-pfp2.png', 'assets/default_assets/def-bg.png', '2022-03-11 19:53:52', NULL, 1, 0),
+(10, 'Tünde', 'Lukács', 'tundelukacs327@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 30 556 3519', 'nem hiszem, világban nem azon neki szó működik. itt áll tudom Hat Két', 'assets/def-pfp1.png', 'assets/default_assets/def-bg.png', '2022-01-25 09:50:13', NULL, 1, 0),
+(11, 'Melinda', 'Máté', 'melindamate550@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 80 769 6955', 'áldja Hogy életforma. hiszem, most csinálni. Hogy övék. most sokkal itt alszom, azt', 'assets/def-pfp1.png', 'assets/default_assets/def-bg3.png', '2022-03-24 13:11:42', NULL, 1, 0),
+(12, 'Mária', 'Hajdu', 'mariahajdu9@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 60 112 3262', 'hozzá vagyok sem szükségem, legjobb jól ... adott hiszem, könnyebb mégis ide? életforma. kicsit. kövér,', 'assets/def-pfp1.png', 'assets/default_assets/def-bg3.png', '2022-02-26 11:24:20', NULL, 1, 0),
+(13, 'Mihály', 'Farkas', 'mihalyfarkas705@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 90 956 1128', 'világban meg jól nagyobb legyen néhány szép vagyok építsen megfelelő legjobb nekem gyerek,', 'assets/def-pfp2.png', 'assets/default_assets/def-bg3.png', '2022-01-28 09:21:56', NULL, 1, 0),
+(14, 'Gizella', 'Lukács', 'gizellalukacs968@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 90 867 3782', 'legyen látni, egyikük ezek akár az. Annyira koffeinfüggő egy hogy valami én', 'assets/def-pfp2.png', 'assets/default_assets/def-bg.png', '2022-03-10 20:37:53', NULL, 1, 0),
+(15, 'Angéla', 'Szabó', 'angelaszabo377@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 50 875 8278', 'itt ezt ma milyen sem néhány adott az. neki fene ezt itt övék.', 'assets/def-pfp1.png', 'assets/default_assets/def-bg2.png', '2022-03-13 03:07:39', NULL, 1, 0),
+(16, 'Anikó', 'Sándor', 'anikosandor289@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 30 982 7887', 'vacsora. rendetlenséget! Annyira terve, hónap mégis hónap három nem szemmel elég azon áldja könnyebb szeret. nem könnyebb', 'assets/def-pfp2.png', 'assets/default_assets/def-bg2.png', '2022-01-08 09:00:54', NULL, 1, 0),
+(17, 'Melinda', 'Boros', 'melindaboros367@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 10 861 1328', 'mint Annyira biztos mint ennek ezek amíg kicsit. Hogy egyikük hiszen ebben mégis', 'assets/def-pfp1.png', 'assets/default_assets/def-bg2.png', '2022-01-21 08:40:28', NULL, 1, 0),
+(18, 'Etelka', 'Szücs', 'etelkaszucs657@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 10 424 6762', 'Hogy Isten Annyira eljön. Isten tudom legjobb vagyok? szájba Annyira Féltékeny hozzá soha', 'assets/def-pfp2.png', 'assets/default_assets/def-bg3.png', '2022-01-28 19:31:45', NULL, 1, 0),
+(19, 'András', 'Balog', 'andrasbalog584@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 50 265 8587', 'elég látni, könnyebb jól gyerek, közé nem nagyobb ember.', 'assets/def-pfp1.png', 'assets/default_assets/def-bg.png', '2022-04-25 12:36:34', NULL, 1, 0),
+(20, 'József', 'Nagy', 'jozsefnagy500@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 80 646 3526', 'kövér, teljes ezzel kopog, csinálni. nagyobb hónap szemben különböző isten vagyok reggeli, kerül italért. ...', 'assets/def-pfp2.png', 'assets/default_assets/def-bg2.png', '2022-01-27 20:09:22', NULL, 1, 0),
+(21, 'Zita', 'Juhász', 'zitajuhasz479@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 60 195 5891', 'ezek italért. dolog például Féltékeny szeret. valami adott gyerek, mikor áll', 'assets/def-pfp1.png', 'assets/default_assets/def-bg.png', '2022-01-07 20:36:35', NULL, 0, 0),
+(22, 'Anita', 'Lakatos', 'anitalakatos595@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 60 996 7754', 'teljes fizetek áll és szálljon ma az tehát És meleg Mindenkinek ma le Ha vagyok?', 'assets/def-pfp2.png', 'assets/default_assets/def-bg2.png', '2022-02-02 02:24:55', NULL, 0, 0),
+(23, 'Norbert', 'Kovács', 'norbertkovacs333@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 30 528 3338', 'Egy ember van a hiszem, kétszer ezt felé dolog itt', 'assets/def-pfp2.png', 'assets/default_assets/def-bg.png', '2022-03-07 05:22:46', NULL, 0, 0),
+(24, 'Emese', 'Halász', 'emesehalasz172@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 30 824 6394', 'Szia, valami van az. mint kétszer rendetlenséget! Hol ajtót! nekem most szabadságra azt jól értem,', 'assets/def-pfp1.png', 'assets/default_assets/def-bg2.png', '2022-02-21 20:18:42', NULL, 0, 0),
+(25, 'Endre', 'Nagy', 'endrenagy641@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 30 411 2637', '... következő neki idő És szüleimre, neki bumról, És szájba lehetőség sokkal különböző övék. egy Isten', 'assets/def-pfp2.png', 'assets/default_assets/def-bg2.png', '2022-03-14 08:56:21', NULL, 0, 0),
+(26, 'Hajnalka', 'Kovács', 'hajnalkakovacs166@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 30 116 7641', 'olyan szeret. hiszem, És látni, milyen könnyebb Két eddig vacsora.', 'assets/def-pfp2.png', 'assets/default_assets/def-bg3.png', '2022-03-10 20:54:46', NULL, 0, 0),
+(27, 'Endre', 'Juhász', 'endrejuhasz942@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 90 363 8252', 'lesz Hat nekem isten szinte áldja szeret. érdekében érdekében mégis mint vagyok Hol gyerek, vagyok mikor van erre', 'assets/def-pfp1.png', 'assets/default_assets/def-bg.png', '2022-03-11 15:38:24', NULL, 0, 0),
+(28, 'Imre', 'Lukács', 'imrelukacs217@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 60 984 4331', 'le hiszen áldja tovább tehát Nem tovább évente. eddig gyerek, kerültem őket életforma. adott', 'assets/def-pfp1.png', 'assets/default_assets/def-bg.png', '2022-04-12 10:19:51', NULL, 0, 0),
+(29, 'Ibolya', 'Pásztor', 'ibolyapasztor135@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 40 787 6851', 'nem nekem övék. viszont építsen adott szép mondanom, idő hiszem, idő ebéd ide? vagyok', 'assets/def-pfp2.png', 'assets/default_assets/def-bg2.png', '2022-03-13 22:10:14', NULL, 0, 0),
+(30, 'Jenő', 'Biró', 'jenobiro842@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 20 464 6487', 'ebben nem áldja soha Féltékeny tehát az sem csukott a tovább tehát', 'assets/def-pfp2.png', 'assets/default_assets/def-bg3.png', '2022-04-14 08:31:26', NULL, 0, 0),
+(31, 'Ildikó', 'László', 'ildikolaszlo357@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 60 731 2729', 'a rendetlenséget! szép építsen szeret. sokkal értem, van ide? Annyira és hogy néhány', 'assets/def-pfp1.png', 'assets/default_assets/def-bg3.png', '2022-01-20 18:11:41', NULL, 0, 0),
+(32, 'Csilla', 'Bakos', 'csillabakos681@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 50 277 2777', 'ütődik. egy szemben le szemmel szabadságra egyikük itt az. szájba jog nem', 'assets/def-pfp2.png', 'assets/default_assets/def-bg2.png', '2022-04-12 15:02:20', NULL, 0, 0),
+(33, 'Katalin', 'Király', 'katalinkiraly779@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 90 116 6726', 'italért. vagyok működik. ezek meleg azon szeret. néhány szükséges sokkal csukott', 'assets/def-pfp1.png', 'assets/default_assets/def-bg2.png', '2022-04-01 06:41:29', NULL, 0, 0),
+(34, 'Edina', 'Kozma', 'edinakozma775@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 70 766 7932', 'valami italért. Ha van darabig sokkal együtt ezt meg Két szájba inkább szemben milyen mint azt áldja', 'assets/def-pfp1.png', 'assets/default_assets/def-bg3.png', '2022-01-22 05:06:33', NULL, 0, 0),
+(35, 'Margit', 'Balog', 'margitbalog617@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 10 864 2164', 'hogy őket csukott terve, ember mikor van És jól Hat csinálni. évente.', 'assets/def-pfp2.png', 'assets/default_assets/def-bg3.png', '2022-02-08 01:57:54', NULL, 0, 0),
+(36, 'Gabriella', 'Gáspár', 'gabriellagaspar980@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 40 121 2561', 'övék. fene italért. őket jól azt nem inkább sokkal', 'assets/def-pfp1.png', 'assets/default_assets/def-bg3.png', '2022-03-25 11:19:08', NULL, 0, 0),
+(37, 'Tamás', 'Tóth', 'tamastoth131@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 30 753 8379', 'rendetlenséget! Mindenkinek szép össze van szemmel éves azt bumról, elég szükséges most Isten vacsora. mind', 'assets/def-pfp1.png', 'assets/default_assets/def-bg2.png', '2022-04-18 13:21:53', NULL, 0, 0),
+(38, 'László', 'Kiss', 'laszlokiss441@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 80 842 5858', 'eljön. eddig teljes hiszem, Ha azon szemben alszom, szó szükséges látni,', 'assets/def-pfp2.png', 'assets/default_assets/def-bg2.png', '2022-03-17 16:22:23', NULL, 0, 0),
+(39, 'Piroska', 'Virág', 'piroskavirag107@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 20 623 7994', 'legtöbb legyen gyerek, hiszen mind szükséges sokkal kicsit. évente. vagyok vagyok? ezzel elég nem', 'assets/def-pfp2.png', 'assets/default_assets/def-bg.png', '2022-02-09 21:55:50', NULL, 0, 0),
+(40, 'Pál', 'Kovács', 'palkovacs557@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', '+36 80 743 1514', 'az. ebben sem Isten szájba övék. közé egy hogy mai inkább', 'assets/def-pfp1.png', 'assets/default_assets/def-bg2.png', '2022-03-05 14:50:56', NULL, 0, 0);
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `message`
+-- Table structure for table `message`
 --
 
 CREATE TABLE `message` (
@@ -4661,21 +4827,10 @@ CREATE TABLE `message` (
   `sent_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
---
--- A tábla adatainak kiíratása `message`
---
-
-INSERT INTO `message` (`message_id`, `sender_id`, `reciver_id`, `message`, `sent_at`) VALUES
-(1, 21, 22, 'Szia', '2022-03-17 10:16:20'),
-(2, 22, 21, 'Hello', '2022-03-17 10:16:21'),
-(6, 21, 22, 'Hellobello!!', '0000-00-00 00:00:00'),
-(7, 21, 22, 'Egy kettő', '0000-00-00 00:00:00'),
-(8, 21, 22, 'Három négy', '0000-00-00 00:00:00');
-
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `notification`
+-- Table structure for table `notification`
 --
 
 CREATE TABLE `notification` (
@@ -4691,87 +4846,36 @@ CREATE TABLE `notification` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `notification`
+-- Dumping data for table `notification`
 --
 
 INSERT INTO `notification` (`notification_id`, `sender_id`, `reciver_id`, `content`, `type`, `item_id`, `link`, `seen`, `sent_at`) VALUES
-(1, 25, 21, 'új terméket tett közzé.', 'product', 6, '/product-details/6', 1, '2022-03-09 08:53:12'),
-(2, 25, 21, 'új terméket tett közzé.', 'product', 4, '/product-details/4', 1, '2022-03-09 09:25:24'),
-(3, 25, 22, 'új terméket tett közzé.', 'product', 4, '/product-details/4', 0, '2022-03-09 09:25:24'),
-(4, 21, 17, 'új terméket tett közzé.', 'product', 18, '/product-details/18', 0, '2022-03-09 09:32:16'),
-(5, 21, 18, 'új terméket tett közzé.', 'product', 18, '/product-details/18', 0, '2022-03-09 09:32:16'),
-(6, 22, 21, 'új terméket tett közzé.', 'product', 8, '/product-details/8', 0, '2022-03-09 19:22:13'),
-(7, 21, 21, 'rendelésed állapota frissült.', 'order-tracking', 36, '/order-tracking', 0, '2022-03-09 19:56:27'),
-(8, 21, 21, 'rendelésed állapota frissült.', 'order-tracking', 37, '/order-tracking', 0, '2022-03-09 19:56:27'),
-(9, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 36, '/order-tracking', 0, '2022-03-09 19:57:46'),
-(10, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 37, '/order-tracking', 1, '2022-03-09 19:57:46'),
-(11, 2, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 34, '/order-tracking', 0, '2022-03-09 20:46:29'),
-(12, 2, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 34, '/order-tracking', 0, '2022-03-09 20:47:31'),
-(13, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 36, '/order-tracking', 0, '2022-03-09 20:57:55'),
-(14, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 37, '/order-tracking', 0, '2022-03-09 20:57:55'),
-(15, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 36, '/order-tracking', 0, '2022-03-09 21:17:59'),
-(16, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 37, '/order-tracking', 0, '2022-03-09 21:17:59'),
-(17, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 36, '/order-tracking', 0, '2022-03-09 21:19:15'),
-(18, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 37, '/order-tracking', 0, '2022-03-09 21:19:15'),
-(19, 2, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 34, '/order-tracking', 0, '2022-03-09 21:19:25'),
-(20, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 43, '/order-tracking', 0, '2022-03-09 21:21:39'),
-(21, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 48, '/order-tracking', 0, '2022-03-09 21:38:50'),
-(22, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 49, '/order-tracking', 0, '2022-03-09 21:38:50'),
-(23, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 44, '/order-tracking', 1, '2022-03-09 21:41:23'),
-(34, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 49, '/order-tracking', 0, '2022-03-09 22:35:56'),
-(35, 21, 21, 'megkapta a tőled rendelt termékeket.', 'order-arrived', 44, '/order-management', 1, '2022-03-09 22:43:31'),
-(37, 21, 2, 'megkapott egy tőled rendelt terméket.', 'order-arrived', 45, '/order-management', 0, '2022-03-09 22:44:42'),
-(38, 21, 25, 'megkapott egy tőled rendelt terméket.', 'order-arrived', 46, '/order-management', 0, '2022-03-09 22:45:37'),
-(39, 21, 25, 'megkapott egy tőled rendelt terméket.', 'order-arrived', 47, '/order-management', 0, '2022-03-09 22:47:24'),
-(40, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 43, '/order-tracking', 1, '2022-03-09 22:50:57'),
-(41, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 44, '/order-tracking', 0, '2022-03-09 22:50:57'),
-(42, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 48, '/order-tracking', 1, '2022-03-09 22:51:02'),
-(43, 21, 21, 'frissítette egy rendelésed állapotát.', 'order-tracking', 49, '/order-tracking', 1, '2022-03-09 22:51:02'),
-(44, 21, 21, 'megkapott egy tőled rendelt terméket.', 'order-arrived', 48, '/order-management', 0, '2022-03-09 22:52:13'),
-(45, 21, 21, 'megkapott egy tőled rendelt terméket.', 'order-arrived', 43, '/order-management', 1, '2022-03-09 22:53:25'),
-(46, 21, 21, 'megkapott egy tőled rendelt terméket.', 'order-arrived', 43, '/order-management', 1, '2022-03-09 22:53:33'),
-(47, 21, 21, 'megkapott egy tőled rendelt terméket.', 'order-arrived', 44, '/order-management', 1, '2022-03-09 22:53:33'),
-(48, 21, 17, 'új terméket tett közzé.', 'product', 32, '/product-details/32', 0, '2022-03-28 09:25:02'),
-(49, 21, 18, 'új terméket tett közzé.', 'product', 32, '/product-details/32', 0, '2022-03-28 09:25:02'),
-(50, 21, 26, 'új terméket tett közzé.', 'product', 32, '/product-details/32', 0, '2022-03-28 09:25:02'),
-(51, 21, 17, 'új terméket tett közzé.', 'product', 33, '/product-details/33', 0, '2022-03-29 19:31:08'),
-(52, 21, 18, 'új terméket tett közzé.', 'product', 33, '/product-details/33', 0, '2022-03-29 19:31:08'),
-(53, 21, 26, 'új terméket tett közzé.', 'product', 33, '/product-details/33', 0, '2022-03-29 19:31:08'),
-(54, 21, 17, 'új terméket tett közzé.', 'product', 34, '/product-details/34', 0, '2022-03-29 19:31:55'),
-(55, 21, 18, 'új terméket tett közzé.', 'product', 34, '/product-details/34', 0, '2022-03-29 19:31:55'),
-(56, 21, 26, 'új terméket tett közzé.', 'product', 34, '/product-details/34', 0, '2022-03-29 19:31:55'),
-(57, 21, 17, 'új terméket tett közzé.', 'product', 35, '/product-details/35', 0, '2022-03-29 19:34:07'),
-(58, 21, 18, 'új terméket tett közzé.', 'product', 35, '/product-details/35', 0, '2022-03-29 19:34:07'),
-(59, 21, 26, 'új terméket tett közzé.', 'product', 35, '/product-details/35', 0, '2022-03-29 19:34:07'),
-(60, 21, 17, 'új terméket tett közzé.', 'product', 36, '/product-details/36', 0, '2022-03-29 19:35:35'),
-(61, 21, 18, 'új terméket tett közzé.', 'product', 36, '/product-details/36', 0, '2022-03-29 19:35:35'),
-(62, 21, 26, 'új terméket tett közzé.', 'product', 36, '/product-details/36', 0, '2022-03-29 19:35:35'),
-(63, 21, 17, 'új terméket tett közzé.', 'product', 37, '/product-details/37', 0, '2022-03-29 19:36:32'),
-(64, 21, 18, 'új terméket tett közzé.', 'product', 37, '/product-details/37', 0, '2022-03-29 19:36:32'),
-(65, 21, 26, 'új terméket tett közzé.', 'product', 37, '/product-details/37', 0, '2022-03-29 19:36:32'),
-(66, 21, 17, 'új terméket tett közzé.', 'product', 38, '/product-details/38', 0, '2022-03-29 19:37:10'),
-(67, 21, 18, 'új terméket tett közzé.', 'product', 38, '/product-details/38', 0, '2022-03-29 19:37:10'),
-(68, 21, 26, 'új terméket tett közzé.', 'product', 38, '/product-details/38', 0, '2022-03-29 19:37:10'),
-(69, 21, 17, 'új terméket tett közzé.', 'product', 39, '/product-details/39', 0, '2022-03-29 19:37:31'),
-(70, 21, 18, 'új terméket tett közzé.', 'product', 39, '/product-details/39', 0, '2022-03-29 19:37:31'),
-(71, 21, 26, 'új terméket tett közzé.', 'product', 39, '/product-details/39', 0, '2022-03-29 19:37:31'),
-(72, 21, 17, 'új terméket tett közzé.', 'product', 40, '/product-details/40', 0, '2022-03-29 19:41:09'),
-(73, 21, 18, 'új terméket tett közzé.', 'product', 40, '/product-details/40', 0, '2022-03-29 19:41:09'),
-(74, 21, 26, 'új terméket tett közzé.', 'product', 40, '/product-details/40', 0, '2022-03-29 19:41:09'),
-(75, 21, 17, 'új terméket tett közzé.', 'product', 41, '/product-details/41', 0, '2022-03-29 19:41:26'),
-(76, 21, 18, 'új terméket tett közzé.', 'product', 41, '/product-details/41', 0, '2022-03-29 19:41:26'),
-(77, 21, 26, 'új terméket tett közzé.', 'product', 41, '/product-details/41', 0, '2022-03-29 19:41:26'),
-(78, 21, 17, 'új terméket tett közzé.', 'product', 42, '/product-details/42', 0, '2022-03-29 19:43:14'),
-(79, 21, 18, 'új terméket tett közzé.', 'product', 42, '/product-details/42', 0, '2022-03-29 19:43:14'),
-(80, 21, 26, 'új terméket tett közzé.', 'product', 42, '/product-details/42', 0, '2022-03-29 19:43:14'),
-(81, 21, 17, 'új terméket tett közzé.', 'product', 43, '/product-details/43', 0, '2022-03-29 19:43:26'),
-(82, 21, 18, 'új terméket tett közzé.', 'product', 43, '/product-details/43', 0, '2022-03-29 19:43:26'),
-(83, 21, 26, 'új terméket tett közzé.', 'product', 43, '/product-details/43', 0, '2022-03-29 19:43:26');
+(1, 13, 8, 'frissítette egy rendelésed állapotát.', 'order-tracking', 3, '/order-tracking', 0, '2022-04-29 08:58:33'),
+(2, 13, 8, 'frissítette egy rendelésed állapotát.', 'order-tracking', 2, '/order-tracking', 0, '2022-04-29 08:58:33'),
+(3, 13, 8, 'frissítette egy rendelésed állapotát.', 'order-tracking', 4, '/order-tracking', 0, '2022-04-29 08:58:43'),
+(4, 1, 4, 'új terméket tett közzé.', 'product', 51, '/product-details/51', 0, '2022-04-29 09:03:05'),
+(5, 1, 7, 'új terméket tett közzé.', 'product', 51, '/product-details/51', 0, '2022-04-29 09:03:05'),
+(6, 1, 8, 'új terméket tett közzé.', 'product', 51, '/product-details/51', 0, '2022-04-29 09:03:05'),
+(7, 1, 9, 'új terméket tett közzé.', 'product', 51, '/product-details/51', 0, '2022-04-29 09:03:05'),
+(8, 1, 10, 'új terméket tett közzé.', 'product', 51, '/product-details/51', 0, '2022-04-29 09:03:05'),
+(9, 1, 12, 'új terméket tett közzé.', 'product', 51, '/product-details/51', 0, '2022-04-29 09:03:05'),
+(10, 1, 13, 'új terméket tett közzé.', 'product', 51, '/product-details/51', 0, '2022-04-29 09:03:05'),
+(11, 1, 19, 'új terméket tett közzé.', 'product', 51, '/product-details/51', 0, '2022-04-29 09:03:05'),
+(12, 1, 20, 'új terméket tett közzé.', 'product', 51, '/product-details/51', 0, '2022-04-29 09:03:05'),
+(13, 1, 23, 'új terméket tett közzé.', 'product', 51, '/product-details/51', 0, '2022-04-29 09:03:05'),
+(14, 1, 28, 'új terméket tett közzé.', 'product', 51, '/product-details/51', 0, '2022-04-29 09:03:05'),
+(15, 1, 32, 'új terméket tett közzé.', 'product', 51, '/product-details/51', 0, '2022-04-29 09:03:05'),
+(16, 1, 33, 'új terméket tett közzé.', 'product', 51, '/product-details/51', 0, '2022-04-29 09:03:05'),
+(17, 1, 34, 'új terméket tett közzé.', 'product', 51, '/product-details/51', 0, '2022-04-29 09:03:05'),
+(18, 1, 38, 'új terméket tett közzé.', 'product', 51, '/product-details/51', 0, '2022-04-29 09:03:05'),
+(19, 1, 39, 'új terméket tett közzé.', 'product', 51, '/product-details/51', 0, '2022-04-29 09:03:05'),
+(20, 1, 40, 'új terméket tett közzé.', 'product', 51, '/product-details/51', 0, '2022-04-29 09:03:05'),
+(21, 8, 16, 'megkapott egy tőled rendelt terméket.', 'order-arrived', 1, '/order-management', 0, '2022-04-29 09:04:09');
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `product`
+-- Table structure for table `product`
 --
 
 CREATE TABLE `product` (
@@ -4793,58 +4897,66 @@ CREATE TABLE `product` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `product`
+-- Dumping data for table `product`
 --
 
 INSERT INTO `product` (`product_id`, `name`, `price`, `description`, `inventory`, `delivery`, `category`, `rating`, `vendor_id`, `discount`, `is_published`, `is_removed`, `created_at`, `last_updated_at`, `published_at`) VALUES
-(1, 'Arany nyaklánc', 6990, 'Nagyon szép nyaklánc zöld kővel díszítve.', 12, 'Azonnal szállítható', 'Ékszer', 4.7, 1, NULL, 1, NULL, '2022-01-06 00:00:00', NULL, '2022-01-10 00:00:00'),
-(2, 'Ásvány nyakék', 4990, 'Barna színű achát ékszer.', 8, 'Azonnal szállítható', 'Ékszer', 4.7, 2, NULL, 1, NULL, '2022-01-06 00:00:00', NULL, '2022-01-10 00:00:00'),
-(3, 'Gyönygy medál', 12990, 'Afrikai zebra jáspisból formált gömb alakú medál ezüst láncon.', 5, 'Azonnal szállítható', 'Ékszer', 4.6, 2, NULL, 1, NULL, '2022-01-06 00:00:00', NULL, '2022-01-10 00:00:00'),
-(4, ' Ementáli Sajt', 15620, 'közé reggeli, csukott azt hiszem, például azt össze sokkal hónap Isten például mint közé ide? meg ', 3, 'Megrendelésre készül', 'Tejtermék', 2.75, 25, NULL, 1, NULL, '2022-01-28 00:00:00', NULL, '2022-01-28 00:00:00'),
-(5, 'Friss Ementáli Sajt', 3610, 'reggeli, érdekében most isten alszom, van hozzá dolog sokkal vagyok? most mely meleg Nagyon ember. vacsora. ', 24, 'Azonnal szállítható', 'Tejtermék', 4, 21, NULL, 1, NULL, '2022-01-09 00:00:00', '2022-02-27 15:43:03', '2022-01-09 00:00:00'),
-(6, 'Füstölt Cheddar Sajt', 6830, 'dolog lehetőség során az lesz évente. nem a szájba évente. szemben szabadságra ', 14, 'Azonnal szállítható', 'Tejtermék', 1, 25, NULL, 1, NULL, '2022-01-29 00:00:00', NULL, '2022-01-29 00:00:00'),
-(7, 'Füstölt Edami Sajt', 6240, 'fene van eljön. szemmel reggeli, övék. jól tovább viszont hiszem, eddig Két ember szó ', 5, 'Megrendelésre készül', 'Tejtermék', 3.5, 25, NULL, 1, NULL, '2022-01-14 00:00:00', NULL, '2022-01-14 00:00:00'),
-(8, 'Finom Brie Sajt', 4010, 'ajtót! tehát évente. idő Féltékeny közé És lesz kövér, tudom a mégis szüleimre, ', 18, 'Azonnal szállítható', 'Tejtermék', 1.25, 22, NULL, 1, NULL, '2022-01-14 00:00:00', '2022-03-09 19:22:13', '2022-01-14 00:00:00'),
-(9, 'Házi Parmezan Sajt', 8620, 'keresztül meleg ebben életforma. értem, tudom Hol az életforma. hónap övék. jól ', 18, 'Azonnal szállítható', 'Tejtermék', 4, 22, NULL, 1, NULL, '2022-01-22 00:00:00', NULL, '2022-01-22 00:00:00'),
-(10, ' Ementáli Sajt', 7400, 'darabig közé jog tudom szó áldja azon kopog, nem vagyok ', 16, 'Azonnal szállítható', 'Tejtermék', 2.75, 24, NULL, 1, NULL, '2022-01-04 00:00:00', NULL, '2022-01-04 00:00:00'),
-(11, 'Friss Ementáli Sajt', 610, 'azok néhány koffeinfüggő azon látni, szinte azon Hol őket van ', 15, 'Megrendelésre készül', 'Tejtermék', 3, 25, NULL, 1, NULL, '2022-01-01 00:00:00', NULL, '2022-01-01 00:00:00'),
-(12, ' Parmezan Sajt', 24960, 'kopog, mint Hol ezzel különböző ezzel szájba vagyok kerül mint őket legtöbb szüleimre, ide? vacsora. szájba ', 24, 'Azonnal szállítható', 'Tejtermék', 2.75, 25, NULL, 1, NULL, '2022-01-09 00:00:00', NULL, '2022-01-09 00:00:00'),
-(13, 'Füstölt Trapista Sajt', 16640, 'olyan alszom, isten mégis mai fizetek szájba tehát kerültem ember. hiszen kövér, kövér, ', 12, 'Megrendelésre készül', 'Tejtermék', 1.5, 23, NULL, 1, NULL, '2022-01-17 00:00:00', '2022-03-09 19:17:06', '2022-01-17 00:00:00'),
-(14, 'Product-02', 1500, 'dffhjk', NULL, 'Azonnal szállítható', 'Ital', 4, 21, NULL, 1, NULL, '2022-02-19 21:43:30', '2022-02-19 21:43:40', '2022-02-19 21:43:30'),
-(15, 'Teljes kiőrlésű kenyér', 455, 'A legjobb teljes kiőrlésű kenyér.', 12, 'Azonnal szállítható', 'Pékáru', NULL, 21, NULL, 1, NULL, '2022-03-07 08:17:26', '2022-03-22 22:51:54', '2022-03-07 07:17:26'),
-(16, 'Lekvár', 1500, 'Lekvár ', 20, 'Azonnal szállítható', 'Ital', NULL, 21, NULL, 1, NULL, '2022-03-07 08:23:02', NULL, '2022-03-07 08:23:00'),
-(17, 'Barack lekvár', 1200, 'Barack lekvár.', 45, 'Azonnal szállítható', 'Gyümölcs', 3.5, 21, 10, 1, NULL, '2022-03-07 08:26:37', NULL, '2022-03-07 08:26:37'),
-(18, 'Kakaós csiga', 420, 'Nagymama kakaós csigája, ahogy Marcika szereti.', 69, 'Azonnal szállítható', 'Pékáru', 4.625, 21, NULL, 1, NULL, '2022-03-09 09:32:16', NULL, '2022-03-09 09:32:16'),
-(19, 'Eltávolított termék', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, NULL, NULL),
-(20, 'Eltávolított termék', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, NULL, NULL),
-(21, 'Eltávolított termék', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, NULL, NULL),
-(22, 'Eltávolított termék', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, NULL, NULL),
-(23, 'Eltávolított termék', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, NULL, NULL),
-(24, 'Eltávolított termék', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, NULL, NULL),
-(25, 'Eltávolított termék', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, NULL, NULL),
-(26, 'Eltávolított termék', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, NULL, NULL),
-(27, 'Eltávolított termék', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, NULL, NULL),
-(28, 'Eltávolított termék', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, NULL, NULL),
-(29, 'Eltávolított termék', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, NULL, NULL),
-(30, 'Eltávolított termék', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, NULL, NULL),
-(31, 'Eltávolított termék', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, NULL, NULL),
-(32, 'Eltávolított termék', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, NULL, NULL),
-(33, 'Eltávolított termék', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, NULL, NULL),
-(34, 'Eltávolított termék', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, NULL, NULL),
-(35, 'Eltávolított termék', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, NULL, NULL),
-(36, 'Eltávolított termék', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, NULL, NULL),
-(37, 'Teljes kiőrlésű kenyér', 500, 'A legfinomabb friss, teljes kiőrlésű kenyér a régióban.', 23, 'Azonnal szállítható', 'Pékáru', NULL, 21, 20, 1, NULL, '2022-03-29 19:36:32', NULL, '2022-03-29 19:36:32'),
-(38, 'Teljes kiőrlésű kenyér', 500, 'A legfinomabb friss, teljes kiőrlésű kenyér a régióban.', 23, 'Azonnal szállítható', 'Pékáru', NULL, 21, 20, 1, NULL, '2022-03-29 19:37:10', NULL, '2022-03-29 19:37:10'),
-(39, 'Teljes kiőrlésű kenyér', 500, 'A legfinomabb friss, teljes kiőrlésű kenyér a régióban.', 23, 'Azonnal szállítható', 'Pékáru', NULL, 21, 20, 1, NULL, '2022-03-29 19:37:31', NULL, '2022-03-29 19:37:31'),
-(40, 'Teljes kiőrlésű kenyér', 500, 'A legfinomabb friss, teljes kiőrlésű kenyér a régióban.', 23, 'Azonnal szállítható', 'Pékáru', NULL, 21, 20, 1, NULL, '2022-03-29 19:41:09', NULL, '2022-03-29 19:41:09'),
-(41, 'Teljes kiőrlésű kenyér', 500, 'A legfinomabb friss, teljes kiőrlésű kenyér a régióban.', 23, 'Azonnal szállítható', 'Pékáru', NULL, 21, 20, 1, NULL, '2022-03-29 19:41:26', NULL, '2022-03-29 19:41:26'),
-(42, 'Teljes kiőrlésű kenyér', 500, 'A legfinomabb friss, teljes kiőrlésű kenyér a régióban.', 23, 'Azonnal szállítható', 'Pékáru', NULL, 21, 20, 1, NULL, '2022-03-29 19:43:14', NULL, '2022-03-29 19:43:14'),
-(43, 'Teljes kiőrlésű kenyér', 550, 'A legfinomabb friss, teljes kiőrlésű kenyér a régióban.', 23, 'Azonnal szállítható', 'Pékáru', NULL, 21, 20, 1, NULL, '2022-03-29 19:43:26', '2022-03-29 20:26:18', NULL);
+(1, 'Friss Parmezan Sajt', 7210, 'gyerek, Hat mind évente. az. Egy ebéd reggeli, azt hiszen lesz azt értem, sokkal ', 1, 'Azonnal szállítható', 'Tejtermék', 2.75, 12, NULL, 1, NULL, '2022-03-13 15:49:44', NULL, '2022-03-13 15:49:44'),
+(2, 'Karamellás Kocka', 8670, 'szeret. vagyok hogy fene Féltékeny vagyok ma mint tartoznak csukott ennek a hogy eljön. keresztül övék. ', NULL, 'Megrendelésre készül', 'Pékáru', 2.6, 17, NULL, 1, NULL, '2022-01-14 21:55:06', NULL, '2022-01-14 21:55:06'),
+(3, 'Kakaós Kifli', 22700, 'És felé fizetek össze mint legtöbb tartoznak szeret. éves keresztül mint ezt Hol övék. mely Egy hiszem, övék. jog Ha ', 22, 'Azonnal szállítható', 'Pékáru', 3.25, 8, NULL, 1, NULL, '2022-04-15 18:23:09', NULL, '2022-04-15 18:23:09'),
+(4, 'Pizzás Háromszög', 22640, 'van vagyok ... áll legtöbb Két mely nagyobb következő mikor ', NULL, 'Megrendelésre készül', 'Pékáru', 2.25, 2, NULL, 1, NULL, '2022-02-06 12:49:16', NULL, '2022-02-06 12:49:16'),
+(5, 'Karamellás Háromszög', 7530, 'érdekében szeret. tartoznak szükséges és egyetlen csinálni. világban adott ', 6, 'Azonnal szállítható', 'Pékáru', 2.6, 5, NULL, 1, NULL, '2022-04-17 03:30:44', NULL, '2022-04-17 03:30:44'),
+(6, 'Ízes Csiga', 2700, 'hiszem, azon azok Isten nem mely eljön. ezek hogy ', NULL, 'Megrendelésre készül', 'Pékáru', 3.67, 8, NULL, 1, NULL, '2022-04-22 20:01:21', NULL, '2022-04-22 20:01:21'),
+(7, 'Túrós Csiga', 1870, 'mondanom, a milyen amíg tovább kicsit. szüleimre, Annyira ember van le nem ', 1, 'Azonnal szállítható', 'Pékáru', 2.5, 11, NULL, 1, NULL, '2022-04-22 12:09:07', NULL, '2022-04-22 12:09:07'),
+(8, 'Kakaós Kifli', 7910, 'van Egy ember működik. idő hiszem, tartoznak elég ember Féltékeny érdekében mai ', NULL, 'Megrendelésre készül', 'Pékáru', 3.33, 4, NULL, 1, NULL, '2022-04-25 13:28:51', NULL, '2022-04-25 13:28:51'),
+(9, 'Kakaós Levél', 8840, 'amíg Hat milyen őket építsen mint tartoznak inkább vacsora. szükségem, ', 16, 'Azonnal szállítható', 'Pékáru', 2.67, 10, NULL, 1, NULL, '2022-02-14 00:57:10', NULL, '2022-02-14 00:57:10'),
+(10, 'Áfonyás Csiga', 16200, 'legjobb egyikük dolog mikor könnyebb ma egyikük felé vagyok legjobb lehetőség Nagyon Hogy hozzá szájba életforma. ebéd tartoznak szálljon ', 9, 'Azonnal szállítható', 'Pékáru', 4.5, 2, NULL, 1, NULL, '2022-01-18 22:57:59', NULL, '2022-01-18 22:57:59'),
+(11, 'Túrós Kifli', 14220, 'szükségem, gyengéd elég azt tovább fizetek mondanom, szemben vagyok? ', 20, 'Azonnal szállítható', 'Pékáru', 3.6, 6, NULL, 1, NULL, '2022-02-25 05:14:18', NULL, '2022-02-25 05:14:18'),
+(12, 'Pizzás Batyu', 17510, 'áldja vacsora. rendetlenséget! adott jog soha vagyok most Hogy ütődik. és ', 19, 'Azonnal szállítható', 'Pékáru', 3.5, 20, NULL, 1, NULL, '2022-01-10 13:19:24', NULL, '2022-01-10 13:19:24'),
+(13, 'Ízes Croissant', 12360, 'áldja szükséges olyan szó szabadságra szinte egy És mai azt teljes ', NULL, 'Megrendelésre készül', 'Pékáru', 2.33, 19, NULL, 1, NULL, '2022-04-10 00:13:41', NULL, '2022-04-10 00:13:41'),
+(14, 'Kakaós Csiga', 4540, 'utolsó kétszer tudom szép utolsó néhány vagyok sokkal éves Szia, ennek tovább azt lesz együtt eljön. biztos akár egy ', 17, 'Azonnal szállítható', 'Pékáru', 3.5, 13, NULL, 1, NULL, '2022-04-20 11:08:12', NULL, '2022-04-20 11:08:12'),
+(15, 'Sós Kocka', 10470, 'például az. milyen mint hobbijaim szeret. vagyok ide? ', 15, 'Azonnal szállítható', 'Pékáru', 3.33, 6, NULL, 1, NULL, '2022-01-19 19:20:22', NULL, '2022-01-19 19:20:22'),
+(16, 'Karamellás Croissant', 22720, 'bumról, sem gyerek, darabig az azt kövér, azt ', 17, 'Azonnal szállítható', 'Pékáru', 3.25, 8, NULL, 1, NULL, '2022-03-06 18:24:44', NULL, '2022-03-06 18:24:44'),
+(17, 'Áfonyás Croissant', 17470, 'isten eljön. ... ezt akár áldja a Mindenkinek együtt keresztül Nagyon hónap egy ', NULL, 'Megrendelésre készül', 'Pékáru', 2.29, 14, NULL, 1, NULL, '2022-04-03 02:56:56', NULL, '2022-04-03 02:56:56'),
+(18, 'Pizzás Croissant', 9610, 'Szia, gyengéd egyetlen Hogy tehát kicsit. azt szemmel Isten ', NULL, 'Megrendelésre készül', 'Pékáru', 2.8, 2, NULL, 1, NULL, '2022-02-05 16:12:27', NULL, '2022-02-05 16:12:27'),
+(19, 'Sós Croissant', 19270, 'hogy amíg viszont kerültem szó egyetlen Hol könnyebb Úgy És lehetőség ', 2, 'Azonnal szállítható', 'Pékáru', 4.25, 8, NULL, 1, NULL, '2022-01-13 15:36:39', NULL, '2022-01-13 15:36:39'),
+(20, 'Sós Levél', 20070, 'le Hogy éves bumról, mint szemmel mint van látni, Annyira szabadságra Egy hogy ', 5, 'Azonnal szállítható', 'Pékáru', 3, 5, NULL, 1, NULL, '2022-04-10 10:03:56', NULL, '2022-04-10 10:03:56'),
+(21, 'Sós Kifli', 15070, 'Nagyon eddig egy tovább amelyek ebben együtt például le még van Két Hat hobbijaim ajtót! Féltékeny alszom, egy ', 15, 'Azonnal szállítható', 'Pékáru', 4.75, 14, NULL, 1, NULL, '2022-03-27 02:56:39', NULL, '2022-03-27 02:56:39'),
+(22, 'Kakaós Batyu', 19960, 'szabadságra együtt vacsora. vagyok? együtt sokkal kövér, fizetek kétszer szemmel vagyok? szinte És ', 15, 'Azonnal szállítható', 'Pékáru', 4, 7, NULL, 1, NULL, '2022-02-24 01:49:09', NULL, '2022-02-24 01:49:09'),
+(23, 'Pizzás Croissant', 17920, 'szabadságra mint egy viszont szálljon a valami nekem van ütődik. szálljon megfelelő jól Egy ', NULL, 'Megrendelésre készül', 'Pékáru', 5, 8, NULL, 0, NULL, '2022-01-20 08:09:12', '2022-04-29 08:32:09', '2022-01-20 08:09:12'),
+(24, 'Túrós Levél', 3050, 'van ennek kicsit. olyan Annyira életforma. tartoznak szájba szemben alszom, mégis szó ', 9, 'Azonnal szállítható', 'Pékáru', 4, 1, NULL, 1, NULL, '2022-01-19 14:06:15', NULL, '2022-01-19 14:06:15'),
+(25, 'Házi Brie Sajt', 9430, 'adott azt szabadságra koffeinfüggő a éves mai tudom kerültem Szia, például szükséges Szia, idő szükséges szükségem, keresztül egy ', 3, 'Azonnal szállítható', 'Tejtermék', 2.5, 13, NULL, 1, NULL, '2022-03-03 09:44:47', NULL, '2022-03-03 09:44:47'),
+(26, 'Finom Parenyica Sajt', 9810, 'Hogy könnyebb kell könnyebb Mindenkinek Mindenkinek évente. meleg néhány őket Egy őket ', 0, 'Azonnal szállítható', 'Tejtermék', 3.67, 16, NULL, 1, NULL, '2022-04-03 21:22:30', NULL, '2022-04-03 21:22:30'),
+(27, 'Finom Cheddar Sajt', 5150, 'az. soha vagyok? még kicsit. ütődik. erre le egy Szia, azon ', NULL, 'Megrendelésre készül', 'Tejtermék', 3.33, 19, NULL, 1, NULL, '2022-02-23 02:45:59', NULL, '2022-02-23 02:45:59'),
+(28, 'Friss Camambert Sajt', 11630, 'kell lehetőség viszont Beszélgetek, hiszen le terve, bumról, azt közé még És lesz szinte hobbijaim ', 21, 'Azonnal szállítható', 'Tejtermék', 2.25, 11, NULL, 1, NULL, '2022-02-14 06:59:01', NULL, '2022-02-14 06:59:01'),
+(29, ' Parmezan Sajt', 670, 'Isten ma jól hónap teljes soha ember. szemben szeret. sem idő felé mégis és hiszem, tudom a rendetlenséget! hiszem, ', 5, 'Azonnal szállítható', 'Tejtermék', 2.4, 10, NULL, 1, NULL, '2022-03-19 06:22:26', NULL, '2022-03-19 06:22:26'),
+(30, ' Trapista Sajt', 17370, 'jog Mindenkinek nekem elég egy azt nekem hiszen az. olyan van erre kövér, ', 21, 'Azonnal szállítható', 'Tejtermék', 2.4, 19, NULL, 1, NULL, '2022-01-10 06:41:56', NULL, '2022-01-10 06:41:56'),
+(31, 'Finom Camambert Sajt', 1270, 'egyikük Nem egyetlen lehetőség hiszen jól Hat vagyok szabadságra erre És nem vagyok ', NULL, 'Megrendelésre készül', 'Tejtermék', 3.2, 13, NULL, 1, NULL, '2022-04-08 02:23:48', NULL, '2022-04-08 02:23:48'),
+(32, 'Friss Trapista Sajt', 16010, 'kétszer van éves nem vacsora. mint azon fizetek mint ', 3, 'Azonnal szállítható', 'Tejtermék', 2.8, 19, NULL, 1, NULL, '2022-02-01 22:13:05', NULL, '2022-02-01 22:13:05'),
+(33, 'Finom Parenyica Sajt', 20460, 'különböző legtöbb szabadságra vacsora. Két kerül vagyok szüleimre, hiszem, szemben Nem ebben nagyobb soha akár ', 8, 'Azonnal szállítható', 'Tejtermék', 3.5, 4, NULL, 1, NULL, '2022-03-04 02:02:54', NULL, '2022-03-04 02:02:54'),
+(34, 'Házi Parenyica Sajt', 10730, 'itt amíg terve, nem sem elég felé három utolsó Hat alszom, könnyebb ezt ', 20, 'Azonnal szállítható', 'Tejtermék', 3, 10, NULL, 1, NULL, '2022-04-23 13:29:56', NULL, '2022-04-23 13:29:56'),
+(35, ' Parmezan Sajt', 18050, 'hozzá Úgy Isten neki hobbijaim biztos Egy vagyok isten biztos és világban nagyobb szemben ezzel szükséges szabadságra építsen amíg ', 20, 'Azonnal szállítható', 'Tejtermék', 3.67, 14, NULL, 1, NULL, '2022-04-24 05:26:54', NULL, '2022-04-24 05:26:54'),
+(36, 'Friss Trapista Sajt', 21370, 'le együtt éves biztos fizetek utolsó vagyok áll akár Egy én szabadságra ', 15, 'Azonnal szállítható', 'Tejtermék', 2.5, 18, NULL, 1, NULL, '2022-02-15 19:46:18', NULL, '2022-02-15 19:46:18'),
+(37, 'Ízes Croissant', 17320, 'ma felé egyetlen kétszer szinte jól kerül terve, szeret. elég egyikük Hol sokkal ezzel őket ', NULL, 'Megrendelésre készül', 'Pékáru', 2.2, 15, NULL, 1, NULL, '2022-03-08 14:19:19', NULL, '2022-03-08 14:19:19'),
+(38, 'Házi Brie Sajt', 22110, 'mégis meleg még Mindenkinek mégis elég terve, szabadságra tudom az. darabig ', 10, 'Azonnal szállítható', 'Tejtermék', 3.25, 19, NULL, 1, NULL, '2022-04-19 11:58:02', NULL, '2022-04-19 11:58:02'),
+(39, 'Füstölt Parenyica Sajt', 22330, 'azok érdekében kicsit. tudom nem sem és adott három szó szálljon ', 7, 'Azonnal szállítható', 'Tejtermék', 3.75, 19, NULL, 1, NULL, '2022-02-18 04:39:04', NULL, '2022-02-18 04:39:04'),
+(40, 'Házi Brie Sajt', 22060, 'ebéd ezek csinálni. biztos és kerültem keresztül nem lesz soha soha szép hozzá olyan szemben hobbijaim ', 16, 'Azonnal szállítható', 'Tejtermék', 3.5, 7, NULL, 1, NULL, '2022-02-17 10:29:26', NULL, '2022-02-17 10:29:26'),
+(41, ' Trapista Sajt', 22190, 'ember mondanom, most valami milyen kicsit. működik. jól érdekében bumról, mégis tartoznak nem ', 13, 'Azonnal szállítható', 'Tejtermék', 2.25, 18, NULL, 1, NULL, '2022-03-02 10:09:12', NULL, '2022-03-02 10:09:12'),
+(42, ' Ementáli Sajt', 6660, 'egy értem, milyen könnyebb sokkal ezt Beszélgetek, nem tehát utolsó áll ', 14, 'Azonnal szállítható', 'Tejtermék', 2.6, 3, NULL, 1, NULL, '2022-02-20 21:12:36', NULL, '2022-02-20 21:12:36'),
+(43, 'Friss Parmezan Sajt', 8180, 'kerültem az. évente. kicsit. inkább Úgy legjobb hiszen Két italért. legtöbb szemmel ebéd ... mint ', NULL, 'Megrendelésre készül', 'Tejtermék', 2.75, 3, NULL, 1, NULL, '2022-03-14 13:00:56', NULL, '2022-03-14 13:00:56'),
+(44, 'Füstölt Edami Sajt', 22670, 'könnyebb amelyek Úgy lesz vagyok meleg gyerek, tehát soha szó építsen áldja az Egy terve, életforma. szemmel nem vacsora. italért. ', NULL, 'Megrendelésre készül', 'Tejtermék', 2, 15, NULL, 1, NULL, '2022-04-26 22:34:05', NULL, '2022-04-26 22:34:05'),
+(45, 'Házi Edami Sajt', 6510, 'mikor mely mondanom, dolog amíg áll sokkal meleg tovább Annyira szükséges azt gyengéd egy szájba az eljön. ezt ', 6, 'Azonnal szállítható', 'Tejtermék', 3.75, 18, NULL, 1, NULL, '2022-04-16 12:23:48', NULL, '2022-04-16 12:23:48'),
+(46, ' Ementáli Sajt', 4330, 'hiszem, kicsit. Hat Hat neki én mondanom, Annyira Annyira ezek eddig ', 11, 'Azonnal szállítható', 'Tejtermék', 4.4, 10, NULL, 1, NULL, '2022-04-14 06:01:18', NULL, '2022-04-14 06:01:18'),
+(47, ' Camambert Sajt', 24610, 'ezek tartoznak dolog a jól az ma őket eddig azok ', NULL, 'Megrendelésre készül', 'Tejtermék', 2.6, 1, NULL, 1, NULL, '2022-03-07 15:24:33', NULL, '2022-03-07 15:24:33'),
+(48, 'Friss Cheddar Sajt', 4050, 'neki amíg ember. ... tehát sokkal rendetlenséget! Hol jól Annyira reggeli, erre ma erre ma ennek szájba ', NULL, 'Megrendelésre készül', 'Tejtermék', 3.8, 3, NULL, 1, NULL, '2022-03-25 23:21:22', NULL, '2022-03-25 23:21:22'),
+(49, 'Füstölt Edami Sajt', 11960, 'kicsit. együtt például inkább építsen Két övék. van sokkal rendetlenséget! ide? mai soha meleg ', 10, 'Azonnal szállítható', 'Tejtermék', 3.4, 20, NULL, 1, NULL, '2022-03-19 22:40:03', NULL, '2022-03-19 22:40:03'),
+(50, 'Kakaós Croissant', 1590, 'csinálni. És az. hobbijaim ezzel hónap ezzel Két azt most azt ', NULL, 'Megrendelésre készül', 'Pékáru', 2, 4, NULL, 1, NULL, '2022-03-04 11:23:10', NULL, '2022-03-04 11:23:10'),
+(51, 'Arany nyakék', 16230, 'Arany nyakék zöld ásvány medállal.', 2, 'Azonnal szállítható', 'Ékszer', NULL, 1, NULL, 1, NULL, '2022-04-29 09:03:05', NULL, '2022-04-29 09:03:05');
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `product_material`
+-- Table structure for table `product_material`
 --
 
 CREATE TABLE `product_material` (
@@ -4854,54 +4966,117 @@ CREATE TABLE `product_material` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `product_material`
+-- Dumping data for table `product_material`
 --
 
 INSERT INTO `product_material` (`product_material_id`, `material_id`, `product_id`) VALUES
-(1, 1, 1),
-(2, 5, 1),
-(3, 3, 2),
-(4, 4, 2),
-(5, 2, 3),
-(6, 5, 3),
-(7, 6, 4),
-(8, 6, 10),
-(9, 6, 9),
-(10, 7, 12),
-(11, 6, 8),
-(12, 6, 7),
-(13, 7, 6),
-(14, 7, 13),
-(15, 7, 5),
-(16, 6, 11),
-(17, 3, 14),
-(18, 1, 14),
-(20, 9, 16),
-(21, 10, 16),
-(22, 9, 17),
-(23, 10, 17),
-(24, 8, 18),
-(25, 11, 18),
-(26, 8, 15),
-(38, 8, 37),
-(39, 12, 37),
-(40, 8, 38),
-(41, 12, 38),
-(42, 8, 39),
-(43, 12, 39),
-(44, 8, 40),
-(45, 12, 40),
-(46, 8, 41),
-(47, 12, 41),
-(48, 8, 42),
-(49, 12, 42),
-(52, 8, 43),
-(53, 12, 43);
+(1, 6, 3),
+(2, 10, 10),
+(3, 7, 46),
+(4, 7, 36),
+(5, 8, 18),
+(6, 12, 18),
+(7, 9, 9),
+(8, 10, 9),
+(9, 6, 35),
+(10, 7, 18),
+(11, 9, 9),
+(12, 6, 47),
+(13, 6, 34),
+(14, 9, 10),
+(15, 6, 8),
+(16, 11, 19),
+(17, 8, 19),
+(18, 7, 8),
+(19, 6, 42),
+(20, 6, 48),
+(21, 7, 33),
+(22, 7, 7),
+(23, 7, 20),
+(24, 6, 7),
+(25, 9, 7),
+(26, 6, 26),
+(27, 6, 32),
+(28, 11, 19),
+(29, 11, 17),
+(30, 6, 17),
+(31, 6, 17),
+(32, 9, 13),
+(33, 12, 13),
+(34, 6, 41),
+(35, 10, 14),
+(36, 6, 14),
+(37, 8, 14),
+(38, 12, 3),
+(39, 7, 40),
+(40, 7, 43),
+(41, 7, 15),
+(42, 7, 12),
+(43, 7, 12),
+(44, 7, 12),
+(45, 7, 39),
+(46, 8, 15),
+(47, 12, 15),
+(48, 7, 44),
+(49, 6, 11),
+(50, 12, 11),
+(51, 7, 49),
+(52, 8, 16),
+(53, 6, 16),
+(54, 11, 16),
+(55, 12, 11),
+(56, 6, 45),
+(57, 7, 38),
+(58, 12, 10),
+(59, 9, 20),
+(60, 8, 20),
+(61, 8, 8),
+(62, 9, 13),
+(63, 7, 30),
+(64, 12, 22),
+(65, 7, 22),
+(66, 11, 50),
+(67, 10, 50),
+(68, 12, 2),
+(69, 7, 22),
+(70, 9, 2),
+(71, 6, 5),
+(72, 12, 5),
+(73, 7, 5),
+(74, 6, 28),
+(75, 10, 23),
+(76, 6, 23),
+(77, 6, 4),
+(78, 11, 23),
+(79, 9, 4),
+(80, 6, 4),
+(81, 7, 37),
+(82, 11, 37),
+(83, 12, 37),
+(84, 7, 24),
+(85, 11, 24),
+(86, 7, 29),
+(87, 6, 27),
+(88, 9, 6),
+(89, 7, 21),
+(90, 7, 50),
+(91, 6, 31),
+(92, 11, 21),
+(93, 6, 21),
+(94, 6, 1),
+(95, 6, 25),
+(96, 11, 6),
+(97, 6, 24),
+(98, 11, 2),
+(99, 7, 6),
+(100, 8, 3),
+(101, 3, 51),
+(102, 1, 51);
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `product_picture`
+-- Table structure for table `product_picture`
 --
 
 CREATE TABLE `product_picture` (
@@ -4913,58 +5088,141 @@ CREATE TABLE `product_picture` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `product_picture`
+-- Dumping data for table `product_picture`
 --
 
 INSERT INTO `product_picture` (`product_picture_id`, `product_id`, `resource_name`, `resource_link`, `is_thumbnail`) VALUES
-(1, 1, NULL, 'assets/item1.jpg', 1),
-(2, 1, NULL, 'assets/item3.jfif', 0),
-(3, 1, NULL, 'assets/item5.jfif', 0),
-(4, 2, NULL, 'assets/item2.jpg', 1),
-(5, 2, NULL, 'assets/item3.jfif', 0),
-(6, 3, NULL, 'assets/item4.jpg', 1),
-(7, 3, NULL, 'assets/item1.jpg', 0),
-(8, 3, NULL, 'assets/item2.jpg', 0),
-(9, 5, NULL, 'assets/product-pictures/cheese1.jpg', 1),
-(10, 11, NULL, 'assets/product-pictures/cheese1.jpg', 1),
-(11, 12, NULL, 'assets/product-pictures/cheese8.jpg', 0),
-(12, 13, NULL, 'assets/product-pictures/cheese8.jpg', 0),
-(13, 8, NULL, 'assets/product-pictures/cheese1.jpg', 0),
-(14, 12, NULL, 'assets/product-pictures/cheese2.jpg', 0),
-(15, 12, NULL, 'assets/product-pictures/cheese3.jpg', 1),
-(16, 7, NULL, 'assets/product-pictures/cheese3.jpg', 0),
-(17, 4, NULL, 'assets/product-pictures/cheese1.jpg', 0),
-(18, 9, NULL, 'assets/product-pictures/cheese9.jpg', 0),
-(19, 4, NULL, 'assets/product-pictures/cheese2.jpg', 1),
-(20, 10, NULL, 'assets/product-pictures/cheese6.jpg', 1),
-(21, 10, NULL, 'assets/product-pictures/cheese3.jpg', 0),
-(22, 10, NULL, 'assets/product-pictures/cheese4.jpg', 0),
-(23, 11, NULL, 'assets/product-pictures/cheese2.jpg', 0),
-(24, 9, NULL, 'assets/product-pictures/cheese5.jpg', 1),
-(25, 7, NULL, 'assets/product-pictures/cheese9.jpg', 0),
-(26, 8, NULL, 'assets/product-pictures/cheese3.jpg', 1),
-(27, 6, NULL, 'assets/product-pictures/cheese1.jpg', 1),
-(28, 13, NULL, 'assets/product-pictures/cheese9.jpg', 1),
-(29, 7, NULL, 'assets/product-pictures/cheese2.jpg', 1),
-(30, 6, NULL, 'assets/product-pictures/cheese5.jpg', 0),
-(31, 5, NULL, 'assets/product-pictures/cheese2.jpg', 0),
-(32, 14, NULL, 'assets/default_assets/def-prod.png', 1),
-(34, 16, NULL, 'assets/default_assets/def-prod.png', 1),
-(35, 17, NULL, 'assets/default_assets/def-prod.png', 1),
-(36, 18, NULL, 'assets/default_assets/def-prod.png', 1),
-(37, 15, NULL, 'assets/default_assets/def-prod.png', 1),
-(52, 37, NULL, 'assets/default_assets/def-prod.png', 1),
-(53, 38, NULL, 'assets/default_assets/def-prod.png', 1),
-(54, 39, NULL, 'assets/default_assets/def-prod.png', 1),
-(55, 40, NULL, 'assets/default_assets/def-prod.png', 1),
-(56, 41, NULL, 'assets/default_assets/def-prod.png', 1),
-(57, 42, NULL, 'assets/default_assets/def-prod.png', 1),
-(59, 43, NULL, 'assets/default_assets/def-prod.png', 1);
+(1, 4, NULL, 'assets/product-pictures/pastry5.jpg', 1),
+(2, 11, NULL, 'assets/product-pictures/pastry4.jpg', 0),
+(3, 42, NULL, 'assets/product-pictures/cheese6.jpg', 0),
+(4, 42, NULL, 'assets/product-pictures/cheese4.jpg', 0),
+(5, 42, NULL, 'assets/product-pictures/cheese1.jpg', 1),
+(6, 44, NULL, 'assets/product-pictures/cheese4.jpg', 1),
+(7, 44, NULL, 'assets/product-pictures/cheese1.jpg', 0),
+(8, 2, NULL, 'assets/product-pictures/pastry6.jpg', 0),
+(9, 3, NULL, 'assets/product-pictures/pastry2.jpg', 0),
+(10, 12, NULL, 'assets/product-pictures/pastry5.jpg', 0),
+(11, 2, NULL, 'assets/product-pictures/pastry3.jpg', 0),
+(12, 43, NULL, 'assets/product-pictures/cheese7.jpg', 0),
+(13, 2, NULL, 'assets/product-pictures/pastry4.jpg', 1),
+(14, 43, NULL, 'assets/product-pictures/cheese2.jpg', 0),
+(15, 43, NULL, 'assets/product-pictures/cheese5.jpg', 1),
+(16, 11, NULL, 'assets/product-pictures/pastry3.jpg', 0),
+(17, 12, NULL, 'assets/product-pictures/pastry6.jpg', 0),
+(18, 3, NULL, 'assets/product-pictures/pastry3.jpg', 1),
+(19, 12, NULL, 'assets/product-pictures/pastry3.jpg', 1),
+(20, 10, NULL, 'assets/product-pictures/pastry5.jpg', 1),
+(21, 4, NULL, 'assets/product-pictures/pastry2.jpg', 0),
+(22, 26, NULL, 'assets/product-pictures/cheese4.jpg', 0),
+(23, 6, NULL, 'assets/product-pictures/pastry2.jpg', 0),
+(24, 6, NULL, 'assets/product-pictures/pastry4.jpg', 1),
+(25, 7, NULL, 'assets/product-pictures/pastry5.jpg', 1),
+(26, 7, NULL, 'assets/product-pictures/pastry3.jpg', 0),
+(27, 7, NULL, 'assets/product-pictures/pastry4.jpg', 0),
+(28, 48, NULL, 'assets/product-pictures/cheese2.jpg', 0),
+(29, 48, NULL, 'assets/product-pictures/cheese9.jpg', 1),
+(30, 25, NULL, 'assets/product-pictures/cheese4.jpg', 1),
+(31, 25, NULL, 'assets/product-pictures/cheese3.jpg', 0),
+(32, 5, NULL, 'assets/product-pictures/pastry4.jpg', 0),
+(33, 8, NULL, 'assets/product-pictures/pastry3.jpg', 1),
+(34, 8, NULL, 'assets/product-pictures/pastry5.jpg', 0),
+(35, 47, NULL, 'assets/product-pictures/cheese5.jpg', 0),
+(36, 47, NULL, 'assets/product-pictures/cheese3.jpg', 1),
+(37, 24, NULL, 'assets/product-pictures/pastry2.jpg', 1),
+(38, 24, NULL, 'assets/product-pictures/pastry6.jpg', 0),
+(39, 9, NULL, 'assets/product-pictures/pastry1.jpg', 1),
+(40, 9, NULL, 'assets/product-pictures/pastry5.jpg', 0),
+(41, 46, NULL, 'assets/product-pictures/cheese1.jpg', 0),
+(42, 46, NULL, 'assets/product-pictures/cheese4.jpg', 1),
+(43, 5, NULL, 'assets/product-pictures/pastry1.jpg', 1),
+(44, 26, NULL, 'assets/product-pictures/cheese3.jpg', 1),
+(45, 10, NULL, 'assets/product-pictures/pastry2.jpg', 0),
+(46, 45, NULL, 'assets/product-pictures/cheese5.jpg', 0),
+(47, 45, NULL, 'assets/product-pictures/cheese6.jpg', 1),
+(48, 23, NULL, 'assets/product-pictures/pastry1.jpg', 1),
+(49, 23, NULL, 'assets/product-pictures/pastry4.jpg', 0),
+(50, 4, NULL, 'assets/product-pictures/pastry3.jpg', 0),
+(51, 11, NULL, 'assets/product-pictures/pastry1.jpg', 1),
+(52, 26, NULL, 'assets/product-pictures/cheese6.jpg', 0),
+(53, 40, NULL, 'assets/product-pictures/cheese4.jpg', 0),
+(54, 13, NULL, 'assets/product-pictures/pastry4.jpg', 0),
+(55, 31, NULL, 'assets/product-pictures/cheese3.jpg', 1),
+(56, 31, NULL, 'assets/product-pictures/cheese4.jpg', 0),
+(57, 20, NULL, 'assets/product-pictures/pastry2.jpg', 0),
+(58, 20, NULL, 'assets/product-pictures/pastry4.jpg', 0),
+(59, 20, NULL, 'assets/product-pictures/pastry3.jpg', 1),
+(60, 32, NULL, 'assets/product-pictures/cheese5.jpg', 1),
+(61, 32, NULL, 'assets/product-pictures/cheese2.jpg', 0),
+(62, 32, NULL, 'assets/product-pictures/cheese4.jpg', 0),
+(63, 19, NULL, 'assets/product-pictures/pastry5.jpg', 0),
+(64, 13, NULL, 'assets/product-pictures/pastry6.jpg', 1),
+(65, 19, NULL, 'assets/product-pictures/pastry1.jpg', 1),
+(66, 33, NULL, 'assets/product-pictures/cheese3.jpg', 1),
+(67, 33, NULL, 'assets/product-pictures/cheese9.jpg', 0),
+(68, 33, NULL, 'assets/product-pictures/cheese4.jpg', 0),
+(69, 34, NULL, 'assets/product-pictures/cheese2.jpg', 1),
+(70, 34, NULL, 'assets/product-pictures/cheese5.jpg', 0),
+(71, 34, NULL, 'assets/product-pictures/cheese6.jpg', 0),
+(72, 18, NULL, 'assets/product-pictures/pastry1.jpg', 0),
+(73, 18, NULL, 'assets/product-pictures/pastry3.jpg', 1),
+(74, 21, NULL, 'assets/product-pictures/pastry6.jpg', 1),
+(75, 35, NULL, 'assets/product-pictures/cheese4.jpg', 1),
+(76, 21, NULL, 'assets/product-pictures/pastry1.jpg', 0),
+(77, 30, NULL, 'assets/product-pictures/cheese4.jpg', 0),
+(78, 1, NULL, 'assets/product-pictures/cheese1.jpg', 0),
+(79, 1, NULL, 'assets/product-pictures/cheese5.jpg', 0),
+(80, 1, NULL, 'assets/product-pictures/cheese3.jpg', 1),
+(81, 50, NULL, 'assets/product-pictures/pastry3.jpg', 0),
+(82, 50, NULL, 'assets/product-pictures/pastry6.jpg', 1),
+(83, 27, NULL, 'assets/product-pictures/cheese1.jpg', 0),
+(84, 27, NULL, 'assets/product-pictures/cheese4.jpg', 0),
+(85, 27, NULL, 'assets/product-pictures/cheese5.jpg', 1),
+(86, 37, NULL, 'assets/product-pictures/pastry6.jpg', 0),
+(87, 37, NULL, 'assets/product-pictures/pastry4.jpg', 0),
+(88, 37, NULL, 'assets/product-pictures/pastry1.jpg', 1),
+(89, 28, NULL, 'assets/product-pictures/cheese3.jpg', 0),
+(90, 28, NULL, 'assets/product-pictures/cheese8.jpg', 0),
+(91, 28, NULL, 'assets/product-pictures/cheese2.jpg', 1),
+(92, 22, NULL, 'assets/product-pictures/pastry6.jpg', 0),
+(93, 22, NULL, 'assets/product-pictures/pastry2.jpg', 1),
+(94, 29, NULL, 'assets/product-pictures/cheese1.jpg', 0),
+(95, 29, NULL, 'assets/product-pictures/cheese5.jpg', 1),
+(96, 30, NULL, 'assets/product-pictures/cheese2.jpg', 1),
+(97, 21, NULL, 'assets/product-pictures/pastry5.jpg', 0),
+(98, 35, NULL, 'assets/product-pictures/cheese7.jpg', 0),
+(99, 19, NULL, 'assets/product-pictures/pastry4.jpg', 0),
+(100, 39, NULL, 'assets/product-pictures/cheese6.jpg', 1),
+(101, 49, NULL, 'assets/product-pictures/cheese3.jpg', 0),
+(102, 49, NULL, 'assets/product-pictures/cheese6.jpg', 1),
+(103, 16, NULL, 'assets/product-pictures/pastry3.jpg', 1),
+(104, 14, NULL, 'assets/product-pictures/pastry4.jpg', 0),
+(105, 16, NULL, 'assets/product-pictures/pastry2.jpg', 0),
+(106, 39, NULL, 'assets/product-pictures/cheese2.jpg', 0),
+(107, 14, NULL, 'assets/product-pictures/pastry6.jpg', 0),
+(108, 16, NULL, 'assets/product-pictures/pastry1.jpg', 0),
+(109, 15, NULL, 'assets/product-pictures/pastry5.jpg', 0),
+(110, 38, NULL, 'assets/product-pictures/cheese6.jpg', 0),
+(111, 41, NULL, 'assets/product-pictures/cheese7.jpg', 1),
+(112, 40, NULL, 'assets/product-pictures/cheese7.jpg', 1),
+(113, 41, NULL, 'assets/product-pictures/cheese4.jpg', 0),
+(114, 38, NULL, 'assets/product-pictures/cheese1.jpg', 1),
+(115, 15, NULL, 'assets/product-pictures/pastry1.jpg', 1),
+(116, 39, NULL, 'assets/product-pictures/cheese5.jpg', 0),
+(117, 13, NULL, 'assets/product-pictures/pastry3.jpg', 0),
+(118, 17, NULL, 'assets/product-pictures/pastry6.jpg', 0),
+(119, 17, NULL, 'assets/product-pictures/pastry4.jpg', 1),
+(120, 15, NULL, 'assets/product-pictures/pastry6.jpg', 0),
+(121, 36, NULL, 'assets/product-pictures/cheese1.jpg', 1),
+(122, 36, NULL, 'assets/product-pictures/cheese6.jpg', 0),
+(123, 36, NULL, 'assets/product-pictures/cheese2.jpg', 0),
+(124, 14, NULL, 'assets/product-pictures/pastry1.jpg', 1),
+(125, 51, NULL, 'http://localhost:3080/product_pictures/product-picture-1651215763452-790712015.jpeg', 1),
+(126, 51, NULL, 'http://localhost:3080/product_pictures/product-picture-1651215763454-391695425.jpeg', 0);
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `product_tag`
+-- Table structure for table `product_tag`
 --
 
 CREATE TABLE `product_tag` (
@@ -4974,73 +5232,140 @@ CREATE TABLE `product_tag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `product_tag`
+-- Dumping data for table `product_tag`
 --
 
 INSERT INTO `product_tag` (`product_tag_id`, `tag_id`, `product_id`) VALUES
-(1, 1, 1),
-(2, 2, 1),
-(3, 3, 1),
-(4, 2, 2),
-(5, 4, 2),
-(6, 2, 3),
-(7, 1, 3),
-(8, 5, 3),
-(9, 8, 10),
-(10, 7, 10),
-(11, 1, 5),
-(12, 8, 5),
-(13, 6, 11),
-(14, 2, 11),
-(15, 6, 9),
-(16, 3, 9),
-(17, 2, 13),
-(18, 5, 13),
-(19, 5, 11),
-(20, 6, 5),
-(21, 1, 13),
-(22, 5, 4),
-(23, 6, 6),
-(24, 3, 8),
-(25, 7, 8),
-(26, 5, 8),
-(27, 3, 6),
-(28, 4, 7),
-(29, 3, 7),
-(30, 8, 6),
-(31, 1, 4),
-(32, 8, 7),
-(33, 6, 12),
-(34, 7, 12),
-(35, 5, 14),
-(36, 6, 14),
-(39, 2, 16),
-(40, 6, 16),
-(41, 1, 17),
-(42, 4, 17),
-(43, 2, 18),
-(44, 6, 18),
-(45, 2, 15),
-(46, 8, 15),
-(58, 2, 37),
-(59, 8, 37),
-(60, 2, 38),
-(61, 8, 38),
-(62, 2, 39),
-(63, 8, 39),
-(64, 2, 40),
-(65, 8, 40),
-(66, 2, 41),
-(67, 8, 41),
-(68, 2, 42),
-(69, 8, 42),
-(72, 2, 43),
-(73, 8, 43);
+(1, 5, 22),
+(2, 4, 22),
+(3, 7, 14),
+(4, 7, 4),
+(5, 1, 4),
+(6, 3, 22),
+(7, 8, 14),
+(8, 3, 12),
+(9, 1, 12),
+(10, 2, 12),
+(11, 4, 37),
+(12, 5, 37),
+(13, 6, 37),
+(14, 3, 50),
+(15, 1, 13),
+(16, 4, 3),
+(17, 1, 3),
+(18, 7, 3),
+(19, 8, 13),
+(20, 5, 50),
+(21, 5, 13),
+(22, 7, 17),
+(23, 4, 21),
+(24, 4, 11),
+(25, 6, 9),
+(26, 5, 9),
+(27, 2, 18),
+(28, 7, 8),
+(29, 1, 8),
+(30, 3, 18),
+(31, 8, 16),
+(32, 7, 16),
+(33, 2, 7),
+(34, 7, 10),
+(35, 5, 7),
+(36, 8, 7),
+(37, 6, 19),
+(38, 4, 19),
+(39, 1, 11),
+(40, 5, 19),
+(41, 4, 15),
+(42, 1, 6),
+(43, 8, 6),
+(44, 2, 6),
+(45, 3, 20),
+(46, 5, 20),
+(47, 1, 15),
+(48, 5, 15),
+(49, 5, 17),
+(50, 8, 5),
+(51, 2, 5),
+(52, 7, 5),
+(53, 3, 21),
+(54, 6, 21),
+(55, 6, 10),
+(56, 1, 1),
+(57, 1, 2),
+(58, 7, 29),
+(59, 4, 46),
+(60, 3, 28),
+(61, 5, 43),
+(62, 3, 45),
+(63, 7, 26),
+(64, 8, 26),
+(65, 1, 26),
+(66, 7, 45),
+(67, 4, 43),
+(68, 3, 29),
+(69, 4, 41),
+(70, 3, 41),
+(71, 3, 31),
+(72, 2, 48),
+(73, 4, 48),
+(74, 6, 48),
+(75, 4, 31),
+(76, 2, 42),
+(77, 2, 34),
+(78, 6, 34),
+(79, 1, 31),
+(80, 7, 42),
+(81, 4, 47),
+(82, 7, 25),
+(83, 1, 47),
+(84, 8, 42),
+(85, 6, 35),
+(86, 8, 35),
+(87, 4, 30),
+(88, 3, 30),
+(89, 7, 30),
+(90, 8, 47),
+(91, 7, 40),
+(92, 3, 25),
+(93, 7, 35),
+(94, 2, 23),
+(95, 1, 23),
+(96, 4, 23),
+(97, 4, 33),
+(98, 7, 32),
+(99, 4, 44),
+(100, 5, 40),
+(101, 5, 44),
+(102, 8, 49),
+(103, 8, 2),
+(104, 2, 49),
+(105, 5, 1),
+(106, 8, 38),
+(107, 4, 38),
+(108, 7, 49),
+(109, 3, 33),
+(110, 4, 39),
+(111, 1, 36),
+(112, 4, 28),
+(113, 5, 28),
+(114, 8, 32),
+(115, 1, 39),
+(116, 8, 36),
+(117, 6, 24),
+(118, 5, 24),
+(119, 6, 36),
+(120, 7, 27),
+(121, 2, 27),
+(122, 8, 24),
+(123, 2, 46),
+(124, 2, 51),
+(125, 3, 51);
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `region`
+-- Table structure for table `region`
 --
 
 CREATE TABLE `region` (
@@ -5049,7 +5374,7 @@ CREATE TABLE `region` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `region`
+-- Dumping data for table `region`
 --
 
 INSERT INTO `region` (`region_id`, `region_name`) VALUES
@@ -5077,7 +5402,7 @@ INSERT INTO `region` (`region_id`, `region_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `review`
+-- Table structure for table `review`
 --
 
 CREATE TABLE `review` (
@@ -5092,72 +5417,215 @@ CREATE TABLE `review` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `review`
+-- Dumping data for table `review`
 --
 
 INSERT INTO `review` (`review_id`, `product_id`, `member_id`, `rating`, `points`, `title`, `content`, `published_at`) VALUES
-(1, 1, 5, 5, 9, 'Szuper duper', 'Az egyik kedvenc ékszerem', '2022-01-11 00:00:00'),
-(2, 1, 5, 4, 2, 'Jó', '-', '2022-01-11 00:00:00'),
-(3, 1, 7, 5, 4, 'Ajándékba vettem', 'Biztos jó, nem tudom.', '2022-01-11 00:00:00'),
-(4, 2, 8, 4, 7, 'Pont ezt kerestem', 'Mindenhol kerestem dejó h itt van', '2022-01-11 00:00:00'),
-(5, 2, 9, 4, 5, 'Nagyszerű', '', '2022-01-11 00:00:00'),
-(6, 3, 10, 5, 7, 'Minden amire valaha vágytam', '', '2022-01-11 00:00:00'),
-(7, 3, 11, 5, 8, 'Egyszerűen tökéletes!!!', 'Az unokámnak vettem szülinapjára és imádja!!!! Köszönöm!!!!!', '2022-01-11 00:00:00'),
-(8, 3, 12, 4, 3, 'Szép darab', 'Aprólékos, jól kidolgozatt nyaklánc, csak ajánlani tudom.', '2022-01-11 00:00:00'),
-(9, 12, 4, 2, 7, 'szükséges ', 'ütődik. utolsó nem nem Szia, ', '2022-01-09 00:00:00'),
-(10, 11, 14, 1, 13, 'most van ', 'felé szemmel mai van sokkal különböző csinálni. legjobb ', '2022-01-01 00:00:00'),
-(11, 12, 20, 1, 2, 'szálljon ', 'és lehetőség értem, ebéd ma szemben ', '2022-01-09 00:00:00'),
-(12, 11, 16, 5, 1, 'alszom, egy tartoznak ', 'kopog, szálljon azon idő felé alszom, könnyebb lesz eljön. nem szó viszont sem ', '2022-01-01 00:00:00'),
-(13, 11, 15, 1, 4, 'soha Féltékeny ', 'szabadságra milyen dolog inkább hogy És ember azt ebéd inkább ', '2022-01-01 00:00:00'),
-(14, 11, 9, 5, 2, 'tartoznak ', 'utolsó jól azt egy mondanom, vagyok? ', '2022-01-01 00:00:00'),
-(15, 12, 20, 4, 3, 'össze ajtót! ', 'során áll mint lehetőség vagyok hobbijaim látni, eddig során ', '2022-01-09 00:00:00'),
-(16, 12, 13, 4, 0, 'Beszélgetek, bumról, ', 'olyan akár mint italért. még terve, nem néhány tartoznak ', '2022-01-09 00:00:00'),
-(17, 8, 12, 2, 4, 'mind ', 'Hol dolog életforma. italért. vacsora. teljes ', '2022-01-14 00:00:00'),
-(18, 10, 20, 3, 11, 'rendetlenséget! ajtót! ', 'szeret. hozzá jól ezzel tudom jól érdekében hiszem, életforma. ', '2022-01-04 00:00:00'),
-(19, 4, 15, 5, 2, 'szó ', 'szeret. viszont mikor szabadságra ebben őket ', '2022-01-28 00:00:00'),
-(20, 4, 17, 3, 7, 'és ', 'különböző csukott azt szeret. három ', '2022-01-28 00:00:00'),
-(21, 4, 3, 2, -1, 'mint ', 'során soha mikor tovább működik. során ', '2022-01-28 00:00:00'),
-(22, 4, 6, 1, 6, 'akár ', 'legjobb elég nem nekem van jog ', '2022-01-28 00:00:00'),
-(23, 5, 6, 5, 8, 'csinálni. Hol ', 'amelyek csinálni. szükségem, építsen egy szálljon ebben szép ', '2022-01-09 00:00:00'),
-(24, 5, 13, 3, 9, 'nem egy ', 'felé kopog, az. közé mondanom, kétszer mondanom, ', '2022-01-09 00:00:00'),
-(25, 6, 20, 1, 8, 'Nem viszont ', 'eljön. hiszem, tudom ebéd évente. szüleimre, italért. tehát ', '2022-01-29 00:00:00'),
-(26, 6, 2, 1, 9, 'közé például ', 'kicsit. mint szeret. évente. elég meleg ajtót! azok kerültem szó ', '2022-01-29 00:00:00'),
-(27, 6, 20, 1, 2, 'itt ember. ', 'nem ebéd érdekében azt néhány vagyok Úgy ', '2022-01-29 00:00:00'),
-(28, 7, 19, 2, 3, 'Hat sem ', 'ide? egy vagyok során kopog, én csinálni. hiszen ezzel szemmel terve, Ha ', '2022-01-14 00:00:00'),
-(29, 7, 13, 5, 0, 'egy Szia, ', 'áll azt ebben Szia, viszont csukott vagyok reggeli, elég ', '2022-01-14 00:00:00'),
-(30, 7, 12, 5, 13, 'rendetlenséget! ebéd ', 'vacsora. kétszer tehát ide? Féltékeny közé legjobb vacsora. ', '2022-01-14 00:00:00'),
-(31, 7, 17, 2, 13, 'Hogy lesz ', 'ezt látni, szemben isten mint mint lehetőség legtöbb a hónap gyerek, ', '2022-01-14 00:00:00'),
-(32, 8, 7, 1, 13, 'kicsit. viszont ', 'könnyebb mai a biztos tovább tudom neki ', '2022-01-14 00:00:00'),
-(33, 8, 12, 1, 1, 'szemmel Annyira ', 'van életforma. egy sokkal hozzá áll van ', '2022-01-14 00:00:00'),
-(34, 8, 7, 1, 6, 'kell keresztül ', 'Egy amíg szálljon tartoznak vagyok egy jog gyengéd koffeinfüggő itt vagyok ', '2022-01-14 00:00:00'),
-(35, 13, 14, 2, 5, 'viszont ', 'lehetőség egyetlen egyikük során például ', '2022-01-17 00:00:00'),
-(36, 9, 20, 5, 5, 'biztos Szia, ', 'dolog nekem sokkal nem szemben azt szeret. vagyok Isten ', '2022-01-22 00:00:00'),
-(37, 9, 4, 5, 0, 'ezzel lesz ', 'egy szemben hozzá csinálni. És Hat kövér, mai ', '2022-01-22 00:00:00'),
-(38, 9, 5, 4, 10, 'különböző ', 'a évente. Nagyon mai tovább ', '2022-01-22 00:00:00'),
-(39, 9, 13, 2, 7, 'szükséges következő ', 'azok teljes gyengéd azt szinte ma érdekében mikor jól koffeinfüggő Féltékeny tovább ', '2022-01-22 00:00:00'),
-(40, 10, 2, 2, 10, 'terve, fene ', 'amíg mely jog Hogy nekem vacsora. soha szükségem, ', '2022-01-04 00:00:00'),
-(41, 10, 7, 3, 11, 'elég vagyok ', 'ember együtt a lehetőség szép bumról, lesz szép áldja hiszem, és ', '2022-01-04 00:00:00'),
-(42, 10, 6, 3, 1, 'áldja Beszélgetek, ', 'össze keresztül neki megfelelő itt évente. Szia, tudom ', '2022-01-04 00:00:00'),
-(43, 13, 5, 1, 14, 'erre mondanom, ', 'hónap tudom következő hónap övék. Mindenkinek vagyok azon ', '2022-01-17 00:00:00'),
-(44, 17, 21, 5, 1, 'Nagyon fini barack lekvár', 'Az egyik legjobb amit valaha ettem', '2022-03-08 07:38:24'),
-(45, 17, 21, 3, 0, 'asd', 'asd', '2022-03-08 19:18:37'),
-(46, 18, 21, 4, 1, 'Vélemény', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', '2022-03-10 10:05:12'),
-(47, 18, 21, 5, 0, 'ud exercitation ullamco laboris nisi ut aliquip ex', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum', '2022-03-10 10:17:31'),
-(48, 18, 21, 3, 0, 'ed ut perspiciatis unde omni', 'input.ng-invalid{\n    border-bottom: red thin solid;\n    // background-color: #ff8b95a6;\n}\ninput.ng-untouched{\n    border-color: lightgray;\n}\ninput.ng-valid{\n    border-bottom: #859C62 thin solid;\n}\ntextarea.ng-untouched{\n    border-color: lightgray;\n}\ntextarea.ng-valid{\n    border-bottom: #859C62 thin solid;\n}\n.form-control:focus {   \n    color: #212529;\n    background-color: #fff;\n    border-color: #859C62;\n    outline: 0;\n    box-shadow: 0 0 0 0.25rem #859c625b;\n}', '2022-03-10 10:21:39'),
-(49, 18, 21, 5, 0, 'asd', 'asd', '2022-03-10 11:04:40'),
-(50, 17, 21, 1, 0, 'asd', 'asd', '2022-03-10 11:05:28'),
-(51, 17, 21, 5, 0, 'sdf', 'sdf', '2022-03-10 11:05:51'),
-(52, 14, 26, 5, 1, 'Szuper termék', 'Szuper áron :)))))', '2022-03-22 21:08:30'),
-(53, 14, 26, 3, 0, 'Elmegy', 'Nem jó, de nem is tragikus.... ', '2022-03-22 21:11:10'),
-(54, 18, 21, 5, 0, 'Egyszerűen tökéletes!!!', 'Az unokámnak vettem szülinapjára és imádja!!!! Köszönöm!!!!!', '2022-03-30 10:06:42'),
-(55, 18, 21, 5, 0, 'Egyszerűen tökéletes!!!', 'Az unokámnak vettem szülinapjára és imádja!!!! Köszönöm!!!!!', '2022-03-30 10:11:17'),
-(56, 18, 21, 5, 0, 'Egyszerűen tökéletes!!!', 'Az unokámnak vettem szülinapjára és imádja!!!! Köszönöm!!!!!', '2022-03-30 10:14:05'),
-(57, 18, 21, 5, 0, 'Egyszerűen tökéletes!!!', 'Az unokámnak vettem szülinapjára és imádja!!!! Köszönöm!!!!!', '2022-03-30 10:14:25');
+(1, 18, 23, 2, 0, 'során koffeinfüggő ', 'tovább csukott kell azt hobbijaim vagyok? évente. elég ', '2022-02-05 16:12:27'),
+(2, 32, 38, 2, 5, 'alszom, viszont ', 'van mikor mai őket mint évente. gyerek, ', '2022-02-01 22:13:05'),
+(3, 33, 25, 5, 3, 'meg azt megfelelő ', 'Szia, kicsit. van és ennek koffeinfüggő soha során tovább Hol ennek hiszem, működik. ', '2022-03-04 02:02:54'),
+(4, 18, 33, 3, 6, 'legyen legtöbb ', 'olyan tehát soha mikor vagyok Hat szüleimre, Úgy gyerek, ', '2022-02-05 16:12:27'),
+(5, 18, 22, 3, 3, 'a ', 'ebéd sokkal nekem könnyebb szükségem, ', '2022-02-05 16:12:27'),
+(6, 18, 28, 5, 9, 'nekem kerül ', 'tudom le adott a inkább van soha most És ', '2022-02-05 16:12:27'),
+(7, 18, 39, 1, 2, 'sem szálljon ', 'eddig működik. vagyok neki kerül itt fizetek akár ', '2022-02-05 16:12:27'),
+(8, 2, 34, 2, 7, 'nem Két ', 'Ha Mindenkinek kétszer kell különböző építsen szó nem ', '2022-01-14 21:55:06'),
+(9, 34, 21, 5, 3, 'csinálni. övék. ', 'szálljon koffeinfüggő ütődik. eljön. együtt őket Úgy világban Isten vagyok kicsit. ', '2022-04-23 13:29:56'),
+(10, 36, 21, 2, 4, 'össze Nem ', 'a eddig adott hónap én szeret. darabig legjobb Hat viszont sem ', '2022-02-15 19:46:18'),
+(11, 36, 35, 3, 5, 'soha ', 'egy Hol milyen kopog, Annyira biztos ', '2022-02-15 19:46:18'),
+(12, 16, 33, 3, 0, 'le reggeli, ', 'Isten éves áll tudom vagyok? itt szájba kerültem ', '2022-03-06 18:24:44'),
+(13, 16, 24, 5, 9, 'azok ezzel ', 'szép ember. például hónap azt elég Nem gyengéd és gyerek, ', '2022-03-06 18:24:44'),
+(14, 16, 36, 2, 4, 'ennek ', 'ennek ennek csukott ezt lehetőség ', '2022-03-06 18:24:44'),
+(15, 16, 28, 3, 3, 'mikor isten ', 'egy őket a és szeret. együtt Mindenkinek idő szálljon ', '2022-03-06 18:24:44'),
+(16, 35, 23, 4, 13, 'szükséges vagyok? ', 'inkább össze és nagyobb Hol szabadságra nem mint tehát életforma. építsen szükségem, ', '2022-04-24 05:26:54'),
+(17, 35, 32, 2, 13, 'azt szabadságra ', 'van gyerek, tovább össze Annyira terve, eljön. övék. azt tovább ', '2022-04-24 05:26:54'),
+(18, 33, 36, 2, 4, 'És ', 'azok adott azt vagyok? mint legtöbb ', '2022-03-04 02:02:54'),
+(19, 35, 27, 5, 0, 'És valami ', 'hozzá legtöbb együtt nem akár áll szükségem, bumról, adott ', '2022-04-24 05:26:54'),
+(20, 17, 37, 2, 7, 'ütődik. világban ', 'jól tartoznak azt gyerek, hiszen kerültem inkább mind az. dolog ', '2022-04-03 02:56:56'),
+(21, 17, 26, 1, 5, 'Annyira ezzel ', 'gyerek, fizetek eddig most látni, azt italért. le ', '2022-04-03 02:56:56'),
+(22, 17, 39, 2, 11, 'szájba három ', 'tehát utolsó azt lehetőség kell idő legtöbb ember kerültem ', '2022-04-03 02:56:56'),
+(23, 17, 30, 3, 9, 'nem évente. ', 'három tudom inkább Hat jól tehát Beszélgetek, gyerek, valami áldja ', '2022-04-03 02:56:56'),
+(24, 32, 24, 5, 5, 'megfelelő kopog, ', 'Szia, közé tehát ... például áll szálljon tudom ', '2022-02-01 22:13:05'),
+(25, 17, 34, 2, 11, 'vagyok fene ', 'meleg áldja És érdekében adott Nem soha eddig nem Egy ', '2022-04-03 02:56:56'),
+(26, 17, 35, 5, 4, 'vagyok Két ', 'teljes övék. ütődik. meleg gyengéd ebben gyerek, ', '2022-04-03 02:56:56'),
+(27, 34, 25, 1, 12, 'az mind ', 'akár kétszer Hol és ajtót! Nem legyen Nem hobbijaim ', '2022-04-23 13:29:56'),
+(28, 17, 22, 1, 1, 'ma van ', 'ember. terve, viszont ember ajtót! neki Két ', '2022-04-03 02:56:56'),
+(29, 32, 31, 1, 6, 'mely koffeinfüggő ', 'eddig mint mely Beszélgetek, Hat azon egyetlen darabig során ', '2022-02-01 22:13:05'),
+(30, 20, 29, 3, 5, 'dolog adott ', 'legtöbb még jól azt együtt látni, kerültem Féltékeny Szia, eddig ', '2022-04-10 10:03:56'),
+(31, 32, 25, 5, 9, 'érdekében hozzá erre ', 'szemben mondanom, szeret. Beszélgetek, Beszélgetek, soha ide? alszom, akár teljes az szükségem, biztos különböző ', '2022-02-01 22:13:05'),
+(32, 29, 28, 2, 7, 'most gyengéd ', 'soha alszom, lesz nagyobb azt kopog, szó És inkább ajtót! ', '2022-03-19 06:22:26'),
+(33, 29, 39, 3, 9, 'erre legjobb ', 'itt jól legtöbb a idő szálljon könnyebb le biztos vagyok szinte ', '2022-03-19 06:22:26'),
+(34, 22, 37, 4, 7, 'működik. övék. ember. ', 'bumról, értem, milyen milyen soha jól viszont néhány keresztül egy gyerek, övék. akár a nekem ', '2022-02-24 01:49:09'),
+(35, 22, 23, 5, 2, 'keresztül jól ', 'adott kerül nem mondanom, kerül ide? reggeli, dolog még még reggeli, isten ', '2022-02-24 01:49:09'),
+(36, 22, 23, 2, 14, 'azon soha ', 'áldja lesz néhány néhány övék. szó nem a szép ', '2022-02-24 01:49:09'),
+(37, 22, 26, 5, 12, 'jól gyerek, ', 'legjobb sokkal biztos Mindenkinek azt és jól ', '2022-02-24 01:49:09'),
+(38, 28, 37, 2, 12, 'gyerek, le ', 'Mindenkinek ajtót! hiszem, kell építsen évente. gyerek, koffeinfüggő tovább ', '2022-02-14 06:59:01'),
+(39, 28, 25, 2, 5, 'hónap azt ', 'neki három szó látni, értem, gyerek, a azt azt szeret. hónap ', '2022-02-14 06:59:01'),
+(40, 28, 31, 3, 10, 'idő ember ', 'hiszem, Úgy Egy érdekében kerültem szemmel jog övék. ', '2022-02-14 06:59:01'),
+(41, 28, 22, 2, 13, 'keresztül ebben ', 'nekem van kicsit. felé a három szüleimre, soha most ', '2022-02-14 06:59:01'),
+(42, 27, 34, 5, 7, 'szó vagyok ', 'a lehetőség kerültem Egy azok inkább amelyek ', '2022-02-23 02:45:59'),
+(43, 29, 35, 1, 2, 'sem nem ', 'sokkal Mindenkinek szemmel értem, teljes vacsora. mondanom, rendetlenséget! jól felé lesz ', '2022-03-19 06:22:26'),
+(44, 37, 34, 3, 5, 'csinálni. ', 'azt Nem jól vagyok? erre áll ', '2022-03-08 14:19:19'),
+(45, 37, 26, 1, 11, 'Szia, vagyok ', 'Szia, viszont szükségem, ezt kopog, mind mikor ennek ', '2022-03-08 14:19:19'),
+(46, 37, 25, 3, 5, 'évente. adott ', 'erre eddig soha és azt nekem ezek szinte ebéd ', '2022-03-08 14:19:19'),
+(47, 37, 24, 1, 14, 'hogy jól ', 'mai nem tovább ajtót! reggeli, alszom, kicsit. látni, szinte ', '2022-03-08 14:19:19'),
+(48, 27, 21, 1, 0, 'tovább mondanom, ', 'eddig vagyok nem mikor rendetlenséget! milyen ember azon ', '2022-02-23 02:45:59'),
+(49, 27, 27, 4, 12, 'azt ', 'értem, áldja meleg kerül egy övék. ', '2022-02-23 02:45:59'),
+(50, 1, 36, 1, 0, 'következő ', 'És lehetőség mint jól szinte soha ', '2022-03-13 15:49:44'),
+(51, 1, 26, 1, 8, 'ezek gyengéd ', 'Hol például kerül ajtót! teljes érdekében darabig viszont ', '2022-03-13 15:49:44'),
+(52, 1, 27, 5, 3, 'nekem mind ', 'szálljon össze most kövér, Nem van egyikük Két ', '2022-03-13 15:49:44'),
+(53, 1, 28, 4, 10, 'teljes szép ', 'az. évente. szinte sokkal bumról, erre ebben ezzel italért. soha van ütődik. ', '2022-03-13 15:49:44'),
+(54, 50, 35, 4, 0, 'Beszélgetek, Féltékeny ', 'egyikük sokkal Mindenkinek évente. Két gyerek, amíg ', '2022-03-04 11:23:10'),
+(55, 50, 32, 1, 14, 'ütődik. biztos ', 'mégis biztos én során azt ember És mikor értem, terve, ', '2022-03-04 11:23:10'),
+(56, 37, 24, 3, 7, 'még közé ', 'teljes legjobb Két megfelelő kicsit. és vagyok világban azok ', '2022-03-08 14:19:19'),
+(57, 32, 36, 1, 0, 'ennek Nagyon ', 'mint három szemmel van éves szemben akár gyengéd Egy mint szép Hat ', '2022-02-01 22:13:05'),
+(58, 29, 25, 5, 14, 'van Úgy ', 'kicsit. mégis gyengéd amíg gyerek, a Hol ', '2022-03-19 06:22:26'),
+(59, 21, 31, 5, 6, 'Hol ', 'ebéd kerül következő biztos biztos azt ', '2022-03-27 02:56:39'),
+(60, 19, 28, 5, 3, 'legtöbb az ', 'lesz Hat ezek van soha Hol különböző vacsora. azok ', '2022-01-13 15:36:39'),
+(61, 19, 23, 4, 12, 'utolsó szinte ', 'nagyobb ide? azt italért. kerül Isten szemmel valami ', '2022-01-13 15:36:39'),
+(62, 19, 35, 5, 14, 'mai és ', 'Egy És azok lehetőség kopog, Beszélgetek, mondanom, hozzá tartoznak legjobb azt ', '2022-01-13 15:36:39'),
+(63, 19, 24, 3, 4, 'jól adott ', 'tovább szemben szemben most Nagyon jog szükségem, kopog, kövér, soha sokkal mint ', '2022-01-13 15:36:39'),
+(64, 31, 24, 2, 1, 'Úgy ', 'övék. szükségem, azok kopog, ezt ', '2022-04-08 02:23:48'),
+(65, 31, 24, 5, 14, 'koffeinfüggő nem ', 'hogy rendetlenséget! könnyebb azt szeret. Két alszom, ide? lesz sokkal ', '2022-04-08 02:23:48'),
+(66, 31, 35, 4, 5, 'őket ', 'biztos le működik. Isten vagyok ', '2022-04-08 02:23:48'),
+(67, 31, 38, 2, 0, 'inkább ', 'vagyok fene Mindenkinek értem, ezzel felé ', '2022-04-08 02:23:48'),
+(68, 31, 39, 3, 9, 'nagyobb legyen ', 'például kövér, teljes érdekében mint terve, hogy hobbijaim tartoznak Úgy mikor ', '2022-04-08 02:23:48'),
+(69, 38, 25, 1, 6, 'össze egyikük ', 'van felé elég és egyetlen valami szüleimre, szinte ide? ', '2022-04-19 11:58:02'),
+(70, 20, 25, 2, 3, 'Szia, alszom, ', 'én ember. jól keresztül eljön. viszont kicsit. ', '2022-04-10 10:03:56'),
+(71, 29, 27, 1, 13, 'csinálni. kell ', 'vagyok jól szükséges reggeli, lehetőség során az kicsit. az. soha tovább ', '2022-03-19 06:22:26'),
+(72, 20, 34, 1, 9, 'az. az ', 'övék. felé valami fizetek tehát egy hónap azok ezzel ', '2022-04-10 10:03:56'),
+(73, 20, 34, 5, 12, 'amelyek eljön. ', 'dolog vacsora. kövér, és ezek dolog mely én nekem kerül ', '2022-04-10 10:03:56'),
+(74, 20, 25, 1, 9, 'kerültem azok ', 'áll kétszer alszom, felé ezek biztos még legtöbb össze Két ', '2022-04-10 10:03:56'),
+(75, 20, 29, 5, 11, 'össze darabig ', 'És Annyira adott keresztül azt szükségem, gyerek, mégis tudom mely ', '2022-04-10 10:03:56'),
+(76, 30, 25, 2, 1, '... Beszélgetek, ', 'eljön. jól mint szükséges ember. italért. csukott azon Nagyon áldja lesz ', '2022-01-10 06:41:56'),
+(77, 30, 30, 3, 10, 'tovább áll ', 'építsen következő szemmel mondanom, lehetőség Nem soha Hogy ', '2022-01-10 06:41:56'),
+(78, 30, 39, 5, 13, 'terve, ... ', 'sokkal mind könnyebb Szia, azok azt És ide? ezzel lesz ', '2022-01-10 06:41:56'),
+(79, 30, 27, 1, 3, 'van ', 'mikor nem ember tehát kell a ', '2022-01-10 06:41:56'),
+(80, 30, 24, 1, 6, 'értem, idő ', 'látni, hiszem, gyengéd könnyebb Beszélgetek, isten alszom, eddig ', '2022-01-10 06:41:56'),
+(81, 21, 24, 4, 7, 'értem, le ', 'mégis hobbijaim keresztül hiszem, itt ... valami hobbijaim ide? mégis ', '2022-03-27 02:56:39'),
+(82, 21, 31, 5, 7, 'azt gyengéd ', 'mikor hiszen hogy inkább könnyebb csinálni. utolsó azt utolsó áll ', '2022-03-27 02:56:39'),
+(83, 21, 30, 5, 6, 'utolsó könnyebb ', 'még elég tehát adott sokkal világban keresztül ', '2022-03-27 02:56:39'),
+(84, 20, 23, 4, 12, '... ', 'Egy a keresztül szemmel szüleimre, ', '2022-04-10 10:03:56'),
+(85, 38, 34, 4, 1, 'inkább ', 'életforma. Szia, könnyebb gyengéd szükségem, sokkal ', '2022-04-19 11:58:02'),
+(86, 39, 25, 5, 14, 'az mint ', 'áll látni, kerültem idő vagyok nem különböző hozzá lehetőség vagyok erre ajtót! ', '2022-02-18 04:39:04'),
+(87, 38, 31, 5, 12, 'adott szükséges ', 'ebéd És érdekében a soha ember érdekében idő ... ', '2022-04-19 11:58:02'),
+(88, 26, 34, 4, 13, 'hónap hónap ', 'szó látni, bumról, hónap jog milyen eddig rendetlenséget! eddig Szia, szép ', '2022-04-03 21:22:30'),
+(89, 6, 32, 5, 9, 'vagyok ', 'ütődik. soha fene sokkal működik. ezzel ', '2022-04-22 20:01:21'),
+(90, 6, 25, 2, 14, 'életforma. van ', 'alszom, le tartoznak nem most különböző keresztül ', '2022-04-22 20:01:21'),
+(91, 6, 21, 4, 1, 'jól áldja ', 'azok Szia, hogy kétszer építsen mint világban sokkal legyen közé ', '2022-04-22 20:01:21'),
+(92, 48, 34, 4, 0, 'szó kerül ', 'keresztül tovább itt világban azon szemben Isten áll ', '2022-03-25 23:21:22'),
+(93, 48, 23, 4, 6, 'Nem során ', '... ezek olyan szemmel soha világban ide? hiszem, gyengéd évente. könnyebb még ', '2022-03-25 23:21:22'),
+(94, 48, 36, 3, 7, 'áll jól ', 'szinte kell össze ma az azt tartoznak kicsit. adott mint Ha szükséges ', '2022-03-25 23:21:22'),
+(95, 48, 35, 3, 10, 'le szálljon ', 'kell az eddig néhány mai vagyok? működik. szép ', '2022-03-25 23:21:22'),
+(96, 48, 36, 5, 11, 'inkább nem ', 'És az eljön. italért. nagyobb érdekében nem az ', '2022-03-25 23:21:22'),
+(97, 47, 34, 2, 3, 'darabig jól ', 'hobbijaim És elég őket Nem ezt olyan ', '2022-03-07 15:24:33'),
+(98, 7, 22, 4, 5, 'ütődik. vagyok ', 'legtöbb mondanom, rendetlenséget! most ezt van soha Egy az szinte ', '2022-04-22 12:09:07'),
+(99, 26, 26, 2, 4, 'és inkább azok ', 'néhány egyetlen szeret. a italért. eljön. különböző idő soha Két szájba kell ezzel éves ', '2022-04-03 21:22:30'),
+(100, 7, 22, 1, 12, 'egyetlen ', 'azt Beszélgetek, lesz vacsora. sokkal az ', '2022-04-22 12:09:07'),
+(101, 47, 35, 2, 7, 'mikor Egy ', 'ma azt ebéd szinte ezt hiszem, van eddig ', '2022-03-07 15:24:33'),
+(102, 47, 22, 5, 2, 'az én ', 'egy sokkal érdekében le akár eddig akár az ', '2022-03-07 15:24:33'),
+(103, 47, 21, 1, 14, 'érdekében idő ', 'gyerek, teljes csinálni. viszont terve, legyen milyen mind kétszer ', '2022-03-07 15:24:33'),
+(104, 8, 34, 3, 0, 'akár hónap ', 'szó egy olyan áldja kell mikor idő inkább ', '2022-04-25 13:28:51'),
+(105, 8, 26, 3, 8, 'ember ', 'néhány tudom ebéd gyengéd hiszem, fene ', '2022-04-25 13:28:51'),
+(106, 8, 33, 4, 1, 'a tartoznak ', 'csukott azok nekem legtöbb És mind és világban tudom ', '2022-04-25 13:28:51'),
+(107, 46, 39, 5, 10, 'nem ', 'életforma. jog eddig össze sokkal szó ', '2022-04-14 06:01:18'),
+(108, 46, 23, 5, 14, 'kerültem életforma. ', 'együtt Hat Hat világban eljön. néhány mind ', '2022-04-14 06:01:18'),
+(109, 46, 24, 5, 0, 'tartoznak mint ', 'felé azt gyerek, amíg van ... az legyen ', '2022-04-14 06:01:18'),
+(110, 46, 31, 2, 4, 'legjobb ebben ', 'szemben És nekem kétszer ajtót! most össze ', '2022-04-14 06:01:18'),
+(111, 46, 34, 5, 1, 'érdekében jól övék. ', 'könnyebb én legyen néhány gyerek, hozzá eddig És vagyok egyetlen szabadságra tehát egyikük ', '2022-04-14 06:01:18'),
+(112, 47, 31, 3, 3, 'eljön. ', 'következő mondanom, legyen nekem jól könnyebb ', '2022-03-07 15:24:33'),
+(113, 26, 32, 5, 13, 'kell ember ', 'a szájba mondanom, mint különböző nekem építsen ', '2022-04-03 21:22:30'),
+(114, 5, 24, 5, 4, 'itt világban ', 'fene Ha szemben ma hiszem, gyerek, szálljon életforma. viszont ', '2022-04-17 03:30:44'),
+(115, 5, 31, 1, 6, 'amíg csukott ', 'szemben Mindenkinek mégis életforma. Hat tudom építsen Egy meleg ', '2022-04-17 03:30:44'),
+(116, 2, 27, 1, 2, 'reggeli, ', 'és olyan szeret. megfelelő szükségem, ütődik. ', '2022-01-14 21:55:06'),
+(117, 2, 39, 5, 9, 'ajtót! ', 'van ezek egy áll és fene ', '2022-01-14 21:55:06'),
+(118, 2, 37, 2, 14, 'együtt gyerek, amelyek ', 'legjobb hobbijaim életforma. értem, szép akár még szeret. mind Mindenkinek jog van biztos ', '2022-01-14 21:55:06'),
+(119, 50, 33, 2, 12, 'a szükségem, ', 'le egy erre még ezek nem erre ', '2022-03-04 11:23:10'),
+(120, 3, 30, 3, 2, 'idő Mindenkinek ', 'ide? valami Annyira mikor legjobb milyen neki sokkal amelyek soha ', '2022-04-15 18:23:09'),
+(121, 3, 28, 5, 12, 'ajtót! legyen ', 'mikor még tartoznak legtöbb itt éves ember. jog ', '2022-04-15 18:23:09'),
+(122, 3, 38, 4, 2, 'Annyira ', 'utolsó szálljon kerültem eljön. világban ', '2022-04-15 18:23:09'),
+(123, 3, 39, 1, 14, 'fizetek szabadságra ', 'nekem mai ezzel azt mégis én mint eljön. meleg mely ', '2022-04-15 18:23:09'),
+(124, 23, 30, 5, 10, 'ennek ide? ', 'nekem teljes kopog, mikor nem ezek azon áldja Nem ', '2022-01-20 08:09:12'),
+(125, 23, 39, 5, 4, 'szinte ', 'hiszen tartoznak utolsó akár szó sokkal ', '2022-01-20 08:09:12'),
+(126, 23, 22, 5, 13, 'Nagyon szájba ', 'hozzá mai fene nekem őket jól ide? eddig én ', '2022-01-20 08:09:12'),
+(127, 24, 38, 5, 2, 'a Annyira ', 'én tudom dolog ebéd viszont És a ', '2022-01-19 14:06:15'),
+(128, 24, 25, 2, 12, 'mint ', 'együtt legyen most a egyikük szálljon ', '2022-01-19 14:06:15'),
+(129, 4, 31, 4, 1, 'Beszélgetek, mind Egy ', 'sokkal hiszem, értem, sem hiszem, éves idő milyen vagyok fene ebben szinte ide? kell ', '2022-02-06 12:49:16'),
+(130, 4, 23, 1, 12, 'erre mint ', 'ezzel van amíg Egy Hogy erre a vagyok ', '2022-02-06 12:49:16'),
+(131, 4, 24, 3, 9, 'fizetek Beszélgetek, ', 'biztos viszont éves lesz például ebben szemben dolog életforma. hónap ', '2022-02-06 12:49:16'),
+(132, 4, 27, 1, 12, 'egy hónap ', 'meg legtöbb mind mind még sokkal keresztül legyen biztos koffeinfüggő mikor ennek ', '2022-02-06 12:49:16'),
+(133, 24, 34, 5, 9, 'jól mikor ', 'meleg szüleimre, értem, egyikük mikor erre ebben kerültem ', '2022-01-19 14:06:15'),
+(134, 25, 28, 3, 10, 'most nekem adott ', 'lesz kicsit. van például csinálni. mikor vacsora. nekem azon a azt övék. jog inkább szabadságra ', '2022-03-03 09:44:47'),
+(135, 25, 26, 1, 3, 'idő sokkal ', 'viszont És Féltékeny van tudom valami Úgy hiszen három ', '2022-03-03 09:44:47'),
+(136, 25, 33, 5, 9, 'egy évente. ', 'kell mint szemben viszont az. következő egy sokkal mely éves szájba ', '2022-03-03 09:44:47'),
+(137, 25, 32, 1, 1, 'hónap ', 'hiszem, szabadságra nekem ember dolog hiszem, ', '2022-03-03 09:44:47'),
+(138, 5, 21, 4, 13, 'tudom egyetlen ', 'És meleg neki lehetőség Hat könnyebb most eljön. egyetlen ', '2022-04-17 03:30:44'),
+(139, 5, 27, 2, 14, 'vagyok? hiszem, ', 'hónap ember. mikor ezzel vagyok nekem Két legyen kicsit. mind értem, van ', '2022-04-17 03:30:44'),
+(140, 5, 38, 1, 7, 'Egy még ', 'hiszen ajtót! három Nem szinte következő vagyok közé szeret. kerül le ', '2022-04-17 03:30:44'),
+(141, 9, 30, 3, 13, 'hónap ezt ', 'például őket hiszem, egyetlen utolsó következő kerültem ', '2022-02-14 00:57:10'),
+(142, 9, 35, 1, 8, 'erre ', 'jól mikor most értem, szálljon És ', '2022-02-14 00:57:10'),
+(143, 9, 31, 4, 9, 'szemben ', 'vagyok? össze sokkal lesz hónap Hol ', '2022-02-14 00:57:10'),
+(144, 45, 36, 3, 4, 'ezt lehetőség ', 'neki soha ide? kövér, Nem neki érdekében Úgy ', '2022-04-16 12:23:48'),
+(145, 41, 29, 4, 9, 'Úgy tudom ', 'szálljon jog hozzá mikor a van soha És egyikük gyerek, ', '2022-03-02 10:09:12'),
+(146, 41, 24, 2, 5, 'van reggeli, ', 'hobbijaim együtt Nagyon fene például mind adott az szabadságra közé éves ', '2022-03-02 10:09:12'),
+(147, 41, 33, 2, 13, 'évente. érdekében ', 'kövér, Nagyon megfelelő adott látni, eljön. áll bumról, most ezt ', '2022-03-02 10:09:12'),
+(148, 41, 38, 1, 10, 'terve, soha ', 'szó tehát nem fene néhány ember. tartoznak össze mondanom, ', '2022-03-02 10:09:12'),
+(149, 40, 32, 2, 7, 'szükségem, ', 'működik. És hiszem, mondanom, Hol Egy ', '2022-02-17 10:29:26'),
+(150, 13, 32, 1, 6, 'és ', 'terve, Nagyon meg kétszer mikor ', '2022-04-10 00:13:41'),
+(151, 13, 31, 1, 6, 'mikor itt ', 'legyen ... Féltékeny eljön. nekem ezt az érdekében ', '2022-04-10 00:13:41'),
+(152, 13, 35, 5, 4, 'viszont ', 'nem Úgy szükségem, Egy például idő ', '2022-04-10 00:13:41'),
+(153, 40, 24, 5, 6, 'jog ', 'Ha következő ezek kicsit. Annyira Annyira ', '2022-02-17 10:29:26'),
+(154, 39, 27, 4, 1, 'vagyok ... ', 'a viszont szükséges könnyebb vagyok mind azok Beszélgetek, Féltékeny ', '2022-02-18 04:39:04'),
+(155, 39, 21, 2, 6, 'egyetlen nem ', 'Úgy most dolog meg Féltékeny az övék. neki ', '2022-02-18 04:39:04'),
+(156, 39, 23, 4, 4, 'vagyok? ', 'tartoznak keresztül mint nem őket évente. ', '2022-02-18 04:39:04'),
+(157, 2, 33, 3, 8, 'kerültem három ', 'megfelelő még csinálni. ebben vacsora. még sokkal ', '2022-01-14 21:55:06'),
+(158, 14, 21, 4, 6, 'ember mint ', 'hogy azt van ezek meg És fene felé néhány egyikük hiszem, csinálni. ', '2022-04-20 11:08:12'),
+(159, 14, 25, 4, 4, 'sem kerül szinte ', 'fene idő egyetlen neki szó amelyek jog Isten Nem lesz mint Egy kerültem őket ', '2022-04-20 11:08:12'),
+(160, 14, 34, 4, 3, 'kopog, működik. ', 'az. övék. például hónap Isten szükségem, azok tartoznak tudom ', '2022-04-20 11:08:12'),
+(161, 14, 31, 2, 12, 'idő kerül ', 'azt azt mikor ajtót! amelyek szabadságra egyetlen látni, mely soha ', '2022-04-20 11:08:12'),
+(162, 49, 22, 3, 14, 'azt még ', 'szabadságra reggeli, bumról, egy ember. kopog, az ', '2022-03-19 22:40:03'),
+(163, 49, 39, 1, 13, 'Szia, amelyek ', 'keresztül mégis viszont Nagyon sokkal hiszem, adott mondanom, mely Hol ', '2022-03-19 22:40:03'),
+(164, 49, 31, 4, 1, 'szeret. könnyebb ', 'ember. Ha tartoznak ütődik. italért. van Hat tudom vagyok őket keresztül ', '2022-03-19 22:40:03'),
+(165, 49, 37, 5, 12, 'azt italért. ', 'valami hiszen ezzel vagyok? mind neki Annyira ', '2022-03-19 22:40:03'),
+(166, 49, 34, 4, 1, 'ütődik. ', 'egy itt gyengéd könnyebb soha nem ', '2022-03-19 22:40:03'),
+(167, 15, 26, 4, 8, 'vagyok ', 'És ma darabig áll mégis ', '2022-01-19 19:20:22'),
+(168, 15, 33, 4, 3, 'gyengéd lesz ', 'Szia, éves ezzel az ma vacsora. a kövér, ide? Mindenkinek áldja ', '2022-01-19 19:20:22'),
+(169, 15, 21, 2, 7, 'szinte azt ', 'Hogy most tartoznak tovább következő nem szüleimre, ', '2022-01-19 19:20:22'),
+(170, 12, 36, 5, 5, 'Ha áll ', 'hogy ezzel sokkal évente. szemmel hobbijaim áll látni, ', '2022-01-10 13:19:24'),
+(171, 38, 24, 3, 14, 'egyikük ', 'vagyok? látni, jog nekem legtöbb ', '2022-04-19 11:58:02'),
+(172, 12, 26, 1, 1, 'van ', 'közé meleg Ha gyerek, kerül egyetlen ', '2022-01-10 13:19:24'),
+(173, 12, 37, 5, 7, 'vagyok kopog, ', 'különböző nem szájba vagyok egy nem eljön. ', '2022-01-10 13:19:24'),
+(174, 45, 36, 3, 6, 'gyerek, hozzá ', 'mint szükségem, Szia, mai tehát őket akár szálljon ', '2022-04-16 12:23:48'),
+(175, 45, 37, 4, 0, 'Egy Hol ', 'szálljon nekem nagyobb során a építsen isten nekem életforma. ', '2022-04-16 12:23:48'),
+(176, 45, 31, 5, 2, 'le Hol ', 'azt le vagyok van mikor bumról, tudom Mindenkinek ma ', '2022-04-16 12:23:48'),
+(177, 44, 37, 3, 11, 'nagyobb idő ', 'szabadságra hobbijaim szabadságra van Szia, Mindenkinek Hat ... Beszélgetek, ', '2022-04-26 22:34:05'),
+(178, 10, 23, 4, 0, 'gyengéd ', 'ezzel kövér, ajtót! olyan felé azt ', '2022-01-18 22:57:59'),
+(179, 10, 29, 5, 14, 'akár hobbijaim ', 'ezt ide? adott darabig egy mai Hogy őket koffeinfüggő közé ', '2022-01-18 22:57:59'),
+(180, 10, 22, 4, 5, 'az koffeinfüggő ', 'hiszem, sokkal tartoznak övék. ma Nagyon világban őket ', '2022-01-18 22:57:59'),
+(181, 10, 38, 5, 8, 'ezek ', 'ide? van kétszer egy Hat ', '2022-01-18 22:57:59'),
+(182, 44, 36, 3, 7, 'szálljon ', 'akár van kicsit. ajtót! Annyira ', '2022-04-26 22:34:05'),
+(183, 44, 29, 1, 14, 'vacsora. inkább ', 'jól a inkább könnyebb Nagyon csinálni. most szálljon ', '2022-04-26 22:34:05'),
+(184, 44, 38, 1, 1, 'tovább nagyobb ', 'áll isten És ajtót! jól szemmel egy a életforma. áldja jól Beszélgetek, ', '2022-04-26 22:34:05'),
+(185, 43, 33, 5, 12, 'ezt vacsora. ', 'ebéd ma az szükségem, övék. meg azon hiszem, akár van ', '2022-03-14 13:00:56'),
+(186, 43, 32, 4, 6, 'évente. tovább ', 'következő szájba szemmel utolsó hogy ... egy szemmel csinálni. nekem lehetőség nem ', '2022-03-14 13:00:56'),
+(187, 43, 26, 1, 6, 'Hol Hol ', 'szükséges nem áll jól az. tartoznak koffeinfüggő hiszen azt van csukott koffeinfüggő ', '2022-03-14 13:00:56'),
+(188, 11, 39, 1, 13, 'meleg ', 'ezek én ezt következő hónap ', '2022-02-25 05:14:18'),
+(189, 11, 28, 2, 5, 'meleg szükségem, ', 'tartoznak kerültem szinte jól Féltékeny terve, áldja felé Féltékeny ', '2022-02-25 05:14:18'),
+(190, 11, 38, 5, 12, 'Isten ', 'kicsit. hiszen vagyok idő mondanom, adott ', '2022-02-25 05:14:18'),
+(191, 11, 38, 5, 5, 'őket szép ', 'dolog van mint szálljon életforma. sem szükséges őket viszont Ha évente. ', '2022-02-25 05:14:18'),
+(192, 11, 28, 5, 10, 'szájba együtt ', 'adott szabadságra egyetlen gyengéd ember. tudom Szia, azt ', '2022-02-25 05:14:18'),
+(193, 43, 24, 1, 12, 'nekem ', 'nekem kicsit. sokkal vagyok szép jog ', '2022-03-14 13:00:56'),
+(194, 42, 22, 3, 7, 'kopog, Beszélgetek, ', 'egy biztos építsen soha hozzá ide? néhány isten ütődik. terve, Hogy jól ', '2022-02-20 21:12:36'),
+(195, 42, 28, 5, 13, 'áldja ezek ', 'nekem tovább következő vagyok néhány mind sokkal azt az darabig keresztül És ', '2022-02-20 21:12:36'),
+(196, 42, 29, 2, 5, 'hiszen nem ', 'Nem szükséges azon ezek bumról, kövér, kövér, nem ', '2022-02-20 21:12:36'),
+(197, 42, 24, 1, 11, 'soha ', 'össze itt egy évente. mint kopog, ', '2022-02-20 21:12:36'),
+(198, 42, 21, 2, 6, 'értem, mai ', 'kopog, Két Mindenkinek ezek Hol terve, erre ember. ', '2022-02-20 21:12:36'),
+(199, 12, 29, 3, 9, 'rendetlenséget! ajtót! ', 'jog terve, amíg kopog, mind ezek olyan mely eljön. ', '2022-01-10 13:19:24'),
+(200, 50, 23, 1, 6, 'szép együtt ', 'szükséges eddig kövér, itt nem olyan össze tehát ', '2022-03-04 11:23:10');
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `review_vote`
+-- Table structure for table `review_vote`
 --
 
 CREATE TABLE `review_vote` (
@@ -5169,21 +5637,10 @@ CREATE TABLE `review_vote` (
   `voted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
---
--- A tábla adatainak kiíratása `review_vote`
---
-
-INSERT INTO `review_vote` (`review_vote_id`, `product_id`, `review_id`, `member_id`, `vote`, `voted_at`) VALUES
-(18, 10, 42, 21, 'up', '2022-03-08 19:53:32'),
-(33, 4, 21, 21, 'down', '2022-03-08 19:56:43'),
-(35, 17, 44, 21, 'up', '2022-03-09 07:46:28'),
-(36, 18, 46, 21, 'up', '2022-03-10 10:22:27'),
-(37, 14, 52, 26, 'up', '2022-03-22 21:10:28');
-
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `session`
+-- Table structure for table `session`
 --
 
 CREATE TABLE `session` (
@@ -5193,19 +5650,10 @@ CREATE TABLE `session` (
   `logged_in_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
---
--- A tábla adatainak kiíratása `session`
---
-
-INSERT INTO `session` (`session_id`, `member_id`, `jwt`, `logged_in_at`) VALUES
-(37, 27, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjpbeyJtZW1iZXJfaWQiOjI3LCJmaXJzdF9uYW1lIjoiTcOhdMOpIiwibGFzdF9uYW1lIjoiTW9sbsOhciIsImVtYWlsIjoibWF0ZUBtYWlsLmNvbSIsInBhc3N3b3JkIjoiODI3Y2NiMGVlYThhNzA2YzRjMzRhMTY4OTFmODRlN2IiLCJwaG9uZSI6Im0iLCJhYm91dCI6IijjgaPil5Til6Hil5Qp44GjIOKZpSBIZWxsbyBXb3JsZCEg4pmlIiwicHJvZmlsZV9waWN0dXJlX2xpbmsiOiJhc3NldHMvZGVmLXBmcDEucG5nIiwiaGVhZGVyX3BpY3R1cmVfbGluayI6ImFzc2V0cy9kZWZhdWx0X2Fzc2V0cy9kZWYtYmcyLnBuZyIsInJlZ2lzdGVyZWRfYXQiOiIyMDIyLTAzLTE1VDE2OjU5OjI3LjAwMFoiLCJsYXN0X2xvZ2luIjpudWxsLCJpc192ZW5kb3IiOjAsImlzX2FkbWluIjowfV0sImlhdCI6MTY0Nzk4MTg0M30.55xQ_Rfv99asRk7OmBeL1YvAgXqWdtBUMsJXGQMSR8s', '2022-03-22 21:44:03'),
-(42, 21, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjpbeyJtZW1iZXJfaWQiOjIxLCJmaXJzdF9uYW1lIjoiRXJ6c8OpYmV0IiwibGFzdF9uYW1lIjoiTmFneSIsImVtYWlsIjoiZXZhbmFneTc4NEBtYWlsLmNvbSIsInBhc3N3b3JkIjoiODI3Y2NiMGVlYThhNzA2YzRjMzRhMTY4OTFmODRlN2IiLCJwaG9uZSI6IiszNiAxMCA3NjcgMzU1OCIsImFib3V0Ijoia8O2bm55ZWJiIHRlaMOhdCBrZXJlc3p0w7xsIE5hZ3lvbiBpbmvDoWJiIGl0YWzDqXJ0LiBlbGrDtm4uIHZhZ3lvaz8gdGVow6F0IHV0b2xzw7MgZWRkaWcgYSIsInByb2ZpbGVfcGljdHVyZV9saW5rIjoiYXNzZXRzL2RlZi1wZnAyLnBuZyIsImhlYWRlcl9waWN0dXJlX2xpbmsiOiJhc3NldHMvZGVmYXVsdF9hc3NldHMvZGVmLWJnMy5wbmciLCJyZWdpc3RlcmVkX2F0IjoiMjAyMi0wMS0xMFQyMzowMDowMC4wMDBaIiwibGFzdF9sb2dpbiI6bnVsbCwiaXNfdmVuZG9yIjoxLCJpc19hZG1pbiI6MH1dLCJpYXQiOjE2NDg0NDk0Mjl9.msYuvA-MsYu-UwapshNKAwAjB8i4qk8Xf94qO6t4-Bc', '2022-03-28 08:37:09'),
-(49, 26, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjpbeyJtZW1iZXJfaWQiOjI2LCJmaXJzdF9uYW1lIjoiRXJ6c8OpYmV0IiwibGFzdF9uYW1lIjoiTmFneSIsImVtYWlsIjoibmFneWVyenNpQG1haWwuY29tIiwicGFzc3dvcmQiOiI4MjdjY2IwZWVhOGE3MDZjNGMzNGExNjg5MWY4NGU3YiIsInBob25lIjpudWxsLCJhYm91dCI6IlN6ZXJldGVtIGEgY2ljw6FrYXQgw6lzIGEga3V0eWlrw6FrYXQgaXMuIiwicHJvZmlsZV9waWN0dXJlX2xpbmsiOiJhc3NldHMvZGVmLXBmcDEucG5nIiwiaGVhZGVyX3BpY3R1cmVfbGluayI6ImFzc2V0cy9kZWZhdWx0X2Fzc2V0cy9kZWYtYmczLnBuZyIsInJlZ2lzdGVyZWRfYXQiOiIyMDIyLTAzLTE2VDE2OjU5OjIwLjAwMFoiLCJsYXN0X2xvZ2luIjpudWxsLCJpc192ZW5kb3IiOjAsImlzX2FkbWluIjowfV0sImlhdCI6MTY0ODYzMTA0OX0.baLNAipphF0cFPmHvC3w2oTLjHAFZ3Z3mla3PgXZucU', '2022-03-30 11:04:09');
-
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `shipping_address`
+-- Table structure for table `shipping_address`
 --
 
 CREATE TABLE `shipping_address` (
@@ -5224,21 +5672,18 @@ CREATE TABLE `shipping_address` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `shipping_address`
+-- Dumping data for table `shipping_address`
 --
 
 INSERT INTO `shipping_address` (`shipping_address_id`, `member_id`, `name`, `phone`, `first_name`, `last_name`, `email`, `country`, `region`, `city`, `street_adress`, `postal_code`) VALUES
-(6, 21, '1. szállítási cím', '+36 10 767 3558', 'Éva', 'Nagy', 'evanagy784@mail.com', 'Magyarország', 'Budapest (főváros)', 'Budapest', 'Út utca 74.', '1028'),
-(7, 21, '2. szállítási cím', '+36 10 767 3558', 'Éva', 'Nagy', 'evanagy784@mail.com', 'Magyarország', 'Győr-Moson-Sopron', 'Győr', 'Út utca 74.', '9023'),
-(8, 21, '3. szállítási cím', '+36 10 767 3558', 'Éva', 'Nagy', 'evanagy784@mail.com', 'Magyarország', 'Győr-Moson-Sopron', 'Nagybajcs', 'Kossuth L. utca 22.', '9063'),
-(9, 21, 'Munka', '+36 10 767 3558', 'Éva', 'Nagy', 'evanagy784@mail.com', 'Magyarország', 'Győr-Moson-Sopron', 'Győr', 'Szent István út 21.', '9021'),
-(10, 22, '1. szállítási cím', '+36 10 926 7715', 'Rozália', 'Jakab', 'rozaliajakab753@mail.com', 'Magyarország', 'Budapest (főváros)', 'Budapest', 'Bécsi utca 83.', '1025'),
-(13, 26, '1. szállítási cím', '+3696123123', 'Erzs', 'Nagy', 'nagyerzsi@mail.com', 'Magyarország', 'Győr-Moson-Sopron', 'Győr', 'Szent István út 21.', '9023');
+(1, 8, 'Munka', '+36 50 519 8123', 'Bertalan', 'Balog', 'bertalanbalog227@mail.com', 'Magyarország', 'Győr-Moson-Sopron', 'Győr', 'Szent István út 7.', '9021'),
+(2, 8, '2. szállítási cím', '+36 50 519 8123', 'Bertalan', 'Balog', 'bertalanbalog227@mail.com', 'Magyarország', 'Győr-Moson-Sopron', 'Kisbajcs', 'Kossuth L. utca 12.', '9062'),
+(3, 1, '1. szállítási cím', '+36 10 167 4965', 'Zita', 'Gáspár', 'zitagaspar430@mail.com', 'Magyarország', 'Győr-Moson-Sopron', 'Győr', 'Mészáros L. U 1', '9023');
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `tag`
+-- Table structure for table `tag`
 --
 
 CREATE TABLE `tag` (
@@ -5247,7 +5692,7 @@ CREATE TABLE `tag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `tag`
+-- Dumping data for table `tag`
 --
 
 INSERT INTO `tag` (`tag_id`, `tag_name`) VALUES
@@ -5263,7 +5708,7 @@ INSERT INTO `tag` (`tag_id`, `tag_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `vendor_detail`
+-- Table structure for table `vendor_detail`
 --
 
 CREATE TABLE `vendor_detail` (
@@ -5276,22 +5721,35 @@ CREATE TABLE `vendor_detail` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `vendor_detail`
+-- Dumping data for table `vendor_detail`
 --
 
 INSERT INTO `vendor_detail` (`vendor_detail_id`, `member_id`, `company_name`, `site_location`, `website`, `takes_custom_orders`) VALUES
-(1, 2, NULL, 'Győrújfalu', 'aranka.hu', 1),
-(2, 1, NULL, 'Ménfőcsanak', 'csanakiekszer.hu', 1),
-(3, 21, 'PeaceOfMind Csoport', 'Rápcakapi', NULL, 0),
-(4, 22, NULL, 'Győrasszonyfa', NULL, 0),
-(5, 23, NULL, 'Várbalog', NULL, 0),
-(6, 24, 'LightPicture Kft.', 'Feketeerdő', NULL, 0),
-(7, 25, NULL, 'Bodonhely', 'horvathsajt.hu', 1);
+(1, 1, NULL, 'Pásztori', NULL, 0),
+(2, 2, NULL, 'Szerecseny', NULL, 1),
+(3, 3, 'PeachTree Kft.', 'Mosonmagyaróvár', 'peachtree.hu', 0),
+(4, 4, NULL, 'Magyarkeresztúr', NULL, 0),
+(5, 5, NULL, 'Románd', NULL, 1),
+(6, 6, 'Express Group', 'Fertőszentmiklós', 'express.hu', 1),
+(7, 7, NULL, 'Mecsér', NULL, 1),
+(8, 8, 'Protect Group', 'Kajárpéc', 'protect.hu', 1),
+(9, 9, NULL, 'Fehértó', NULL, 0),
+(10, 10, NULL, 'Győrsövényház', NULL, 0),
+(11, 11, 'Protect Zrt.', 'Ikrény', 'protect.hu', 1),
+(12, 12, NULL, 'Fertőrákos', NULL, 1),
+(13, 13, NULL, 'Bezenye', NULL, 1),
+(14, 14, NULL, 'Magyarkeresztúr', NULL, 0),
+(15, 15, NULL, 'Tápszentmiklós', NULL, 0),
+(16, 16, NULL, 'Edve', NULL, 0),
+(17, 17, NULL, 'Várbalog', NULL, 0),
+(18, 18, 'PeaceOfMind Csoport', 'Tápszentmiklós', 'peaceofmind.hu', 0),
+(19, 19, 'GreenFarm Csoport', 'Feketeerdő', 'greenfarm.hu', 1),
+(20, 20, NULL, 'Lipót', NULL, 1);
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `wish_list`
+-- Table structure for table `wish_list`
 --
 
 CREATE TABLE `wish_list` (
@@ -5302,22 +5760,92 @@ CREATE TABLE `wish_list` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `wish_list`
+-- Dumping data for table `wish_list`
 --
 
 INSERT INTO `wish_list` (`wish_list_id`, `product_id`, `member_id`, `added_at`) VALUES
-(1, 8, 21, '2022-02-19 17:53:17'),
-(2, 7, 21, '2022-02-19 19:53:15'),
-(4, 8, 25, '2022-03-05 15:53:08'),
-(8, 18, 26, '2022-03-22 21:02:35'),
-(9, 13, 26, '2022-03-22 21:03:55');
+(1, 42, 37, NULL),
+(2, 37, 7, NULL),
+(3, 12, 4, NULL),
+(4, 18, 38, NULL),
+(5, 46, 8, NULL),
+(6, 17, 8, NULL),
+(7, 34, 40, NULL),
+(8, 33, 40, NULL),
+(9, 24, 8, NULL),
+(10, 6, 8, NULL),
+(11, 41, 1, NULL),
+(12, 2, 40, NULL),
+(13, 38, 40, NULL),
+(14, 9, 38, NULL),
+(15, 20, 37, NULL),
+(16, 27, 39, NULL),
+(17, 4, 39, NULL),
+(18, 22, 37, NULL),
+(19, 18, 36, NULL),
+(20, 33, 2, NULL),
+(21, 7, 7, NULL),
+(22, 17, 38, NULL),
+(23, 19, 38, NULL),
+(24, 44, 7, NULL),
+(25, 41, 2, NULL),
+(26, 50, 13, NULL),
+(27, 2, 35, NULL),
+(28, 3, 29, NULL),
+(29, 13, 29, NULL),
+(30, 6, 28, NULL),
+(31, 9, 28, NULL),
+(32, 28, 20, NULL),
+(33, 33, 27, NULL),
+(34, 8, 21, NULL),
+(35, 7, 21, NULL),
+(36, 49, 27, NULL),
+(37, 4, 27, NULL),
+(38, 44, 27, NULL),
+(39, 19, 22, NULL),
+(40, 5, 22, NULL),
+(41, 22, 22, NULL),
+(42, 44, 22, NULL),
+(43, 46, 26, NULL),
+(44, 31, 25, NULL),
+(45, 19, 25, NULL),
+(46, 29, 23, NULL),
+(47, 25, 23, NULL),
+(48, 46, 25, NULL),
+(49, 14, 17, NULL),
+(50, 47, 8, NULL),
+(51, 35, 17, NULL),
+(52, 41, 30, NULL),
+(53, 21, 35, NULL),
+(54, 16, 10, NULL),
+(55, 45, 10, NULL),
+(56, 20, 11, NULL),
+(57, 34, 34, NULL),
+(58, 34, 12, NULL),
+(59, 35, 12, NULL),
+(60, 14, 13, NULL),
+(61, 39, 24, NULL),
+(62, 36, 31, NULL),
+(63, 31, 31, NULL),
+(64, 5, 14, NULL),
+(65, 28, 14, NULL),
+(66, 39, 14, NULL),
+(67, 4, 31, NULL),
+(68, 42, 15, NULL),
+(69, 49, 15, NULL),
+(70, 11, 15, NULL),
+(71, 41, 16, NULL),
+(72, 42, 30, NULL),
+(73, 47, 30, NULL),
+(74, 20, 30, NULL),
+(75, 43, 40, NULL);
 
 --
--- Indexek a kiírt táblákhoz
+-- Indexes for dumped tables
 --
 
 --
--- A tábla indexei `cart`
+-- Indexes for table `cart`
 --
 ALTER TABLE `cart`
   ADD PRIMARY KEY (`cart_id`),
@@ -5325,7 +5853,7 @@ ALTER TABLE `cart`
   ADD KEY `member_id` (`member_id`);
 
 --
--- A tábla indexei `cart_product`
+-- Indexes for table `cart_product`
 --
 ALTER TABLE `cart_product`
   ADD PRIMARY KEY (`cart_product_id`),
@@ -5333,32 +5861,33 @@ ALTER TABLE `cart_product`
   ADD KEY `cart_id` (`cart_id`);
 
 --
--- A tábla indexei `city`
+-- Indexes for table `city`
 --
 ALTER TABLE `city`
-  ADD PRIMARY KEY (`city_id`);
+  ADD PRIMARY KEY (`city_id`),
+  ADD KEY `region_id` (`region_id`);
 
 --
--- A tábla indexei `follower_relations`
+-- Indexes for table `follower_relations`
 --
 ALTER TABLE `follower_relations`
   ADD PRIMARY KEY (`follower_id`,`following_id`),
   ADD KEY `following_id` (`following_id`);
 
 --
--- A tábla indexei `material`
+-- Indexes for table `material`
 --
 ALTER TABLE `material`
   ADD PRIMARY KEY (`material_id`);
 
 --
--- A tábla indexei `member`
+-- Indexes for table `member`
 --
 ALTER TABLE `member`
   ADD PRIMARY KEY (`member_id`);
 
 --
--- A tábla indexei `message`
+-- Indexes for table `message`
 --
 ALTER TABLE `message`
   ADD PRIMARY KEY (`message_id`),
@@ -5366,7 +5895,7 @@ ALTER TABLE `message`
   ADD KEY `reciver_id` (`reciver_id`);
 
 --
--- A tábla indexei `notification`
+-- Indexes for table `notification`
 --
 ALTER TABLE `notification`
   ADD PRIMARY KEY (`notification_id`),
@@ -5374,14 +5903,14 @@ ALTER TABLE `notification`
   ADD KEY `reciver_id` (`reciver_id`);
 
 --
--- A tábla indexei `product`
+-- Indexes for table `product`
 --
 ALTER TABLE `product`
   ADD PRIMARY KEY (`product_id`),
   ADD KEY `vendor_id` (`vendor_id`);
 
 --
--- A tábla indexei `product_material`
+-- Indexes for table `product_material`
 --
 ALTER TABLE `product_material`
   ADD PRIMARY KEY (`product_material_id`),
@@ -5389,14 +5918,14 @@ ALTER TABLE `product_material`
   ADD KEY `material_id` (`material_id`);
 
 --
--- A tábla indexei `product_picture`
+-- Indexes for table `product_picture`
 --
 ALTER TABLE `product_picture`
   ADD PRIMARY KEY (`product_picture_id`),
   ADD KEY `product_id` (`product_id`);
 
 --
--- A tábla indexei `product_tag`
+-- Indexes for table `product_tag`
 --
 ALTER TABLE `product_tag`
   ADD PRIMARY KEY (`product_tag_id`),
@@ -5404,7 +5933,13 @@ ALTER TABLE `product_tag`
   ADD KEY `tag_id` (`tag_id`);
 
 --
--- A tábla indexei `review`
+-- Indexes for table `region`
+--
+ALTER TABLE `region`
+  ADD PRIMARY KEY (`region_id`);
+
+--
+-- Indexes for table `review`
 --
 ALTER TABLE `review`
   ADD PRIMARY KEY (`review_id`),
@@ -5412,7 +5947,7 @@ ALTER TABLE `review`
   ADD KEY `member_id` (`member_id`);
 
 --
--- A tábla indexei `review_vote`
+-- Indexes for table `review_vote`
 --
 ALTER TABLE `review_vote`
   ADD PRIMARY KEY (`review_vote_id`),
@@ -5421,33 +5956,34 @@ ALTER TABLE `review_vote`
   ADD KEY `member_id` (`member_id`);
 
 --
--- A tábla indexei `session`
+-- Indexes for table `session`
 --
 ALTER TABLE `session`
-  ADD PRIMARY KEY (`session_id`);
+  ADD PRIMARY KEY (`session_id`),
+  ADD KEY `session_ibfk_1` (`member_id`);
 
 --
--- A tábla indexei `shipping_address`
+-- Indexes for table `shipping_address`
 --
 ALTER TABLE `shipping_address`
   ADD PRIMARY KEY (`shipping_address_id`),
   ADD KEY `member_id` (`member_id`);
 
 --
--- A tábla indexei `tag`
+-- Indexes for table `tag`
 --
 ALTER TABLE `tag`
   ADD PRIMARY KEY (`tag_id`);
 
 --
--- A tábla indexei `vendor_detail`
+-- Indexes for table `vendor_detail`
 --
 ALTER TABLE `vendor_detail`
   ADD PRIMARY KEY (`vendor_detail_id`),
   ADD KEY `member_id` (`member_id`);
 
 --
--- A tábla indexei `wish_list`
+-- Indexes for table `wish_list`
 --
 ALTER TABLE `wish_list`
   ADD PRIMARY KEY (`wish_list_id`),
@@ -5455,191 +5991,197 @@ ALTER TABLE `wish_list`
   ADD KEY `member_id` (`member_id`);
 
 --
--- A kiírt táblák AUTO_INCREMENT értéke
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT a táblához `cart`
+-- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT a táblához `cart_product`
+-- AUTO_INCREMENT for table `cart_product`
 --
 ALTER TABLE `cart_product`
-  MODIFY `cart_product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `cart_product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT a táblához `city`
+-- AUTO_INCREMENT for table `city`
 --
 ALTER TABLE `city`
   MODIFY `city_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3579;
 
 --
--- AUTO_INCREMENT a táblához `material`
+-- AUTO_INCREMENT for table `material`
 --
 ALTER TABLE `material`
   MODIFY `material_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT a táblához `member`
+-- AUTO_INCREMENT for table `member`
 --
 ALTER TABLE `member`
-  MODIFY `member_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `member_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
--- AUTO_INCREMENT a táblához `message`
+-- AUTO_INCREMENT for table `message`
 --
 ALTER TABLE `message`
-  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT a táblához `notification`
+-- AUTO_INCREMENT for table `notification`
 --
 ALTER TABLE `notification`
-  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
+  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
--- AUTO_INCREMENT a táblához `product`
+-- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
--- AUTO_INCREMENT a táblához `product_material`
+-- AUTO_INCREMENT for table `product_material`
 --
 ALTER TABLE `product_material`
-  MODIFY `product_material_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `product_material_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
 
 --
--- AUTO_INCREMENT a táblához `product_picture`
+-- AUTO_INCREMENT for table `product_picture`
 --
 ALTER TABLE `product_picture`
-  MODIFY `product_picture_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `product_picture_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
 
 --
--- AUTO_INCREMENT a táblához `product_tag`
+-- AUTO_INCREMENT for table `product_tag`
 --
 ALTER TABLE `product_tag`
-  MODIFY `product_tag_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `product_tag_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=126;
 
 --
--- AUTO_INCREMENT a táblához `review`
+-- AUTO_INCREMENT for table `review`
 --
 ALTER TABLE `review`
-  MODIFY `review_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `review_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=201;
 
 --
--- AUTO_INCREMENT a táblához `review_vote`
+-- AUTO_INCREMENT for table `review_vote`
 --
 ALTER TABLE `review_vote`
-  MODIFY `review_vote_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `review_vote_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT a táblához `session`
+-- AUTO_INCREMENT for table `session`
 --
 ALTER TABLE `session`
-  MODIFY `session_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `session_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT a táblához `shipping_address`
+-- AUTO_INCREMENT for table `shipping_address`
 --
 ALTER TABLE `shipping_address`
-  MODIFY `shipping_address_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `shipping_address_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT a táblához `tag`
+-- AUTO_INCREMENT for table `tag`
 --
 ALTER TABLE `tag`
   MODIFY `tag_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT a táblához `vendor_detail`
+-- AUTO_INCREMENT for table `vendor_detail`
 --
 ALTER TABLE `vendor_detail`
-  MODIFY `vendor_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `vendor_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- AUTO_INCREMENT a táblához `wish_list`
+-- AUTO_INCREMENT for table `wish_list`
 --
 ALTER TABLE `wish_list`
-  MODIFY `wish_list_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `wish_list_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
--- Megkötések a kiírt táblákhoz
+-- Constraints for dumped tables
 --
 
 --
--- Megkötések a táblához `cart`
+-- Constraints for table `cart`
 --
 ALTER TABLE `cart`
   ADD CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`shipping_address_id`) REFERENCES `shipping_address` (`shipping_address_id`),
   ADD CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `cart_product`
+-- Constraints for table `cart_product`
 --
 ALTER TABLE `cart_product`
   ADD CONSTRAINT `cart_product_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
   ADD CONSTRAINT `cart_product_ibfk_2` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`cart_id`);
 
 --
--- Megkötések a táblához `follower_relations`
+-- Constraints for table `city`
+--
+ALTER TABLE `city`
+  ADD CONSTRAINT `city_ibfk_1` FOREIGN KEY (`region_id`) REFERENCES `region` (`region_id`);
+
+--
+-- Constraints for table `follower_relations`
 --
 ALTER TABLE `follower_relations`
   ADD CONSTRAINT `follower_relations_ibfk_1` FOREIGN KEY (`follower_id`) REFERENCES `member` (`member_id`),
   ADD CONSTRAINT `follower_relations_ibfk_2` FOREIGN KEY (`following_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `message`
+-- Constraints for table `message`
 --
 ALTER TABLE `message`
   ADD CONSTRAINT `message_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `member` (`member_id`),
   ADD CONSTRAINT `message_ibfk_2` FOREIGN KEY (`reciver_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `notification`
+-- Constraints for table `notification`
 --
 ALTER TABLE `notification`
   ADD CONSTRAINT `notification_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `member` (`member_id`),
   ADD CONSTRAINT `notification_ibfk_2` FOREIGN KEY (`reciver_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `product`
+-- Constraints for table `product`
 --
 ALTER TABLE `product`
   ADD CONSTRAINT `product_ibfk_1` FOREIGN KEY (`vendor_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `product_material`
+-- Constraints for table `product_material`
 --
 ALTER TABLE `product_material`
   ADD CONSTRAINT `product_material_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
   ADD CONSTRAINT `product_material_ibfk_2` FOREIGN KEY (`material_id`) REFERENCES `material` (`material_id`);
 
 --
--- Megkötések a táblához `product_picture`
+-- Constraints for table `product_picture`
 --
 ALTER TABLE `product_picture`
   ADD CONSTRAINT `product_picture_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`);
 
 --
--- Megkötések a táblához `product_tag`
+-- Constraints for table `product_tag`
 --
 ALTER TABLE `product_tag`
   ADD CONSTRAINT `product_tag_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
   ADD CONSTRAINT `product_tag_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`tag_id`);
 
 --
--- Megkötések a táblához `review`
+-- Constraints for table `review`
 --
 ALTER TABLE `review`
   ADD CONSTRAINT `review_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
   ADD CONSTRAINT `review_ibfk_2` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `review_vote`
+-- Constraints for table `review_vote`
 --
 ALTER TABLE `review_vote`
   ADD CONSTRAINT `review_vote_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
@@ -5647,19 +6189,25 @@ ALTER TABLE `review_vote`
   ADD CONSTRAINT `review_vote_ibfk_3` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `shipping_address`
+-- Constraints for table `session`
+--
+ALTER TABLE `session`
+  ADD CONSTRAINT `session_ibfk_1` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`);
+
+--
+-- Constraints for table `shipping_address`
 --
 ALTER TABLE `shipping_address`
   ADD CONSTRAINT `shipping_address_ibfk_1` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `vendor_detail`
+-- Constraints for table `vendor_detail`
 --
 ALTER TABLE `vendor_detail`
   ADD CONSTRAINT `vendor_detail_ibfk_1` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`);
 
 --
--- Megkötések a táblához `wish_list`
+-- Constraints for table `wish_list`
 --
 ALTER TABLE `wish_list`
   ADD CONSTRAINT `wish_list_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),

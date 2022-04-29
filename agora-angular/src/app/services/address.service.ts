@@ -80,7 +80,8 @@ export class AddressService {
     }
 
     postAddressToCart(address: Address) {
-        return this.http.post<object>(this.rootURL + '/address-to-cart', address, )
+        return this.http.post<object>(this.rootURL + '/address-to-cart', address,
+        { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.authService.getToken()}` })})
             .pipe(
                 catchError(error => this.handleError(error))
             );

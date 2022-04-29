@@ -5343,11 +5343,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\suli\\vizsgaremek\\agora_test_data_generator\\agora_test_data_generator\\agora_test_data_generator.csproj",
+      "projectUniqueName": "D:\\suli\\vizsgaremek\\_vizsgaremek_gitrepo\\Vizsgaremek\\tesztelés\\agora_test_data_generator\\agora_test_data_generator\\agora_test_data_generator.csproj",
       "projectName": "agora_test_data_generator",
-      "projectPath": "D:\\suli\\vizsgaremek\\agora_test_data_generator\\agora_test_data_generator\\agora_test_data_generator.csproj",
+      "projectPath": "D:\\suli\\vizsgaremek\\_vizsgaremek_gitrepo\\Vizsgaremek\\tesztelés\\agora_test_data_generator\\agora_test_data_generator\\agora_test_data_generator.csproj",
       "packagesPath": "C:\\Users\\molna\\.nuget\\packages\\",
-      "outputPath": "D:\\suli\\vizsgaremek\\agora_test_data_generator\\agora_test_data_generator\\obj\\",
+      "outputPath": "D:\\suli\\vizsgaremek\\_vizsgaremek_gitrepo\\Vizsgaremek\\tesztelés\\agora_test_data_generator\\agora_test_data_generator\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",

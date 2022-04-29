@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vL64du8RLPrJxUGqQ/BFOs4u99SYyLCR3tmaqcwD3gXowbxnRdBtPJ6xZWwkdKPqCOsytR146EmNnGxspRRMHw==",
+  "dgSpecHash": "wCYQdmVMBAyg2Gy3xxdwmPsYj8opJ7UVdG3PisO+dyBSpJNBs3uQJDPZzWHHe1YZ1GNFT+GpYXgfxtZriXDSgw==",
   "success": true,
-  "projectFilePath": "D:\\suli\\vizsgaremek\\agora_test_data_generator\\agora_test_data_generator\\agora_test_data_generator.csproj",
+  "projectFilePath": "D:\\suli\\vizsgaremek\\_vizsgaremek_gitrepo\\Vizsgaremek\\tesztelés\\agora_test_data_generator\\agora_test_data_generator\\agora_test_data_generator.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\molna\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\molna\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",

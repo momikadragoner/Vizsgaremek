@@ -21,18 +21,17 @@ namespace agora_test_data_generator
 
             var context = new agorawebshopContext();
 
-            //List<Member> vendors = GenerateUser(vendorAmount, true);
-            //vendors.ForEach(x => context.Members.Add(x));
-            //context.SaveChanges();
+            List<Member> vendors = GenerateUser(vendorAmount, true);
+            vendors.ForEach(x => context.Members.Add(x));
+            context.SaveChanges();
 
-            //List<Member> users = GenerateUser(userAmount);
-            //users.ForEach(x => context.Members.Add(x));
-            //context.SaveChanges();
+            List<Member> users = GenerateUser(userAmount);
+            users.ForEach(x => context.Members.Add(x));
+            context.SaveChanges();
 
-            //List<Product> p = GenerateProduct(productAmount);
-            //p.ForEach(x => context.Products.Add(x));
-            //context.SaveChanges();
-            //m = context.Members.ForEachAsync(x => AddFollowsAndWishes(x));
+            List<Product> p = GenerateProduct(productAmount);
+            p.ForEach(x => context.Products.Add(x));
+            context.SaveChanges();
 
             var m = context.Members;
             foreach (var item in m)
@@ -238,22 +237,6 @@ namespace agora_test_data_generator
                         }
                         user.VendorDetails.Add(vendorDetail);
                     }
-                    //else
-                    //{
-                    //    List<int> follows = new List<int>();
-                    //    for (int j = 0; j < r.Next(4, 11); j++)
-                    //    {
-                    //        int follow = r.Next(1, vendorAmount + 1);
-                    //        if (!follows.Contains(follow))
-                    //        {
-                    //            FollowerRelation followerRelation = new FollowerRelation();
-                    //            followerRelation.FollowingId = follow;
-                    //            follows.Add(follow);
-                    //            followerRelation.FollowerId = i + 1;
-                    //            user.FollowerRelationFollowers.Add(followerRelation);
-                    //        }
-                    //    }
-                    //}
                     if (r.Next(0, 2) == 0)
                     {
                         user.ProfilePictureLink = "assets/def-pfp1.png";
